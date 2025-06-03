@@ -36,6 +36,9 @@ gem 'nokolexbor', require: false
 # Genres and Tags for Events
 gem 'acts-as-taggable-on'
 
+# Searching and sorting
+gem 'ransack'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/ndebugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

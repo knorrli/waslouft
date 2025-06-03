@@ -3,7 +3,8 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
-    @events = Event.order(start_date: :asc)
+    @q = Event.ransack(params[:q])
+    @events = @q.result.order(start_date: :asc)
   end
 
   # GET /events/1

@@ -4,6 +4,22 @@
 
 <h1>Events</h1>
 
+<%= search_form_for @q do |f| %>
+
+  <div class='form-group'>
+    <%= f.label :location_name, 'Location' %>
+    <%= f.select :location_name_eq, Location.order(name: :asc).pluck(:name), include_blank: true %>
+  </div>
+  <div class='form-group'>
+    <%= f.label :tags_name, 'Tags' %>
+    <%= f.select :tags_name_in, ActsAsTaggableOn::Tag.where(
+      id: ActsAsTaggableOn::Tagging.includes(:tag).where(taggable: @events).select(:tag_id)
+    ).distinct.order(:name).pluck(:name), include_blank: true %>
+  </div>
+
+  <%= f.submit %>
+<% end %>
+
 <div id="events">
   <% @events.each do |event| %>
     <%= render event %>

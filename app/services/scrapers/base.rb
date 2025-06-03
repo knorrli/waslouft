@@ -27,6 +27,7 @@ module Scrapers
           tag_list: event_tags(program_entry: program_entry)
         )
       rescue StandardError => e
+        debugger
         Rails.logger.error(e)
       end
     end
@@ -39,7 +40,7 @@ module Scrapers
     end
 
     # skip iteration by returning false when necessary
-    def preprocess
+    def preprocess(program_entry:)
       true
     end
 

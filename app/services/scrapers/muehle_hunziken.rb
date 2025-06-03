@@ -38,7 +38,7 @@ module Scrapers
     def event_start_date(program_entry:)
       date_string = program_entry.css('div > span + span').content.squish
       /(?<day>\d{1,2})?\.(?<month>\d{1,2})?\./ =~ date_string
-      Date.parse("#{year}-#{month}-#{day}")
+      Time.zone.parse("#{year}-#{month}-#{day}")
     end
 
     def event_url(program_entry:)

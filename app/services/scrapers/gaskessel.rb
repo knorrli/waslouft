@@ -3,8 +3,6 @@ module Scrapers
   class Gaskessel
     include Base
 
-    attr_accessor :current_year
-
     def initialize
       @location = Location.find_or_create_by(name: 'Gaskessel', url: 'http://localhost:3000/tests/gaskessel')
     end

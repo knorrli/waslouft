@@ -22,7 +22,7 @@ module Scrapers
         )
 
         event.update(
-          url: event_url(program_entry: program_entry).squish,
+          url: event_url(program_entry: program_entry)&.squish,
           subtitle: event_subtitle(program_entry: program_entry)&.squish,
           tag_list: event_tags(program_entry: program_entry)
         )

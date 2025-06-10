@@ -18,4 +18,6 @@ Rails.application.routes.draw do
 
   resources :locations
   resources :events
+
+  get 'calendar', to: 'calendars#show'
 end

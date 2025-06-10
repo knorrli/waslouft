@@ -7,10 +7,10 @@
 <div data-controller='combobox-filter' data-action='hw-combobox:selection->combobox-filter#addTag' data-combobox-filter-genres-value="<%= @genres %>" data-combobox-filter-locations-value="<%= @locations %>">
   <div style="display: flex; gap: 10px;">
     <% @locations.each do |location| %>
-      <%= button_tag location, type: :button, data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': location, 'combobox-filter-context-param': 'locations' } %>
+      <%= button_tag "L:#{location}", type: :button, data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': location, 'combobox-filter-context-param': 'locations' } %>
     <% end %>
     <% @genres.each do |genre| %>
-      <%= button_tag genre, type: :button, data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': genre, 'combobox-filter-context-param': 'genres' } %>
+      <%= button_tag "G:#{genre}", type: :button, data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': genre, 'combobox-filter-context-param': 'genres' } %>
     <% end %>
   </div>
   <div class="youtube">
@@ -28,5 +28,3 @@
     <%= render event %>
   <% end %>
 </div>
-
-<%= link_to "New event", new_event_path %>

@@ -1,5 +1,5 @@
 class Event < ApplicationRecord
-  acts_as_taggable_on :tags
+  acts_as_taggable_on :locations, :genres
 
   belongs_to :location
 
@@ -8,7 +8,7 @@ class Event < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ['location', 'taggings', 'tags']
+    ['location', 'taggings', 'genres', 'locations']
   end
 
   def to_s

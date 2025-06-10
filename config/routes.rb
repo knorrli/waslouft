@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   resources :locations
   resources :events
+  resources :tags, only: :index
 
   get 'calendar', to: 'calendars#show'
 end

@@ -42,6 +42,9 @@ gem 'ransack'
 # Support for iCalendar exports
 gem 'icalendar'
 
+# Combobox UI element for filters
+gem "hotwire_combobox"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/ndebugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

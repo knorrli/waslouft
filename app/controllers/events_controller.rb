@@ -3,7 +3,9 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
-    @q = Event.ransack(params[:q])
+    @genres = params[:g]&.first&.split(',') || []
+    @locations = params[:l]&.first&.split(',') || []
+    @q = Event.ransack(genres_name_in: @genres, locations_name_in: @locations, m: :or)
     @events = @q.result.order(start_date: :asc)
   end
 

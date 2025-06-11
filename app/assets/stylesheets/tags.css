@@ -1,0 +1,8 @@
+.tag {
+  border: none;
+  padding: 5px;
+
+  &.active {
+    border-color: green;
+  }
+}

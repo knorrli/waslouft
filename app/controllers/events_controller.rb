@@ -6,7 +6,7 @@ class EventsController < ApplicationController
     @genres = params[:g]&.first&.split(',') || []
     @locations = params[:l]&.first&.split(',') || []
     @q = Event.ransack(genres_name_in: @genres, locations_name_in: @locations, m: :or)
-    @events = @q.result.order(start_date: :asc)
+    @events = @q.result(distinct: true).order(start_date: :asc)
   end
 
   # GET /events/1

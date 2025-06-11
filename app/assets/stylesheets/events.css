@@ -1,0 +1,7 @@
+.events-header {
+  padding: var(--gap-medium);
+}
+
+.event {
+  border: 1px solid var(--border-color);
+}

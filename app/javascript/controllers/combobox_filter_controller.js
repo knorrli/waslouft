@@ -13,17 +13,12 @@ export default class extends Controller {
   connect() {
   }
 
-  addTag(event) {
-    const context = event.detail.value;
-    const tag = event.detail.display;
-    const target = this[`${context}Target`];
-    if (!target) {
-      console.error("NO INPUT");
-      return;
-    }
+  addTagFromButton(event) {
+    this.#addTag(event.params.context, event.params.tag);
+  }
 
-    target.value = [...this[`${context}Value`], tag];
-    target.dispatchEvent(new Event('change', { bubbles: true }));
+  addTagFromCombobox(event) {
+    this.#addTag(event.detail.value, event.detail.display);
   }
 
   removeTag(event) {
@@ -32,4 +27,22 @@ export default class extends Controller {
     target.value = this[`${context}Value`].filter((tag) => tag !== event.params.tag);
     target.dispatchEvent(new Event('change', { bubbles: true }));
   }
+
+  #addTag(context, tag) {
+    const target = this[`${context}Target`];
+    if (!target) {
+      console.error("NO INPUT");
+      return;
+    }
+
+    const existingTags = this[`${context}Value`];
+    if (existingTags.includes(tag)) {
+      console.error("TAG ALREADY IN LIST");
+      return;
+    }
+
+    target.value = [...existingTags, tag];
+    target.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
 }

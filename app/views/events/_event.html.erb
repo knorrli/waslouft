@@ -1,32 +1,25 @@
-<fieldset id="<%= dom_id event %>">
-  <p>
-    <strong>Location:</strong>
-    <%= event.location %>
-  </p>
+<fieldset id="<%= dom_id event %>" class="event">
+  <h3>
+    <%= l event.start_date.to_date, format: :default %>
+    –
+    <%= link_to event.location, event.location.url %>
+  </h3>
+  <h1><%= link_to event.title, event.url, target: :blank %></h1>
+  <% if event.subtitle.present? %>
+    <h3><%= event.subtitle %></h3>
+  <% end %>
 
-  <p>
-    <strong>Title:</strong>
-    <%= event.title %>
-  </p>
+  <div style="flex gap-small">
+    <div style="flex gap-small">
+      <% event.locations.each do |location| %>
+        <%= button_tag "L:#{location}", type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#addTagFromButton', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } %>
+      <% end %>
+    </div>
 
-  <p>
-    <strong>Subtitle:</strong>
-    <%= event.subtitle %>
-  </p>
-
-  <p>
-    <strong>Date:</strong>
-    <%= l event.start_date, format: :long %>
-  </p>
-
-  <p>
-    <strong>Genres:</strong>
-    <%= event.genres.join(', ') %>
-  </p>
-
-  <p>
-    <strong>Link:</strong>
-    <%= link_to "event link", event.url, target: :blank %>
-  </p>
-
+    <div style="flex gap-small">
+      <% event.genres.each do |genre| %>
+        <%= button_tag "G:#{genre}", type: :button, class: class_names(:tag, active: @genres.include?(genre.name)), data: { action: 'combobox-filter#addTagFromButton', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } %>
+      <% end %>
+    </div>
+  </div>
 </fieldset>

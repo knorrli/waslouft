@@ -2,29 +2,37 @@
 
 <% content_for :title, "Events" %>
 
-<h1>Events</h1>
+<div data-controller='combobox-filter' data-action='hw-combobox:selection->combobox-filter#addTagFromCombobox' data-combobox-filter-genres-value="<%= @genres %>" data-combobox-filter-locations-value="<%= @locations %>">
 
-<div data-controller='combobox-filter' data-action='hw-combobox:selection->combobox-filter#addTag' data-combobox-filter-genres-value="<%= @genres %>" data-combobox-filter-locations-value="<%= @locations %>">
-  <div style="display: flex; gap: 10px;">
-    <% @locations.each do |location| %>
-      <%= button_tag "L:#{location}", type: :button, data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': location, 'combobox-filter-context-param': 'locations' } %>
-    <% end %>
-    <% @genres.each do |genre| %>
-      <%= button_tag "G:#{genre}", type: :button, data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': genre, 'combobox-filter-context-param': 'genres' } %>
-    <% end %>
-  </div>
-  <div class="youtube">
-    <%= form_with url: events_url, method: :get do |f| %>
-      <%= f.hidden_field 'l[]', value: params[:l], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'locations' } %>
-      <%= f.hidden_field 'g[]', value: params[:g], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'genres' } %>
-    <% end %>
-    <%= combobox_tag "tags", tags_path(applied: (@genres | @locations)), data: { combobox_filter_target: 'combobox' } %>
-  </div>
-</div>
-</div>
+  <section class="events-header flex flex-col gap-medium">
+    <div class="searchbar flex justify-center">
+      <%= combobox_tag "tags", tags_path(applied: (@genres | @locations)), data: { combobox_filter_target: 'combobox' } %>
+      <%# <fieldset class="calendar-select"> %>
+      <%#   input %>
+      <%# </fieldset> %>
+      <%# <%= combobox_tag "calendar", tags_path(applied: (@genres | @locations)), data: { combobox_filter_target: 'combobox' } %1> %>
+    </div>
 
-<div id="events">
-  <% @events.each do |event| %>
-    <%= render event %>
+    <div class="tag-list flex justify-center wrap gap-medium">
+      <% @locations.each do |location| %>
+        <%= button_tag "L:#{location}", type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': location, 'combobox-filter-context-param': 'locations' } %>
+      <% end %>
+      <% @genres.each do |genre| %>
+        <%= button_tag "G:#{genre}", type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': genre, 'combobox-filter-context-param': 'genres' } %>
+      <% end %>
+    </div>
+
+  </section>
+
+  <%= form_with url: events_url, method: :get do |f| %>
+    <%= f.hidden_field 'l[]', value: params[:l], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'locations' } %>
+    <%= f.hidden_field 'g[]', value: params[:g], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'genres' } %>
   <% end %>
+
+
+  <section id="events" class="flex flex-col gap-small">
+    <% @events.each do |event| %>
+      <%= render event %>
+    <% end %>
+  </section>
 </div>

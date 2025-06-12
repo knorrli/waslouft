@@ -10,6 +10,13 @@ module Scrapers
       @current_year = Date.current.year
     end
 
+    def preprocess(program_entry:)
+      event_type = program_entry.css('.event_title_info').content.split(' - ').first&.squish
+      return true if event_type == 'Konzert'
+
+      false
+    end
+
     def program_entries
       page.css('a.event_preview')
     end
@@ -33,7 +40,7 @@ module Scrapers
     end
 
     def event_tags(program_entry:)
-      program_entry.css('.event_title_info').content.split(/[-,\,]/).map(&:squish)
+      program_entry.css('.event_title_info').content.split(' - ').last.split(',').map(&:squish)
     end
   end
 end

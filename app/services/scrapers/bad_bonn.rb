@@ -29,8 +29,9 @@ module Scrapers
       year = program_entry.css('.program-year').content.squish
       month = program_entry.css('.program-month').content.squish
       day = program_entry.css('.program-day').content.squish
+      time = program_entry.css('.program-time').content.squish
 
-      Time.zone.parse("#{year}-#{month}-#{day}")
+      Time.zone.parse("#{year}-#{month}-#{day}T#{time}")
     end
 
     def event_url(program_entry:)

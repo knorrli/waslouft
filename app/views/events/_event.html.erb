@@ -1,6 +1,6 @@
-<fieldset id="<%= dom_id event %>" class="event flex flex-col gap-m">
-  <h4>
-    <%= l event.start_date.to_date, format: :default %>
+<article id="<%= dom_id event %>" class="event flex flex-col gap-m">
+  <h4 class="date-and-location">
+    <%= l event.start_date, format: :default %>
     –
     <%= link_to event.location, event.location.url %>
   </h4>
@@ -10,16 +10,16 @@
   <% end %>
 
   <div class="flex flex-col gap-small">
-    <div class="flex gap-small">
+    <div class="flex wrap gap-small">
       <% event.locations.each do |location| %>
-        <%= button_tag "L:#{location}", type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#addTagFromButton', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } %>
+        <%= button_tag "L:#{location}", type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } %>
       <% end %>
     </div>
 
-    <div class="flex gap-small">
+    <div class="flex wrap gap-small">
       <% event.genres.each do |genre| %>
-        <%= button_tag "G:#{genre}", type: :button, class: class_names(:tag, active: @genres.include?(genre.name)), data: { action: 'combobox-filter#addTagFromButton', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } %>
+        <%= button_tag "G:#{genre}", type: :button, class: class_names(:tag, active: @genres.include?(genre.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } %>
       <% end %>
     </div>
   </div>
-</fieldset>
+</article>

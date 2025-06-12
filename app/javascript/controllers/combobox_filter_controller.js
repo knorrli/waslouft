@@ -13,12 +13,23 @@ export default class extends Controller {
   connect() {
   }
 
-  addTagFromButton(event) {
-    this.#addTag(event.params.context, event.params.tag);
+  toggleTag(event) {
+    const context = event.params.context;
+    const tag = event.params.tag;
+    const existingTags = this[`${context}Value`];
+    if (existingTags.includes(tag)) {
+      this.removeTag(event);
+    } else {
+      this.#addTag(context, tag);
+    }
   }
 
   addTagFromCombobox(event) {
-    this.#addTag(event.detail.value, event.detail.display);
+    const context = event.detail.value;
+    const tag = event.detail.display;
+    if (context && tag) {
+      this.#addTag(event.detail.value, event.detail.display);
+    }
   }
 
   removeTag(event) {

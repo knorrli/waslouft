@@ -1,7 +1,17 @@
-.events-header {
-  padding: var(--gap-medium);
+.filter {
+  margin-top: var(--gap-large);
+}
+
+.searchbar {
+  gap: 10vw;
 }
 
 .event {
   border: 1px solid var(--border-color);
+  padding: var(--gap-medium);
+
+  .date-and-location {
+    padding: 0;
+    margin: 0;
+  }
 }

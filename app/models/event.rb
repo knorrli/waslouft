@@ -4,7 +4,7 @@ class Event < ApplicationRecord
   belongs_to :location
 
   def self.ransackable_attributes(auth_object = nil)
-    []
+    ['start_date']
   end
 
   def self.ransackable_associations(auth_object = nil)
@@ -14,4 +14,8 @@ class Event < ApplicationRecord
   def to_s
     name
   end
+
+  ransacker :start_date do
+  Arel.sql('DATE(start_date)')
+end
 end

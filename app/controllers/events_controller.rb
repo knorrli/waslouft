@@ -5,7 +5,11 @@ class EventsController < ApplicationController
   def index
     @genres = params[:g]&.first&.split(',') || []
     @locations = params[:l]&.first&.split(',') || []
-    @q = Event.ransack(genres_name_in: @genres, locations_name_in: @locations, m: :or)
+    ransack_query = { m: :or }
+    ransack_query[:genres_name_in] = @genres if @genres.present?
+    ransack_query[:locations_name_in] = @locations if @locations.present?
+    ransack_query[:start_date_between] = params[:d].presence if /\d{4}-\d{2}-\d{2}\s-\s\d{4}-\d{2}-\d{2}/.match?(params[:d].presence)
+    @q = Event.ransack(ransack_query)
     @events = @q.result(distinct: true).order(start_date: :asc)
   end
 

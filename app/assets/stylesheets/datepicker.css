@@ -1,0 +1,62 @@
+/* TODO: use own CSS variables */
+.datepicker {
+  max-width: var(--search-field-width);
+  border: var(--border-width) solid var(--border-color);
+  padding: var(--hw-padding--slim) calc(var(--hw-handle-width) + var(--hw-padding--slimmer)) var(--hw-padding--slim) var(--hw-padding--thick);
+  position: relative;
+
+  &:focus-within {
+    box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
+  }
+
+  input {
+    background-color: inherit;
+    color: inherit;
+    border: none;
+    font-size: inherit;
+    line-height: var(--hw-line-height);
+    min-width: 0;
+    padding: 0;
+    text-overflow: ellipsis;
+    width: 100%;
+
+    &:focus,
+    &:focus-visible,
+    &:focus-within {
+      box-shadow: none;
+      outline: none;
+    }
+  }
+
+  .datepicker-handle {
+    height: 100%;
+    position: absolute;
+    right: var(--hw-handle-offset-right);
+    top: 0;
+    width: var(--hw-handle-width);
+
+    &::before {
+      background-image: var(--datepicker-handle-image);
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: var(--hw-handle-width);
+      bottom: 0;
+      content: '';
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+  }
+
+  &.active {
+    background-color: var(--color-bg-black);
+    color: var(--color-white);
+
+
+    .datepicker-handle::before {
+      background-image: var(--hw-handle-image--queried);
+      background-size: var(--hw-handle-width--queried);
+    }
+  }
+}

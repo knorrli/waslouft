@@ -12,7 +12,7 @@
         <%= f.hidden_field 'l[]', value: params[:l], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'locations' } %>
         <%= f.hidden_field 'g[]', value: params[:g], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'genres' } %>
 
-        <div data-controller="datepicker" data-datepicker-date-range-value="<%= params[:d] %>" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-enable-range-value="true" data-datepicker-range-tooltip-value="false">
+        <div data-controller="datepicker" data-datepicker-date-range-value="<%= params[:d] %>" data-datepicker-grid-value="1" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-enable-range-value="true" data-datepicker-range-tooltip-value="false">
           <div class="<%= class_names(:datepicker, active: params[:d].present?) %>" data-datepicker-target="wrapper">
             <%= f.text_field 'd', value: params[:d], onchange: 'this.form.requestSubmit()', data: { datepicker_target: 'input' } %>
             <span class="datepicker-handle" data-action="click->datepicker#toggle"></span>

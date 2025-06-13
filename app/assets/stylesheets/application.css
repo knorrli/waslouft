@@ -10,8 +10,9 @@
  */
 
 .content {
-  /* width: 60vw; */
-  /* min-width: 70vw; */
-  max-width: 70vw;
-  /* margin: var(--gap-large); */
+  margin: 0 calc(35vw - 120px);
+}
+
+.footer {
+  height: var(--gap-large);
 }

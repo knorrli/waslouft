@@ -23,9 +23,12 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="flex justify-center">
+  <body class="flex flex-col align-stretch">
     <div class="content flex-grow">
       <%= yield %>
     </div>
+
+    <footer class="footer">
+    </footer>
   </body>
 </html>

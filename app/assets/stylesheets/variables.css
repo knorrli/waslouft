@@ -1,10 +1,15 @@
 :root {
   /* colors */
-  --color-bg-black: black;
   --color-white: white;
+  --color-black: black;
+  /* --color-accent: #e63757; */
+  --color-accent: yellow;
+  --color-primary: var(--color-black);
+  --color-bg-black: var(--color-black);
   /* app styles */
   --border-width: 1px;
   --border-color: black;
+  --border-radius: none;
   --gap-small: 5px;
   --gap-medium: 10px;
   --gap-large: 20px;

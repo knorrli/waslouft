@@ -4,11 +4,13 @@ class CalendarsController < ApplicationController
       format.ics do
         cal = Icalendar::Calendar.new
         cal.x_wr_calname = 'Awesome Rails Calendar'
-        cal.event do |e|
-          e.dtstart     = DateTime.now + 2.hours
-          e.dtend       = DateTime.now + 3.hours
-          e.summary     = 'Power Lunch'
-          e.description = 'Get together and do big things'
+        Event.order(start_date).each do |event|
+          cal.event do |e|
+            e.dtstart = event.start_date
+            e.dtend = event.start_date.end_of_day
+            e.summary = event.title
+            e.description = event.location
+          end
         end
         cal.publish
         render plain: cal.to_ical

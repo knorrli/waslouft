@@ -6,7 +6,7 @@ module Scrapers
     attr_reader :year
 
     def initialize
-      @location = Location.find_or_create_by(name: 'Mühle Hunziken', url: 'http://localhost:3000/tests/muehle_hunziken')
+      @location = Location.find_or_create_by(name: 'Mühle Hunziken', url: 'https://muehlehunziken.ch/')
       @year = Date.current.year
     end
 

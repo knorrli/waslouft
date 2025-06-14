@@ -33,9 +33,13 @@ module Events
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.i18n.default_locale = :de
+    config.i18n.default_locale = :de
     config.time_zone = 'Europe/Berlin'
     # config.eager_load_paths << Rails.root.join("extras")
+
+    Rails.application.reloader.to_prepare do
+      Dir[Rails.root.join('app/services/scrapers/**/*.rb')].each { |file| require_dependency(file) }
+    end
 
     # Don't generate system test files.
     config.generators.system_tests = nil

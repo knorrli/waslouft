@@ -10,7 +10,7 @@ class EventsController < ApplicationController
     ransack_query[:locations_name_in] = @locations if @locations.present?
     ransack_query[:start_date_between] = params[:d].presence if /\d{4}-\d{2}-\d{2}\s-\s\d{4}-\d{2}-\d{2}/.match?(params[:d].presence)
     @q = Event.ransack(ransack_query)
-    @events = @q.result(distinct: true).order(start_date: :asc)
+    @events = @q.result(distinct: true).order(start_date: :asc).page(params[:page])
   end
 
   # GET /events/1

@@ -15,4 +15,5 @@
 
 .footer {
   height: var(--gap-large);
+  margin: var(--gap-large) 0;
 }

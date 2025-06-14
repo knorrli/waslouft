@@ -1,9 +1,7 @@
-require 'nokolexbor'
-require 'open-uri'
-
 module Scrapers
   class NouveauMonde
     include Base
+    register_scraper
 
     attr_reader :year
 

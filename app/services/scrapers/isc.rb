@@ -1,7 +1,7 @@
-
 module Scrapers
   class Isc
     include Base
+    register_scraper
 
     attr_accessor :current_year
 

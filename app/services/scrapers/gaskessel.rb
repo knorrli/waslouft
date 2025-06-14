@@ -1,7 +1,7 @@
-
 module Scrapers
   class Gaskessel
     include Base
+    register_scraper
 
     def initialize
       @location = Location.find_or_create_by(name: 'Gaskessel', url: 'http://localhost:3000/tests/gaskessel')

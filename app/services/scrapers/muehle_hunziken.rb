@@ -1,9 +1,7 @@
-require 'nokolexbor'
-require 'open-uri'
-
 module Scrapers
   class MuehleHunziken
     include Base
+    register_scraper
 
     attr_reader :year
 

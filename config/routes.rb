@@ -16,9 +16,9 @@ Rails.application.routes.draw do
     get ':name', to: 'tests#show'
   end
 
-  resources :locations
   resources :events
   resources :tags, only: :index
 
   get 'calendar', to: 'calendars#show'
+  post 'scrape', to: 'scrapers#run', as: :scrape
 end

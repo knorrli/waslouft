@@ -39,6 +39,9 @@ gem 'acts-as-taggable-on'
 # Searching and sorting
 gem 'ransack'
 
+# Pagination
+gem 'kaminari'
+
 # Support for iCalendar exports
 gem 'icalendar'
 

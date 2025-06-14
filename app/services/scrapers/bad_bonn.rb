@@ -1,13 +1,7 @@
-require 'nokolexbor'
-require 'open-uri'
-
 module Scrapers
   class BadBonn
     include Base
-
-    def self.call
-      new.call
-    end
+    register_scraper
 
     def initialize
       @location = Location.find_or_create_by(name: 'Bad Bonn', url: 'http://localhost:3000/tests/bad_bonn')

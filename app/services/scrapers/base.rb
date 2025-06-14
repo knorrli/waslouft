@@ -10,6 +10,10 @@ module Scrapers
       def call
         new.call
       end
+
+      def register_scraper
+        All.scrapers[name.demodulize] = self
+      end
     end
 
     def call

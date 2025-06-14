@@ -1,10 +1,7 @@
-require 'nokolexbor'
-require 'open-uri'
-
 module Scrapers
   class Roessli
     include Base
-    attr_reader :location
+    register_scraper
 
     def initialize
       @location = Location.find_or_create_by(name: 'Rössli', url: 'http://localhost:3000/tests/roessli')

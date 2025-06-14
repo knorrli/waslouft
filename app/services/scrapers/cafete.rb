@@ -1,7 +1,7 @@
-
 module Scrapers
   class Cafete
     include Base
+    register_scraper
 
     def initialize
       @location = Location.find_or_create_by(name: 'Cafete', url: 'http://localhost:3000/tests/cafete')

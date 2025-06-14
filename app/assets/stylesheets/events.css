@@ -10,8 +10,7 @@
   border: 1px solid var(--border-color);
   padding: var(--gap-medium);
 
-  .date-and-location {
-    padding: 0;
-    margin: 0;
+  .event-title {
+    margin-bottom: var(--gap-large);
   }
 }

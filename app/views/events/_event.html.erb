@@ -1,25 +1,32 @@
-<article id="<%= dom_id event %>" class="event flex flex-col gap-m">
-  <h4 class="date-and-location">
+<article id="<%= dom_id event %>" class="event flex flex-col gap-medium">
+  <h4 class="event-date-and-location">
     <%= l event.start_date, format: :default %>
     –
     <%= link_to event.location, event.location.url %>
   </h4>
-  <h2><%= link_to event.title, event.url, target: :blank %></h2>
-  <% if event.subtitle.present? %>
-    <h3><%= event.subtitle %></h3>
-  <% end %>
+
+  <div class="event-title">
+    <h2><%= link_to event.title, event.url, target: :blank %></h2>
+    <% if event.subtitle.present? %>
+      <h3><%= event.subtitle %></h3>
+    <% end %>
+  </div>
 
   <div class="flex flex-col gap-small">
-    <div class="flex wrap gap-small">
-      <% event.locations.each do |location| %>
-        <%= button_tag "L:#{location}", type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } %>
-      <% end %>
-    </div>
+    <% if event.locations.any? %>
+      <div class="flex wrap gap-small">
+        <% event.locations.each do |location| %>
+          <%= button_tag "L:#{location}", type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } %>
+        <% end %>
+      </div>
+    <% end %>
 
-    <div class="flex wrap gap-small">
-      <% event.genres.each do |genre| %>
-        <%= button_tag "G:#{genre}", type: :button, class: class_names(:tag, active: @genres.include?(genre.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } %>
-      <% end %>
-    </div>
+    <% if event.genres.any? %>
+      <div class="flex wrap gap-small">
+        <% event.genres.each do |genre| %>
+          <%= button_tag "G:#{genre}", type: :button, class: class_names(:tag, active: @genres.include?(genre.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } %>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </article>

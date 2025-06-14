@@ -9,7 +9,7 @@ class CalendarsController < ApplicationController
             e.dtstart = event.start_date
             e.dtend = event.start_date.end_of_day
             e.summary = event.title
-            e.description = event.location
+            e.description = event.location.name
           end
         end
         cal.publish

@@ -6,7 +6,7 @@ module Scrapers
     attr_reader :year
 
     def initialize
-      @location = Location.find_or_create_by(name: 'Nouveau Monde', url: 'http://localhost:3000/tests/nouveau_monde')
+      @location = Location.find_or_create_by(name: 'Nouveau Monde', url: 'https://www.nouveaumonde.ch/agenda/')
     end
 
     def program_entries

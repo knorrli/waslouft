@@ -4,7 +4,7 @@ module Scrapers
     register_scraper
 
     def initialize
-      @location = Location.find_or_create_by(name: 'Bad Bonn', url: 'http://localhost:3000/tests/bad_bonn')
+      @location = Location.find_or_create_by(name: 'Bad Bonn', url: 'https://club.badbonn.ch/program')
     end
 
     def program_entries

@@ -6,7 +6,7 @@ module Scrapers
     attr_accessor :current_year
 
     def initialize
-      @location = Location.find_or_create_by(name: 'ISC', url: 'http://localhost:3000/tests/isc')
+      @location = Location.find_or_create_by(name: 'ISC', url: 'https://isc-club.ch/')
       @current_year = Date.current.year
     end
 

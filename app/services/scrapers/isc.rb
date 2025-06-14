@@ -3,11 +3,12 @@ module Scrapers
     include Base
     register_scraper
 
-    attr_accessor :current_year
+    attr_accessor :current_year, :current_month
 
     def initialize
       @location = Location.find_or_create_by(name: 'ISC', url: 'https://isc-club.ch/')
       @current_year = Date.current.year
+      @current_month = Date.current.month
     end
 
     def preprocess(program_entry:)
@@ -32,6 +33,9 @@ module Scrapers
     def event_start_date(program_entry:)
       date_string = program_entry.css('.event_title_date').content.squish
       /(?<day>\d{1,2})?\.(?<month>\d{1,2})?\./ =~ date_string
+      if month < current_month
+        @current_year += 1
+      end
       Time.zone.parse("#{current_year}-#{month}-#{day}")
     end
 

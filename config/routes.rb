@@ -21,4 +21,5 @@ Rails.application.routes.draw do
 
   get 'calendar', to: 'calendars#show'
   post 'scrape', to: 'scrapers#run', as: :scrape
+  post 'clear', to: 'scrapers#clear', as: :clear
 end

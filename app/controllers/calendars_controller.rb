@@ -3,13 +3,14 @@ class CalendarsController < ApplicationController
     respond_to do |format|
       format.ics do
         cal = Icalendar::Calendar.new
-        cal.x_wr_calname = 'Awesome Rails Calendar'
+        cal.x_wr_calname = 'WasLouft'
         Event.order(start_date: :asc).each do |event|
           cal.event do |e|
             e.dtstart = event.start_date
             e.dtend = event.start_date.end_of_day
             e.summary = event.title
-            e.description = event.location.name
+            e.location = event.location.name
+            e.description = event.subtitle
           end
         end
         cal.publish

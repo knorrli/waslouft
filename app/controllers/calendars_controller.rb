@@ -4,7 +4,7 @@ class CalendarsController < ApplicationController
       format.ics do
         cal = Icalendar::Calendar.new
         cal.x_wr_calname = 'Awesome Rails Calendar'
-        Event.order(start_date).each do |event|
+        Event.order(start_date: :asc).each do |event|
           cal.event do |e|
             e.dtstart = event.start_date
             e.dtend = event.start_date.end_of_day

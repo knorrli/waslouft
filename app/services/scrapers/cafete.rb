@@ -30,7 +30,7 @@ module Scrapers
     end
 
     def event_tags(program_entry:)
-      program_entry.css('.style').content.gsub(/Style:/, '').split('/').map(&:squish)
+      program_entry.css('.style').content&.gsub(/Style:/, '')&.split('/')&.map(&:squish)
     end
   end
 end

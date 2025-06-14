@@ -33,7 +33,7 @@ module Scrapers
     def event_start_date(program_entry:)
       date_string = program_entry.css('.event_title_date').content.squish
       /(?<day>\d{1,2})?\.(?<month>\d{1,2})?\./ =~ date_string
-      if month < current_month
+      if month.to_i < current_month
         @current_year += 1
       end
       Time.zone.parse("#{current_year}-#{month}-#{day}")

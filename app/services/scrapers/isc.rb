@@ -36,7 +36,7 @@ module Scrapers
       if month.to_i < current_month
         @current_year += 1
       end
-      Time.zone.parse("#{current_year}-#{month}-#{day}")
+      Time.zone.parse("#{current_year}-#{month}-#{day} 20:00")
     end
 
     def event_url(program_entry:)

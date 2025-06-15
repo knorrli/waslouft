@@ -20,14 +20,16 @@ module Scrapers
       program_entries.each do |program_entry|
         next unless preprocess(program_entry: program_entry)
 
-        event = location.events.find_or_initialize_by(
+        start_date = event_start_date(program_entry: program_entry)
+
+        event = location.events.where('DATE(start_date) = ?', start_date.to_date).find_or_initialize_by(
           title: event_title(program_entry: program_entry).squish,
-          start_date: event_start_date(program_entry: program_entry)
         )
 
         event.update(
           url: event_url(program_entry: program_entry)&.squish,
           subtitle: event_subtitle(program_entry: program_entry)&.squish,
+          start_date: start_date,
           genre_list: event_tags(program_entry: program_entry),
           location_list: event.location.name
         )

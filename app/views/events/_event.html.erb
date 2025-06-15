@@ -1,6 +1,6 @@
 <article id="<%= dom_id event %>" class="event flex flex-col gap-medium">
   <h4 class="event-date-and-location">
-    <%= l event.start_date.to_date, format: :default %>
+    <%= l event.start_date, format: :default %>
     –
     <%= link_to event.location, event.location.url %>
   </h4>

@@ -1,5 +1,5 @@
 .container {
-  --color-bg-inrange: var(--color-primary);
+  --color-bg-inrange: var(--color-gray);
   --color-bg-secondary: #f9f9f9;
   --color-fg-default: var(--color-primary);
   --color-fg-primary: var(--color-primary);

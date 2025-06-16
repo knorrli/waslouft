@@ -10,10 +10,9 @@
  */
 
 .content {
-  margin: 0 calc(30vw - 120px);
+  margin: var(--gap-large) calc(30vw - 120px);
 }
 
 .footer {
   height: var(--gap-large);
-  margin: var(--gap-large) 0;
 }

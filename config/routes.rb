@@ -12,14 +12,20 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root 'events#index'
 
+  resource :session
+
+  resources :events, only: [:index, :destroy]
+  resources :tags, only: :index
+
+  get 'calendar', to: 'calendars#show'
+
   scope 'tests' do
     get ':name', to: 'tests#show'
   end
 
-  resources :events
-  resources :tags, only: :index
-
-  get 'calendar', to: 'calendars#show'
-  post 'scrape', to: 'scrapers#run', as: :scrape
-  post 'clear', to: 'scrapers#clear', as: :clear
+  scope :administration do
+    get '', to: 'admin#index', as: :admin
+    post 'scrape_events', to: 'admin#scrape_events', as: :scrape_events
+    post 'clear_events', to: 'admin#clear_events', as: :clear_events
+  end
 end

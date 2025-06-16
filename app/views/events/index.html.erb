@@ -4,7 +4,7 @@
 
   <section class="filter flex flex-col gap-large">
     <div class="searchbar flex justify-between">
-      <%= combobox_tag "tags", tags_path(applied: (@genres | @locations)), data: { combobox_filter_target: 'combobox' } do |combobox| %>
+      <%= combobox_tag "tags", tags_path(applied: (@genres | @locations)), placeholder: 'Was?', data: { combobox_filter_target: 'combobox' } do |combobox| %>
         <% combobox.customize_fieldset class: 'flex-grow' %>
       <% end %>
 
@@ -14,7 +14,7 @@
 
         <div data-controller="datepicker" data-datepicker-date-range-value="<%= params[:d] %>" data-datepicker-grid-value="1" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-position-value="left">
           <div class="<%= class_names(:datepicker, active: params[:d].present?) %>" data-datepicker-target="wrapper">
-            <%= f.text_field 'd', value: params[:d], onchange: 'this.form.requestSubmit()', data: { datepicker_target: 'input' } %>
+            <%= f.text_field 'd', value: params[:d], placeholder: 'Wann?', onchange: 'this.form.requestSubmit()', data: { datepicker_target: 'input' } %>
             <span class="datepicker-handle" data-action="click->datepicker#toggle"></span>
           </div>
         </div>
@@ -24,10 +24,20 @@
 
     <div class="tag-list flex justify-start wrap gap-medium">
       <% @locations.each do |location| %>
-        <%= button_tag "L:#{location}", type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': location, 'combobox-filter-context-param': 'locations' } %>
+        <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': location, 'combobox-filter-context-param': 'locations' } do %>
+          <div class="flex gap-small">
+            <span class="<%= tag_icon_class(context: 'locations') %>"></span>
+            <span><%= location %></span>
+          </div>
+        <% end %>
       <% end %>
       <% @genres.each do |genre| %>
-        <%= button_tag "G:#{genre}", type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': genre, 'combobox-filter-context-param': 'genres' } %>
+        <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': genre, 'combobox-filter-context-param': 'genres' } do %>
+          <div class="flex gap-small">
+            <span class="<%= tag_icon_class(context: 'genres') %>"></span>
+            <span><%= genre %></span>
+          </div>
+        <% end %>
       <% end %>
     </div>
 

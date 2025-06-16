@@ -32,8 +32,11 @@
 
     <footer class="footer">
       <div class="content flex justify-end gap-medium">
-        <%= button_to 'clear', clear_path %>
-        <%= button_to 'scrape', scrape_path %>
+        <% if authenticated? %>
+          <%= link_to 'Logout', session_path, data: { turbo_method: :delete } %>
+        <% else %>
+          <%= link_to 'Admin', admin_path %>
+        <% end %>
       </div>
     </footer>
   </body>

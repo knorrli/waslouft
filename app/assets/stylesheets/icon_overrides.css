@@ -1,0 +1,4 @@
+a.danger {
+  text-decoration: none;
+  color: var(--color-danger);
+}

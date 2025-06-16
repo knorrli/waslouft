@@ -1,5 +1,8 @@
-class ScrapersController < ApplicationController
-  def run
+class AdminController < ApplicationController
+  def index
+  end
+
+  def scrape_events
     Scrapers::All.run
   rescue StandardError => e
     debugger
@@ -7,8 +10,8 @@ class ScrapersController < ApplicationController
     redirect_to root_path
   end
 
-  def clear
+  def clear_events
     Event.destroy_all
-    redirect_to root_path
+    redirect_to admin_path
   end
 end

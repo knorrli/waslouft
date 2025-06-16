@@ -1,9 +1,17 @@
 <article id="<%= dom_id event %>" class="event flex flex-col gap-medium">
-  <h4 class="event-date-and-location">
-    <%= l event.start_date, format: :default %>
-    –
-    <%= link_to event.location, event.location.url %>
-  </h4>
+  <div class="flex justify-between">
+    <h4 class="event-date-and-location">
+      <%= l event.start_date, format: :default %>
+      –
+      <%= link_to event.location, event.location.url %>
+    </h4>
+
+    <% if authenticated? %>
+      <%= link_to event, class: 'danger', data: { turbo_method: :delete } do %>
+        <span class="ti-trash"></span>
+      <% end %>
+    <% end %>
+  </div>
 
   <div class="event-title">
     <h2><%= link_to event.title, event.url, target: :blank %></h2>
@@ -16,7 +24,12 @@
     <% if event.locations.any? %>
       <div class="flex wrap gap-small">
         <% event.locations.each do |location| %>
-          <%= button_tag "L:#{location}", type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } %>
+          <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %>
+            <div class="flex gap-small">
+              <span class="<%= tag_icon_class(context: 'locations') %>"></span>
+              <span><%= location %></span>
+            </div>
+          <% end %>
         <% end %>
       </div>
     <% end %>
@@ -24,7 +37,12 @@
     <% if event.genres.any? %>
       <div class="flex wrap gap-small">
         <% event.genres.each do |genre| %>
-          <%= button_tag "G:#{genre}", type: :button, class: class_names(:tag, active: @genres.include?(genre.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } %>
+          <%= button_tag type: :button, class: class_names(:tag, active: @genres.include?(genre.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } do %>
+            <div class="flex gap-small">
+              <span class="<%= tag_icon_class(context: 'genres') %>"></span>
+              <span><%= genre %></span>
+            </div>
+          <% end %>
         <% end %>
       </div>
     <% end %>

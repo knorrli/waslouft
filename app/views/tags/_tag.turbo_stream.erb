@@ -1,1 +1,1 @@
-<span data-combobox-filter-tag-param="<%= tag.name %>" data-combobox-filter-context-param="<%= tag.context %>"><%= "#{tag.context.first.upcase}:#{tag.name}" %></span>
+<span class="flex gap-small <%= tag_icon_class(context: tag.context) %>" data-combobox-filter-tag-param="<%= tag.name %>" data-combobox-filter-context-param="<%= tag.context %>"><%= "#{tag.name}" %></span>

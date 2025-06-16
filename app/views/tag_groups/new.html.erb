@@ -1,0 +1,11 @@
+<% content_for :title, "New tag group" %>
+
+<h1>New tag group</h1>
+
+<%= render "form", tag_group: @tag_group %>
+
+<br>
+
+<div>
+  <%= link_to "Back to tag groups", tag_groups_path %>
+</div>

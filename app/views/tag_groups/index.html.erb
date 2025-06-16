@@ -1,0 +1,14 @@
+<% content_for :title, "Tag groups" %>
+
+<h1>Tag groups</h1>
+
+<div id="tag_groups">
+  <% @tag_groups.each do |tag_group| %>
+    <%= render tag_group %>
+    <p>
+      <%= link_to "Show this tag group", tag_group %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New tag group", new_tag_group_path %>

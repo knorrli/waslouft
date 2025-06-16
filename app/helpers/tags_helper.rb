@@ -1,7 +1,7 @@
 module TagsHelper
   def tag_icon_class(context:)
-    case context
-    when 'tags'
+    case context.to_s
+    when 'groups'
       'ti-music-alt'
     when 'genres'
       'ti-music'

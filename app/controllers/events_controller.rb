@@ -5,11 +5,13 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
+    @tag_groups = params[:tg]&.first&.split(',').map { |name| TagGroup.find_by(name: name) }.compact || []
     @genres = params[:g]&.first&.split(',') || []
     @locations = params[:l]&.first&.split(',') || []
 
+    ransack_query = {}
     ransack_query = { m: :or }
-    ransack_query[:genres_name_in] = @genres if @genres.present?
+    ransack_query[:genres_name_in] = @genres | ActsAsTaggableOn::Tagging.includes(:tag).where(taggable: @tag_groups).pluck(:name) if @genres.present? || @tag_groups.present?
     ransack_query[:locations_name_in] = @locations if @locations.present?
     ransack_query[:start_date_between] = params[:d].presence if /\d{4}-\d{2}-\d{2}\s-\s\d{4}-\d{2}-\d{2}/.match?(params[:d].presence)
 

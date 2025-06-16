@@ -4,11 +4,12 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
 
   static values = {
-    genres: { type: Array, default: [] },
+    groups: { type: Array, default: [] },
     locations: { type: Array, default: [] },
+    genres: { type: Array, default: [] },
   }
 
-  static targets = ['combobox', 'genres', 'locations'];
+  static targets = ['combobox', 'groups', 'genres', 'locations'];
 
   connect() {
   }
@@ -40,6 +41,7 @@ export default class extends Controller {
   }
 
   #addTag(context, tag) {
+    debugger;
     const target = this[`${context}Target`];
     if (!target) {
       console.error("NO INPUT");
@@ -55,5 +57,4 @@ export default class extends Controller {
     target.value = [...existingTags, tag];
     target.dispatchEvent(new Event('change', { bubbles: true }));
   }
-
 }

@@ -1,5 +1,15 @@
-<div class="content flex justify-end gap-medium">
-  <%= button_to 'clear', clear_events_path %>
-  <%= button_to 'scrape', scrape_events_path %>
-</div>
+<div class="flex flex-col gap-small">
 
+  <div class="article flex flex-col gap-medium admin-box">
+    <h2><%= "Events: #{Event.count}" %></h2>
+    <div class="actions flex gap-medium">
+      <%= button_to 'clear', clear_events_path %>
+      <%= button_to 'scrape', scrape_events_path %>
+    </div>
+  </div>
+
+  <div class="article flex flex-col gap-medium admin-box">
+    <h2><%= "Tags: #{ActsAsTaggableOn::Tag.count}" %></h2>
+    <h3><%= "Assigned: #{}" %></h3>
+  </div>
+</div>

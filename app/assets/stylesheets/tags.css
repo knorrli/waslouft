@@ -1,6 +1,7 @@
 .tag {
   border: none;
   padding: 5px;
+  cursor: pointer;
 
   &.active {
     background-color: var(--color-bg-black);

@@ -1,9 +1,23 @@
 <article id="<%= dom_id event %>" class="event flex flex-col gap-medium">
   <div class="flex justify-between">
     <h4 class="event-date-and-location">
+      <%# <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %1> %>
+      <%#   <div class="flex gap-small"> %>
+      <%#     <span class="<%= tag_icon_class(context: 'locations') %1>"></span> %>
+      <%#     <span><%= location %1></span> %>
+      <%#   </div> %>
+      <%# <% end %1> %>
+
       <%= l event.start_date, format: :default %>
       –
-      <%= link_to event.location, event.location.url %>
+      <% event.locations.each do |location| %>
+        <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %>
+          <div class="flex gap-small">
+            <span class="<%= tag_icon_class(context: 'locations') %>"></span>
+            <span><%= location %></span>
+          </div>
+        <% end %>
+      <% end %>
     </h4>
 
     <% if authenticated? %>
@@ -21,19 +35,6 @@
   </div>
 
   <div class="flex flex-col gap-small">
-    <% if event.locations.any? %>
-      <div class="flex wrap gap-small">
-        <% event.locations.each do |location| %>
-          <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %>
-            <div class="flex gap-small">
-              <span class="<%= tag_icon_class(context: 'locations') %>"></span>
-              <span><%= location %></span>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
-
     <% if event.genres.any? %>
       <div class="flex wrap gap-small">
         <% event.genres.each do |genre| %>

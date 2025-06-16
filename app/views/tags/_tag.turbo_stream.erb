@@ -1,1 +1,4 @@
-<span class="flex gap-small <%= tag_icon_class(context: tag.context) %>" data-combobox-filter-tag-param="<%= tag.name %>" data-combobox-filter-context-param="<%= tag.context %>"><%= "#{tag.name}" %></span>
+<div class="flex gap-small align-baseline" data-combobox-filter-tag-param="<%= tag.name %>" data-combobox-filter-context-param="<%= tag.context %>">
+  <span class="<%= tag_icon_class(context: tag.context) %>"></span>
+  <span><%= tag.name %></span>
+</div>

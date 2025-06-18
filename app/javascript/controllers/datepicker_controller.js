@@ -11,7 +11,7 @@ export default class extends Controller {
   static values = {
     firstDay: { type: Number, default: 1 },
     lang: { type: String, default: "en-US" },
-    dateRange: { type: String },
+    dateRanges: { type: Array, default: [] },
     format: { type: String, default: "YYYY-MM-DD" },
     grid: { type: Number, default: 1 },
     calendars: { type: Number, default: 1 },
@@ -33,6 +33,7 @@ export default class extends Controller {
     const element = this.hasInputTarget ? this.decoyTarget : this.element;
     const inputTarget = this.inputTarget;
     const presetValue = this.presetValue;
+    const activeDateRanges = this.dateRangesValue;
 
     this.datepicker = new easepick.create({
       element: element,
@@ -51,13 +52,13 @@ export default class extends Controller {
         picker.on('select', (e) => {
           const selectedPreset = Object.keys(presetValue).find((key) => {
             const { label, values: [start, end] } = presetValue[key];
-            debugger
             const startMatch = picker.getStartDate().format(picker.options.format) === start
             const endMatch = picker.getEndDate().format(picker.options.format) == end;
             return startMatch && endMatch;
           });
-          inputTarget.value = selectedPreset || this.element.value;
+          inputTarget.value = [...activeDateRanges, (selectedPreset || this.element.value)];
           this.element.value = '';
+          debugger;
           inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
         });
         picker.on('clear', (e) => {
@@ -79,10 +80,10 @@ export default class extends Controller {
 
     this.#setupPlugins();
 
-    if (this.dateRangeValue) {
-      const [ startDate, endDate ] = this.dateRangeValue.split(this.rangeDelimiterValue);
-      this.datepicker.setDateRange(startDate, endDate);
-    }
+    // if (this.dateRangeValue) {
+    //   const [ startDate, endDate ] = this.dateRangeValue.split(this.rangeDelimiterValue);
+    //   this.datepicker.setDateRange(startDate, endDate);
+    // }
 
     this.datepicker.renderAll();
     this.decoyTarget.value = '';
@@ -95,13 +96,20 @@ export default class extends Controller {
 
   toggle() {
     if (this.dateRangeValue) {
-      this.clear();
+      this.#clear();
     } else {
       this.datepicker.show();
     }
   }
 
-  clear() {
+  removeRange(event) {
+    const rangeString = event.params.range;
+    const newRanges = this.dateRangesValue.filter((range) => range !== event.params.range);
+    this.inputTarget.value = newRanges;
+    this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  #clear() {
     this.dateRangeValue = "";
     this.datepicker.clear();
   }

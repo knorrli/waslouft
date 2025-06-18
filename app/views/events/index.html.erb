@@ -2,7 +2,7 @@
 
 <div class="flex flex-col gap-large align-stretch" data-controller='combobox-filter' data-action='hw-combobox:selection->combobox-filter#addTagFromCombobox' data-combobox-filter-tag-groups-value="<%= @tag_groups.pluck(:name) %>" data-combobox-filter-locations-value="<%= @locations %>" data-combobox-filter-genres-value="<%= @genres %>">
 
-  <section class="filter flex flex-col gap-large" data-controller="datepicker" data-datepicker-date-range-value="<%= @date_range %>" data-datepicker-grid-value="1" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= datepicker_preset.to_json %>" data-datepicker-preset-position-value="left">
+  <section class="filter flex flex-col gap-large" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @date_ranges.to_json %>" data-datepicker-grid-value="1" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= datepicker_preset.to_json %>" data-datepicker-preset-position-value="left">
       <div class="searchbar flex justify-between">
         <%= combobox_tag "tags", tags_path(applied: (@tag_groups.pluck(:name) | @genres | @locations)), placeholder: 'Was?', data: { combobox_filter_target: 'combobox' } do |combobox| %>
           <% combobox.customize_fieldset class: 'flex-grow' %>
@@ -15,7 +15,7 @@
 
           <div>
             <div class="datepicker">
-              <%= f.hidden_field 'd', value: params[:d], onchange: 'this.form.requestSubmit()', data: { datepicker_target: 'input' } %>
+              <%= f.hidden_field 'd[]', value: params[:d], onchange: 'this.form.requestSubmit()', data: { datepicker_target: 'input' } %>
               <%= f.text_field '', placeholder: 'Wann?', data: { datepicker_target: 'decoy' } %>
               <span class="datepicker-handle" data-action="click->datepicker#toggle"></span>
             </div>
@@ -51,7 +51,9 @@
           <% end %>
         <% end %>
 
-        <%= datepicker_tag(@date_range) if @date_range.present? %>
+        <% @date_ranges.each do |date_range| %>
+          <%= datepicker_tag(date_range) %>
+        <% end %>
 
       </div>
   </section>

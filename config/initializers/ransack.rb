@@ -1,7 +1,6 @@
 module Arel
   module Predications
     def between_any(other)
-      debugger
       grouping_any :between, other
     end
   end

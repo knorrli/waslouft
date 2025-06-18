@@ -2,10 +2,12 @@ import * as easepick from "@easepick/bundle";
 import { Controller } from "@hotwired/stimulus"
 
 window.easepick = easepick;
+window.DateTime = easepick.DateTime;
 
 // Connects to data-controller="datepicker"
 export default class extends Controller {
-  static targets = ["wrapper", "input"];
+
+  static targets = ["input", "decoy"];
   static values = {
     firstDay: { type: Number, default: 1 },
     lang: { type: String, default: "en-US" },
@@ -21,13 +23,16 @@ export default class extends Controller {
     rangeDelimiter: { type: String, default: " - " },
     rangeTooltip: { type: Boolean, default: false },
     enablePreset: { type: Boolean, default: true },
+    preset: { type: Object },
     presetPosition: { type: String, default: "left" },
   };
 
   #presetPositions = ["top", "left", "right", "bottom"];
-
+  #preset = this.#buildPreset();
   connect() {
-    const element = this.hasInputTarget ? this.inputTarget : this.element;
+    const element = this.hasInputTarget ? this.decoyTarget : this.element;
+    const inputTarget = this.inputTarget;
+    const presetValue = this.presetValue;
 
     this.datepicker = new easepick.create({
       element: element,
@@ -44,22 +49,32 @@ export default class extends Controller {
       ],
       setup(picker) {
         picker.on('select', (e) => {
-          this.element.dispatchEvent(new Event('change', { bubbles: true }));
+          const selectedPreset = Object.keys(presetValue).find((key) => {
+            const { label, values: [start, end] } = presetValue[key];
+            const startMatch = picker.getStartDate()?.getTime() === start
+            const endMatch = picker.getEndDate()?.getTime() == end;
+            return startMatch && endMatch;
+          });
+          inputTarget.value = selectedPreset || this.element.value;
+          this.element.value = '';
+          inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
         });
         picker.on('clear', (e) => {
-          this.element.dispatchEvent(new Event('change', { bubbles: true }));
+          inputTarget.value = '';
+          inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
         });
         picker.on('view', (e) => {
           if (e.detail.view == 'PresetPluginButton') {
-            const startDate = picker.getStartDate();
-            const endDate = picker.getEndDate();
-            if (startDate?.getTime()?.toString() === e.detail.target.dataset.start && endDate?.getTime()?.toString() === e.detail.target.dataset.end) {
+            const selectedStartDate = picker.getStartDate();
+            const selectedEndDate = picker.getEndDate();
+            if (selectedStartDate?.getTime()?.toString() === e.detail.target.dataset.start && selectedEndDate?.getTime()?.toString() === e.detail.target.dataset.end) {
               e.detail.target.classList.add('active');
             }
           }
         });
-      }
+      },
     });
+
 
     this.#setupPlugins();
 
@@ -69,6 +84,7 @@ export default class extends Controller {
     }
 
     this.datepicker.renderAll();
+    this.decoyTarget.value = '';
   }
 
   disconnect() {
@@ -78,14 +94,13 @@ export default class extends Controller {
 
   toggle() {
     if (this.dateRangeValue) {
-      this.#clear();
+      this.clear();
     } else {
       this.datepicker.show();
     }
   }
 
-  #clear() {
-    this.wrapperTarget.classList.remove('active');
+  clear() {
     this.dateRangeValue = "";
     this.datepicker.clear();
   }
@@ -137,35 +152,8 @@ export default class extends Controller {
 
     const presetPlugin = this.datepicker.PluginManager.addInstance("PresetPlugin");
 
-    const now = new Date();
-    let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    let tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate()); tomorrow.setDate(now.getDate() + 1);
-
-    let startOfCurrentWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate()); startOfCurrentWeek.setDate(this.#getWeekday(now, 0, 0));
-    let startOfCurrentWeekend = new Date(now.getFullYear(), now.getMonth(), now.getDate()); startOfCurrentWeekend.setDate(this.#getWeekday(now, 5, 0));
-    let endOfCurrentWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate()); endOfCurrentWeek.setDate(this.#getWeekday(now, 6, 0))
-
-    let startOfNextWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate()); startOfNextWeek.setDate(this.#getWeekday(now, 0, 1))
-    let startOfNextWeekend = new Date(now.getFullYear(), now.getMonth(), now.getDate()); startOfNextWeekend.setDate(this.#getWeekday(now, 5, 1));
-    let endOfNextWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate()); endOfNextWeek.setDate(this.#getWeekday(now, 6, 1));
-
-    let firstDayOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    let lastDayOfCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-
-    let firstDayOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-    let lastDayOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 2, 0);
-
     presetPlugin.options = {
-      customPreset: {
-        'Heute': [today, today],
-        'Morgen': [tomorrow, tomorrow],
-        'diese Woche': [startOfCurrentWeek, endOfCurrentWeek],
-        'dieses Wochenende': [startOfCurrentWeekend, endOfCurrentWeek],
-        'nächste Woche': [startOfNextWeek, endOfNextWeek],
-        'nächstes Wochenende': [startOfNextWeekend, endOfNextWeek],
-        'aktueller Monat': [firstDayOfCurrentMonth, lastDayOfCurrentMonth],
-        'nächster Monat': [firstDayOfNextMonth, lastDayOfNextMonth]
-      },
+      customPreset: this.#preset,
       position: this.presetPositionValue,
     };
 
@@ -180,36 +168,15 @@ export default class extends Controller {
     return this.enablePresetValue;
   }
 
-  #getNextDay(dayName) {
-
-    // The current day
-    var date = new Date();
-    var now = date.getDay();
-
-    // Days of the week
-    var days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-
-    // The index for the day you want
-    var day = days.indexOf(dayName.toLowerCase());
-
-    // Find the difference between the current day and the one you want
-    // If it's the same day as today (or a negative number), jump to the next week
-    var diff = day - now;
-    diff = diff < 1 ? 7 + diff : diff;
-
-    // Get the timestamp for the desired day
-    var nextDayTimestamp = date.getTime() + (1000 * 60 * 60 * 24 * diff);
-
-    // Get the next day
-    return new Date(nextDayTimestamp);
-
-  };
+  #buildPreset() {
+    return Object.keys(this.presetValue).reduce((customPreset, key) => {
+      const { label, values: [startDate, endDate] } = this.presetValue[key];
+      customPreset[label] = [new DateTime(startDate), new DateTime(endDate)];
+      return customPreset;
+    }, {});
+  }
 
   #getWeekday(date, weekDay, weekInFuture) {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + ((date.getDay() == 0 ? -6 : 1) + (weekInFuture * 7)) + weekDay).getDate();
   }
-
-  // function getWeekday(date, weekDay, weekInFuture) {
-  //   return new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + ((date.getDay() == 0 ? -6 : 1) + (weekInFuture * 7)) + weekDay).getDate();
-  // }
 }

@@ -41,7 +41,6 @@ export default class extends Controller {
   }
 
   #addTag(context, tag) {
-    debugger;
     const target = this[`${context}Target`];
     if (!target) {
       console.error("NO INPUT");

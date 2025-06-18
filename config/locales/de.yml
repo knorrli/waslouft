@@ -2,6 +2,15 @@ de:
   date:
     formats:
       default: "%d.%m.%Y"
+  datepicker:
+    today: Heute
+    tomorrow: Morgen
+    this_week: Diese Woche
+    this_weekend: Dieses Wochenende
+    next_week: Nächste Woche
+    next_weekend: Nächstes Wochenende
+    this_month: Diesen Monat
+    next_month: Nächsten Monat
   time:
     formats:
       default: "%d.%m.%Y, %H:%M"

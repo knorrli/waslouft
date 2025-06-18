@@ -51,8 +51,9 @@ export default class extends Controller {
         picker.on('select', (e) => {
           const selectedPreset = Object.keys(presetValue).find((key) => {
             const { label, values: [start, end] } = presetValue[key];
-            const startMatch = picker.getStartDate()?.getTime() === start
-            const endMatch = picker.getEndDate()?.getTime() == end;
+            debugger
+            const startMatch = picker.getStartDate().format(picker.options.format) === start
+            const endMatch = picker.getEndDate().format(picker.options.format) == end;
             return startMatch && endMatch;
           });
           inputTarget.value = selectedPreset || this.element.value;
@@ -171,7 +172,7 @@ export default class extends Controller {
   #buildPreset() {
     return Object.keys(this.presetValue).reduce((customPreset, key) => {
       const { label, values: [startDate, endDate] } = this.presetValue[key];
-      customPreset[label] = [new DateTime(startDate), new DateTime(endDate)];
+      customPreset[label] = [new DateTime(startDate, this.formatValue), new DateTime(endDate, this.formatValue)];
       return customPreset;
     }, {});
   }

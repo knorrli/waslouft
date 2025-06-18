@@ -35,7 +35,7 @@ class EventsController < ApplicationController
 
   def extract_date_range(date_query)
     if preset = helpers.datepicker_preset[date_query]
-      start_date, end_date = preset[:values].map { |millis| Time.at(millis/1000) }
+      start_date, end_date = preset[:values]
       "#{start_date.to_date.iso8601} - #{end_date.to_date.iso8601}"
     else
       /\d{4}-\d{2}-\d{2}\s-\s\d{4}-\d{2}-\d{2}/.match?(date_query) ? date_query : nil

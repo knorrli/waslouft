@@ -1,8 +1,8 @@
 .container {
-  --color-bg-inrange: var(--color-gray);
-  --color-bg-secondary: #f9f9f9;
-  --color-fg-default: var(--color-primary);
-  --color-fg-primary: var(--color-primary);
+  --color-bg-inrange: var(--theme-bg-faded);
+  --color-bg-secondary: var(--theme-bg-faded);
+  --color-fg-default: var(--theme-fg-color);
+  --color-fg-primary: var(--theme-fg-color);
   --color-fg-secondary: #748194;
   --color-fg-selected: #fff;
   --color-fg-muted: #9e9e9e;

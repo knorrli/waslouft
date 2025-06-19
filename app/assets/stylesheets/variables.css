@@ -4,16 +4,9 @@
   --color-gray: #444444;
   --color-light-gray: #b9b9b9;
   --color-red: red;
+  --color-blue: blue;
   --color-black: black;
-  /* --color-accent: #e63757; */
-  --color-accent: yellow;
-  --color-primary: var(--color-black);
-  --color-danger: var(--color-red);
-  --color-bg-black: var(--color-black);
   /* app styles */
-  --border-width: 1px;
-  --border-color: var(--color-black);
-  --color-past: var(--color-light-gray);
   --border-radius: none;
   --gap-small: 5px;
   --gap-medium: 10px;

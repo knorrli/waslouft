@@ -3,9 +3,11 @@
   padding: 5px;
   cursor: pointer;
   font-size: 80%;
+  background-color: var(--theme-bg-faded);
+  color: var(--theme-fg-color);
 
   &.active {
-    background-color: var(--color-bg-black);
-    color: var(--color-white);
+    background-color: var(--theme-fg-color);
+    color: var(--theme-bg-color);
   }
 }

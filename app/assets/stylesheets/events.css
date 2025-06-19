@@ -18,6 +18,7 @@
 }
 
 .date {
+  color: var(--color-accent);
   border-bottom: 5px solid var(--border-color);
   border-bottom-style: double;
 }

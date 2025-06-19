@@ -58,7 +58,6 @@ export default class extends Controller {
           });
           inputTarget.value = [...activeDateRanges, (selectedPreset || this.element.value)];
           this.element.value = '';
-          debugger;
           inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
         });
         picker.on('clear', (e) => {

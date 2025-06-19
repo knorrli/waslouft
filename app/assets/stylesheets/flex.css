@@ -35,3 +35,4 @@
 .gap-small { gap: var(--gap-small); }
 .gap-medium { gap: var(--gap-medium); }
 .gap-large { gap: var(--gap-large); }
+.gap-xlarge { gap: var(--gap-xlarge); }

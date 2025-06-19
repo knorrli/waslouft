@@ -2,6 +2,7 @@
   border: none;
   padding: 5px;
   cursor: pointer;
+  font-size: 80%;
 
   &.active {
     background-color: var(--color-bg-black);

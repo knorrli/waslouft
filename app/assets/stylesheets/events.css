@@ -6,13 +6,25 @@
   gap: 10vw;
 }
 
-.event {
-  border: var(--border-width) solid var(--border-color);
-  padding: var(--gap-medium);
-
+.date-events {
   &.past {
-    border-style: dashed;
+    color: var(--color-past);
+
+    .date {
+      color: var(--color-past);
+      border-color: var(--color-past);
+    }
   }
+}
+
+.date {
+  border-bottom: 5px solid var(--border-color);
+  border-bottom-style: double;
+}
+
+.event {
+  border-bottom: var(--border-width) solid var(--border-color);
+  padding-bottom: var(--gap-medium);
 
   .event-title {
     margin-bottom: var(--gap-large);

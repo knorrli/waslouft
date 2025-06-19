@@ -2,6 +2,7 @@
   /* colors */
   --color-white: white;
   --color-gray: #444;
+  --color-light-gray: #111;
   --color-red: red;
   --color-black: black;
   /* --color-accent: #e63757; */
@@ -11,7 +12,8 @@
   --color-bg-black: var(--color-black);
   /* app styles */
   --border-width: 1px;
-  --border-color: black;
+  --border-color: var(--color-black);
+  --border-color-past: var(--color-light-gray);
   --border-radius: none;
   --gap-small: 5px;
   --gap-medium: 10px;

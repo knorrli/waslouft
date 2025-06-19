@@ -10,7 +10,7 @@
  */
 
 .content {
-  margin: var(--gap-large) calc(30vw - 120px);
+  margin: var(--gap-large) calc(30vw - 100px);
 }
 
 .footer {

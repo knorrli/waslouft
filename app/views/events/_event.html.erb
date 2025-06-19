@@ -1,4 +1,4 @@
-<article id="<%= dom_id event %>" class="event flex flex-col gap-medium">
+<article id="<%= dom_id event %>" class="flex flex-col gap-medium <%= class_names(:event, past: event.start_date < Date.current.beginning_of_day) %>">
   <div class="flex justify-between">
     <h4 class="event-date-and-location">
       <%= l event.start_date, format: :default %>

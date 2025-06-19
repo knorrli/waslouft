@@ -14,7 +14,11 @@ class EventsController < ApplicationController
     ransack_query = { m: :or }
     ransack_query[:genres_name_in] = @genres | ActsAsTaggableOn::Tagging.includes(:tag).where(taggable: @tag_groups).pluck(:name) if @genres.present? || @tag_groups.present?
     ransack_query[:locations_name_in] = @locations if @locations.present?
-    ransack_query[:start_date_between_any] = extract_date_ranges(@date_ranges)
+    if date_ranges = extract_date_ranges(@date_ranges).presence
+      ransack_query[:start_date_between_any] = date_ranges
+    else
+      ransack_query[:start_date_gteq] = Date.today.beginning_of_day
+    end
 
     @q = Event.ransack(ransack_query)
     @events = @q.result(distinct: true).order(start_date: :asc).page(params[:page])

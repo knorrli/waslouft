@@ -7,8 +7,12 @@
 }
 
 .event {
-  border: 1px solid var(--border-color);
+  border: var(--border-width) solid var(--border-color);
   padding: var(--gap-medium);
+
+  &.past {
+    border-style: dashed;
+  }
 
   .event-title {
     margin-bottom: var(--gap-large);

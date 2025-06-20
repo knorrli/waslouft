@@ -7,7 +7,7 @@
   color: var(--theme-fg-color);
 
   &.active {
-    background-color: var(--theme-fg-color);
+    background-color: var(--color-accent);
     color: var(--theme-bg-color);
   }
 }

@@ -1,55 +1,67 @@
-<article id="<%= dom_id event %>" class="flex flex-col gap-medium <%= class_names(:event, past: event.start_date < Date.current.beginning_of_day) %>">
-  <div class="flex justify-between">
-    <%# <h4 class="event-date-and-location"> %>
-    <%#   <%= l event.start_date, format: :default %1> %>
-    <%#   – %>
-    <%#   <% event.locations.each do |location| %1> %>
-    <%#     <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %1> %>
-    <%#       <div class="flex gap-small"> %>
-    <%#         <span class="<%= tag_icon_class(context: 'locations') %1>"></span> %>
-    <%#         <span><%= location %1></span> %>
-    <%#       </div> %>
-    <%#     <% end %1> %>
-    <%#   <% end %1> %>
-    <%# </h4> %>
+<article id="<%= dom_id event %>" class="flex justify-between gap-small <%= class_names(:event, past: event.start_date < Date.current.beginning_of_day) %>">
+  <div class="flex event-info flex-col gap-medium">
 
-    <% if authenticated? %>
-      <%= link_to event, class: 'danger', data: { turbo_method: :delete } do %>
-        <span class="ti-trash"></span>
-      <% end %>
-    <% end %>
-  </div>
-
-  <div class="event-title">
-    <h3><%= link_to event.title, event.url, target: :blank %></h3>
-    <% if event.subtitle.present? %>
-      <h4><%= event.subtitle %></h4>
-    <% end %>
-  </div>
-
-  <div class="flex flex-col gap-small">
-    <div class="flex wrap gap-small">
-      <% event.locations.each do |location| %>
-        <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %>
-          <div class="flex gap-small">
-            <span class="<%= tag_icon_class(context: 'locations') %>"></span>
-            <span><%= location %></span>
-          </div>
-        <% end %>
+    <div class="event-title">
+      <h3><%= link_to event.title, event.url, target: :blank %></h3>
+      <% if event.subtitle.present? %>
+        <h4><%= event.subtitle %></h4>
       <% end %>
     </div>
 
-    <% if event.genres.any? %>
+    <div class="flex flex-col gap-small">
       <div class="flex wrap gap-small">
-        <% event.genres.each do |genre| %>
-          <%= button_tag type: :button, class: class_names(:tag, active: @genres.include?(genre.name) || @tag_groups.any? { |group| group.genres.exists?(name: genre.name) }), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } do %>
+        <% event.locations.each do |location| %>
+          <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %>
             <div class="flex gap-small">
-              <span class="<%= tag_icon_class(context: 'genres') %>"></span>
-              <span><%= genre %></span>
+              <span class="<%= tag_icon_class(context: 'locations') %>"></span>
+              <span><%= location %></span>
             </div>
           <% end %>
         <% end %>
       </div>
-    <% end %>
+
+      <% if event.genres.any? %>
+        <div class="flex wrap gap-small">
+          <% event.genres.each do |genre| %>
+            <%= button_tag type: :button, class: class_names(:tag, active: @genres.include?(genre.name) || @tag_groups.any? { |group| group.genres.exists?(name: genre.name) }), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } do %>
+              <div class="flex gap-small">
+                <span class="<%= tag_icon_class(context: 'genres') %>"></span>
+                <span><%= genre %></span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
   </div>
+
+  <% if authenticated? %>
+    <div class="event-actions">
+      <%= button_to event, class: 'button', data: { turbo_method: :delete } do %>
+        <span class="ti-trash"></span>
+      <% end %>
+
+      <%# <div class="flex justify-end"> %>
+        <%#   <%1# <h4 class="event-date-and-location"> %1> %>
+          <%#   <%1#   <%= l event.start_date, format: :default %2> %1> %>
+          <%#   <%1#   – %1> %>
+          <%#   <%1#   <% event.locations.each do |location| %2> %1> %>
+          <%#   <%1#     <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %2> %1> %>
+          <%#   <%1#       <div class="flex gap-small"> %1> %>
+            <%#   <%1#         <span class="<%= tag_icon_class(context: 'locations') %2>"></span> %1> %>
+            <%#   <%1#         <span><%= location %2></span> %1> %>
+            <%#   <%1#       </div> %1> %>
+          <%#   <%1#     <% end %2> %1> %>
+        <%#   <%1#   <% end %2> %1> %>
+      <%#   <%1# </h4> %1> %>
+
+    <%#   <% if authenticated? %1> %>
+      <%#     <%= link_to event, class: 'danger', data: { turbo_method: :delete } do %1> %>
+      <%#       <span class="ti-trash"></span> %>
+      <%#     <% end %1> %>
+    <%#   <% end %1> %>
+  <%# </div> %>
+
+    </div>
+  <% end %>
 </article>

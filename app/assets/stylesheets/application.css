@@ -13,6 +13,12 @@
   margin: var(--gap-large) calc(30vw - 100px);
 }
 
+.button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
 .footer {
   height: var(--gap-large);
 }

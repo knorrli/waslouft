@@ -1,12 +1,12 @@
 body {
-  --color-accent: var(--color-black);
+  --color-accent: var(--color-green);
   --color-primary: var(--color-black);
   --color-danger: var(--color-red);
   --color-bg-black: var(--color-black);
   --border-width: 2px;
   --border-color: var(--color-accent);
   --color-past: var(--color-light-gray);
-  --theme-bg-color: var(--color-white);
+  --theme-bg-color: var(--color-pink);
   --theme-fg-color: var(--color-black);
   --theme-bg-faded: hsl(from var(--theme-bg-color) h s calc(l - 10));
 

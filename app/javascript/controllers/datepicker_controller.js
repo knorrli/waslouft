@@ -7,7 +7,7 @@ window.DateTime = easepick.DateTime;
 // Connects to data-controller="datepicker"
 export default class extends Controller {
 
-  static targets = ["input", "decoy"];
+  static targets = ["wrapper", "input", "decoy"];
   static values = {
     firstDay: { type: Number, default: 1 },
     lang: { type: String, default: "en-US" },
@@ -31,6 +31,7 @@ export default class extends Controller {
   #preset = this.#buildPreset();
   connect() {
     const element = this.hasInputTarget ? this.decoyTarget : this.element;
+    const wrapperTarget = this.wrapperTarget;
     const inputTarget = this.inputTarget;
     const presetValue = this.presetValue;
     const activeDateRanges = this.dateRangesValue;
@@ -56,7 +57,13 @@ export default class extends Controller {
             const endMatch = picker.getEndDate().format(picker.options.format) == end;
             return startMatch && endMatch;
           });
-          inputTarget.value = [...activeDateRanges, (selectedPreset || this.element.value)];
+          const selectedRange = (selectedPreset || this.element.value);
+
+          if (inputTarget.value.includes(selectedRange)) {
+            inputTarget.value = activeDateRanges.filter((range) => range !== selectedRange);
+          } else {
+            inputTarget.value = [...activeDateRanges, selectedRange];
+          }
           this.element.value = '';
           inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
         });
@@ -64,11 +71,24 @@ export default class extends Controller {
           inputTarget.value = '';
           inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
         });
+        picker.on('show', () => {
+          picker.ui.container.style.left = 'unset'
+          picker.ui.container.style.top = '32px';
+          picker.ui.container.style.right = '-29px';
+        });
         picker.on('view', (e) => {
           if (e.detail.view == 'PresetPluginButton') {
-            const selectedStartDate = picker.getStartDate();
-            const selectedEndDate = picker.getEndDate();
-            if (selectedStartDate?.getTime()?.toString() === e.detail.target.dataset.start && selectedEndDate?.getTime()?.toString() === e.detail.target.dataset.end) {
+            const activeLabels = Object.keys(presetValue).reduce((activeLabels, key) => {
+              console.log(activeDateRanges);
+              console.log(key);
+              if (activeDateRanges.includes(key)) {
+                return [...activeLabels, presetValue[key].label];
+              } else {
+                return activeLabels;
+              };
+            }, []);
+
+            if (activeLabels.includes(e.detail.target.textContent)) {
               e.detail.target.classList.add('active');
             }
           }
@@ -78,11 +98,6 @@ export default class extends Controller {
 
 
     this.#setupPlugins();
-
-    // if (this.dateRangeValue) {
-    //   const [ startDate, endDate ] = this.dateRangeValue.split(this.rangeDelimiterValue);
-    //   this.datepicker.setDateRange(startDate, endDate);
-    // }
 
     this.datepicker.renderAll();
     this.decoyTarget.value = '';

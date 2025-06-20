@@ -14,7 +14,7 @@
         <%= f.hidden_field 'g[]', value: params[:g], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'genres' } %>
 
         <div>
-          <div class="datepicker">
+          <div class="datepicker" data-datepicker-target="wrapper">
             <%= f.hidden_field 'd[]', value: params[:d], onchange: 'this.form.requestSubmit()', data: { datepicker_target: 'input' } %>
             <%= f.text_field '', placeholder: 'Wann?', data: { datepicker_target: 'decoy' } %>
             <span class="datepicker-handle" data-action="click->datepicker#toggle"></span>

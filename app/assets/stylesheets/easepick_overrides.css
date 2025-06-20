@@ -1,12 +1,13 @@
 .container {
-  --color-bg-inrange: var(--theme-bg-faded);
-  --color-bg-secondary: var(--theme-bg-faded);
+  --color-bg-inrange: var(--theme-accent-muted);
+  --color-bg-default: var(--theme-bg-color);
+  --color-bg-secondary: var(--theme-bg-color);
   --color-fg-default: var(--theme-fg-color);
-  --color-fg-primary: var(--theme-fg-color);
+  --color-fg-primary: var(--theme-accent-color);
   --color-fg-secondary: #748194;
-  --color-fg-selected: #fff;
-  --color-fg-muted: #9e9e9e;
-  --color-fg-accent: var(--color-accent);
+  --color-fg-selected: var(--theme-bg-color);
+  --color-fg-muted: var(--theme-fg-muted);
+  --color-fg-accent: var(--theme-accent-color);
   --color-btn-primary-bg: #fff;
   --color-btn-primary-fg: #6b82ff;
   --color-btn-primary-border: #6b82ff;
@@ -17,7 +18,7 @@
   --color-btn-primary-disabled-fg: #fff;
   --color-btn-primary-disabled-border: #a2b0ff;
   --color-btn-secondary-bg: #fff;
-  --color-btn-secondary-fg: #748194;
+  --color-btn-secondary-fg: var(--theme-fg-muted);
   --color-btn-secondary-border: #748194;
   --color-btn-secondary-hover-bg: #748194;
   --color-btn-secondary-hover-fg: #fff;
@@ -30,43 +31,59 @@
 
   --day-width: 42px;
   --day-height: 37px;
-  --border-radius: 0px;
+  --border-radius: var(--border-radius);
 }
 
 .container {
   font-family: inherit;
+  border: var(--border-width) solid var(--border-color);
   border-radius: var(--border-radius);
+  transition: none;
 }
 
 .calendar > .days-grid > .day {
   border-radius: var(--border-radius);
 
+  &:hover {
+    color: var(--theme-accent-color);
+    border: var(--border-width) solid var(--theme-accent-color);
+  }
+
   &.today {
     font-weight: bold;
     color: inherit;
     text-decoration: underline;
-    /* color: var(--color-accent); */
   }
 }
 
 .container.range-plugin {
   .calendar > .days-grid > .day.in-range {
-    color: var(--color-fg-selected);
+    color: var(--theme-bg-color);
   }
 }
+
 
 .preset-plugin-container {
   justify-content: flex-start;
   gap: var(--gap-medium);
 
   button {
+    background-color: var(--theme-bg-muted);
+    border: var(--border-width) solid var(--theme-bg-color);
     border-radius: var(--border-radius);
-  }
 
-  .preset-button {
-    &.active {
-      background-color: var(--color-bg-black);
-      color: var(--color-white);
+    &:hover {
+      border: none;
+      border: var(--border-width) solid var(--theme-bg-color);
+      color: var(--theme-fg-color);
+    }
+
+    &.preset-button {
+      &.active {
+        background-color: var(--theme-accent-color);
+        color: var(--theme-bg-color);
+      }
     }
   }
+
 }

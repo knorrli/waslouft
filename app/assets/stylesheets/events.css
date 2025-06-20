@@ -18,7 +18,7 @@
 }
 
 .date {
-  color: var(--color-accent);
+  color: var(--theme-accent-color);
   border-bottom: 5px solid var(--border-color);
   border-bottom-style: double;
 }

@@ -3,11 +3,11 @@
   padding: 5px;
   cursor: pointer;
   font-size: 80%;
-  background-color: var(--theme-bg-faded);
+  background-color: var(--theme-bg-muted);
   color: var(--theme-fg-color);
 
   &.active {
-    background-color: var(--color-accent);
+    background-color: var(--theme-accent-color);
     color: var(--theme-bg-color);
   }
 }

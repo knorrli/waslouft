@@ -3,6 +3,10 @@ module Scrapers
     include Base
     register_scraper
 
+    def self.active?
+      false
+    end
+
     def self.location
       'Mühle Hunziken'
     end

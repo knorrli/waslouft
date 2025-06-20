@@ -7,7 +7,7 @@ module Scrapers
 
     class_methods do
       def call
-        new.call
+        new.call if active?
       end
 
       def register_scraper
@@ -20,6 +20,10 @@ module Scrapers
 
       def url
         raise 'implement in subclass'
+      end
+
+      def active?
+        true
       end
     end
 

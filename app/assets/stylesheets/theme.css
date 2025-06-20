@@ -1,15 +1,15 @@
 body {
+  --color-text: var(--color-black);
   --color-accent: var(--color-green);
-  --color-primary: var(--color-black);
-  --color-danger: var(--color-red);
-  --color-bg-black: var(--color-black);
-  --border-width: 2px;
-  --border-color: var(--theme-accent-color);
+  --color-background: var(--color-pink);
   --color-past: var(--color-light-gray);
 
+  --border-width: 2px;
+  --border-color: var(--theme-accent-color);
+
+  --theme-bg-color: var(--color-background);
+  --theme-fg-color: var(--color-text);
   --theme-accent-color: var(--color-accent);
-  --theme-bg-color: var(--color-pink);
-  --theme-fg-color: var(--color-black);
   --theme-fg-muted: hsl(from var(--theme-fg-color) h s calc(l + 30));
   --theme-bg-muted: hsl(from var(--theme-bg-color) h s calc(l - 10));
   --theme-accent-muted: hsl(from var(--theme-accent-color) h calc(s - 50) calc(l + 15));

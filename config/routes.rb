@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   scope :admin do
     get '', to: 'admin#index', as: :admin
+    post 'reload_styles', to: 'admin#reload_styles', as: :reload_styles
     post 'scrape_events', to: 'admin#scrape_events', as: :scrape_events
     post 'clear_events', to: 'admin#clear_events', as: :clear_events
   end

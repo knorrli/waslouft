@@ -53,28 +53,6 @@
       <%= button_to event, class: 'button', data: { turbo_method: :delete } do %>
         <span class="ti-trash"></span>
       <% end %>
-
-      <%# <div class="flex justify-end"> %>
-        <%#   <%1# <h4 class="event-date-and-location"> %1> %>
-          <%#   <%1#   <%= l event.start_date, format: :default %2> %1> %>
-          <%#   <%1#   – %1> %>
-          <%#   <%1#   <% event.locations.each do |location| %2> %1> %>
-          <%#   <%1#     <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %2> %1> %>
-          <%#   <%1#       <div class="flex gap-small"> %1> %>
-            <%#   <%1#         <span class="<%= tag_icon_class(context: 'locations') %2>"></span> %1> %>
-            <%#   <%1#         <span><%= location %2></span> %1> %>
-            <%#   <%1#       </div> %1> %>
-          <%#   <%1#     <% end %2> %1> %>
-        <%#   <%1#   <% end %2> %1> %>
-      <%#   <%1# </h4> %1> %>
-
-    <%#   <% if authenticated? %1> %>
-      <%#     <%= link_to event, class: 'danger', data: { turbo_method: :delete } do %1> %>
-      <%#       <span class="ti-trash"></span> %>
-      <%#     <% end %1> %>
-    <%#   <% end %1> %>
-  <%# </div> %>
-
     </div>
   <% end %>
 </article>

@@ -3,15 +3,19 @@
 <div class="flex flex-col gap-large align-stretch" data-controller='combobox-filter' data-action='hw-combobox:selection->combobox-filter#addTagFromCombobox' data-combobox-filter-locations-value="<%= @locations %>" data-combobox-filter-styles-value="<%= @styles %> "data-combobox-filter-genres-value="<%= @genres %>">
 
   <section class="filter flex flex-col gap-large" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @date_ranges.to_json %>" data-datepicker-grid-value="1" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= datepicker_preset.to_json %>" data-datepicker-preset-position-value="left">
-    <div class="searchbar flex justify-between">
-      <%= combobox_tag "tags", tags_path(applied: (@locations | @styles | @genres)), placeholder: 'Was?', data: { combobox_filter_target: 'combobox' } do |combobox| %>
-        <% combobox.customize_fieldset class: 'flex-grow' %>
-      <% end %>
+    <div class="">
 
-      <%= form_with url: events_url, method: :get, class: 'flex-grow' do |f| %>
+      <%= form_with url: events_url, method: :get, class: 'searchbar flex justify-between flex-grow' do |f| %>
+        <%= f.hidden_field 'q', value: params[:search], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'search' } %>
         <%= f.hidden_field 'l[]', value: params[:l], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'locations' } %>
         <%= f.hidden_field 's[]', value: params[:s], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'styles' } %>
         <%= f.hidden_field 'g[]', value: params[:g], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'genres' } %>
+
+        <div>
+          <%= combobox_tag "tags", tags_path(applied: (@locations | @styles | @genres)), name_when_new: 'search', placeholder: 'Was?', data: { combobox_filter_target: 'combobox' } do |combobox| %>
+            <% combobox.customize_fieldset class: 'flex-grow' %>
+          <% end %>
+        </div>
 
         <div>
           <div class="datepicker" data-datepicker-target="wrapper">
@@ -24,6 +28,14 @@
     </div>
 
     <div class="tag-list flex justify-start wrap gap-medium">
+      <% if params[:q].present? %>
+        <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeSearch' } do %>
+          <div class="flex gap-small">
+            <span class="ti-search"></span>
+            <span><%= params[:q] %></span>
+          </div>
+        <% end %>
+      <% end %>
       <% @locations.each do |location| %>
         <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': location, 'combobox-filter-context-param': 'locations' } do %>
           <div class="flex gap-small">

@@ -12,6 +12,7 @@ class EventsController < ApplicationController
 
     ransack_query = {}
     ransack_query = { m: :or }
+    ransack_query[:title_or_subtitle_cont] = params[:q] if params[:q].present?
     ransack_query[:locations_name_in] = @locations if @locations.present?
     ransack_query[:styles_name_in] = @styles if @styles.present?
     ransack_query[:genres_name_in] = @genres if @genres.present?

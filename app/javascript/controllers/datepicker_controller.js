@@ -79,8 +79,6 @@ export default class extends Controller {
         picker.on('view', (e) => {
           if (e.detail.view == 'PresetPluginButton') {
             const activeLabels = Object.keys(presetValue).reduce((activeLabels, key) => {
-              console.log(activeDateRanges);
-              console.log(key);
               if (activeDateRanges.includes(key)) {
                 return [...activeLabels, presetValue[key].label];
               } else {

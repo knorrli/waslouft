@@ -3,10 +3,12 @@ module Scrapers
     include Base
     register_scraper
 
-    attr_reader :year
+    def self.location
+      'Nouveau Monde'
+    end
 
-    def initialize
-      @location = Location.find_or_create_by(name: 'Nouveau Monde', url: 'https://www.nouveaumonde.ch/agenda/')
+    def self.url
+      'https://www.nouveaumonde.ch/agenda/'
     end
 
     def program_entries

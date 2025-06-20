@@ -16,11 +16,4 @@ Ransack.configure do |config|
     validator: proc { |v| v.present? },
     compounds: true,
     type: :string
-
-  config.add_predicate 'for_group',
-    arel_predicate: :in,
-    formatter: proc { |v| TagGroup.find_by(name: v).genres.pluck(:name) },
-    validator: proc { |v| TagGroup.exists?(name: v) && TagGroup.find_by(name: v).genres.any? },
-    compound: true,
-    type: :string
 end

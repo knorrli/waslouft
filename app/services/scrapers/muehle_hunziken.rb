@@ -3,10 +3,17 @@ module Scrapers
     include Base
     register_scraper
 
+    def self.location
+      'Mühle Hunziken'
+    end
+
+    def self.url
+      'https://muehlehunziken.ch/'
+    end
+
     attr_reader :year
 
     def initialize
-      @location = Location.find_or_create_by(name: 'Mühle Hunziken', url: 'https://muehlehunziken.ch/')
       @year = Date.current.year
     end
 
@@ -43,7 +50,7 @@ module Scrapers
       program_entry.css('a.customLink').attr('href').to_s
     end
 
-    def event_tags(program_entry:)
+    def event_genres(program_entry:)
       tags = program_entry.css('div > h2 + div .flag').content.squish
     end
   end

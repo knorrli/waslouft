@@ -5,8 +5,15 @@ module Scrapers
 
     attr_accessor :current_year, :current_month
 
+    def self.location
+      'ISC'
+    end
+
+    def self.url
+      'https://isc-club.ch/'
+    end
+
     def initialize
-      @location = Location.find_or_create_by(name: 'ISC', url: 'https://isc-club.ch/')
       @current_year = Date.current.year
       @current_month = Date.current.month
     end
@@ -43,7 +50,7 @@ module Scrapers
       program_entry.attr('href').to_s
     end
 
-    def event_tags(program_entry:)
+    def event_genres(program_entry:)
       program_entry.css('.event_title_info').content.split(' - ').last.split(',').map(&:squish)
     end
   end

@@ -4,12 +4,12 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
 
   static values = {
-    groups: { type: Array, default: [] },
     locations: { type: Array, default: [] },
+    styles: { type: Array, default: [] },
     genres: { type: Array, default: [] },
   }
 
-  static targets = ['combobox', 'groups', 'genres', 'locations'];
+  static targets = ['combobox', 'locations', 'styles', 'genres'];
 
   connect() {
   }

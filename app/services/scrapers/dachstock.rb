@@ -3,8 +3,12 @@ module Scrapers
     include Base
     register_scraper
 
-    def initialize
-      @location = Location.find_or_create_by(name: 'Dachstock', url: 'https://www.dachstock.ch/events')
+    def self.location
+      'Dachstock'
+    end
+
+    def self.url
+      'https://www.dachstock.ch/events'
     end
 
     def program_entries
@@ -28,7 +32,7 @@ module Scrapers
       "https://www.dachstock.ch#{program_entry.css('.event-teaser-info a.event-teaser-bottom').attr('href').to_s.squish}"
     end
 
-    def event_tags(program_entry:)
+    def event_genres(program_entry:)
       program_entry.css('.event-teaser-info .event-teaser-tags .tag').map { |tag| tag.content.squish }
     end
   end

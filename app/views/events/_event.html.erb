@@ -20,10 +20,23 @@
         <% end %>
       </div>
 
+      <% if event.styles.any? %>
+        <div class="flex wrap gap-small">
+          <% event.styles.each do |style| %>
+            <%= button_tag type: :button, class: class_names(:tag, active: @styles.include?(style.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': style.name, 'combobox-filter-context-param': 'styles' } do %>
+              <div class="flex gap-small">
+                <span class="<%= tag_icon_class(context: 'styles') %>"></span>
+                <span><%= style %></span>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+
       <% if event.genres.any? %>
         <div class="flex wrap gap-small">
           <% event.genres.each do |genre| %>
-            <%= button_tag type: :button, class: class_names(:tag, active: @genres.include?(genre.name) || @tag_groups.any? { |group| group.genres.exists?(name: genre.name) }), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } do %>
+            <%= button_tag type: :button, class: class_names(:tag, active: @genres.include?(genre.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': genre.name, 'combobox-filter-context-param': 'genres' } do %>
               <div class="flex gap-small">
                 <span class="<%= tag_icon_class(context: 'genres') %>"></span>
                 <span><%= genre %></span>

@@ -3,8 +3,12 @@ module Scrapers
     include Base
     register_scraper
 
-    def initialize
-      @location = Location.find_or_create_by(name: 'Rössli', url: 'https://www.souslepont-roessli.ch/')
+    def self.location
+      'Rössli'
+    end
+
+    def self.url
+      'https://www.souslepont-roessli.ch/'
     end
 
     def program_entries
@@ -28,7 +32,7 @@ module Scrapers
       program_entry.css('a').attr('href').to_s
     end
 
-    def event_tags(program_entry:)
+    def event_genres(program_entry:)
       program_entry.css('.event-categories li').map { |category| category.content.squish }
     end
   end

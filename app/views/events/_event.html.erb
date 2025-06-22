@@ -8,7 +8,7 @@
       <% end %>
     </div>
 
-    <div class="flex flex-col gap-small">
+    <div class="flex flex-row gap-small flex-wrap">
       <div class="flex wrap gap-small">
         <% event.locations.each do |location| %>
           <%= button_tag type: :button, class: class_names(:tag, active: @locations.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %>

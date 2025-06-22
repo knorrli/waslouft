@@ -6,17 +6,6 @@
   gap: 10vw;
 }
 
-.date-events {
-  &.past {
-    color: var(--color-past);
-
-    .date {
-      color: var(--color-past);
-      border-color: var(--color-past);
-    }
-  }
-}
-
 .date {
   color: var(--theme-accent-color);
   border-bottom: 5px solid var(--border-color);

@@ -5,7 +5,7 @@ class CreateEvents < ActiveRecord::Migration[8.0]
       t.string :subtitle
       t.date :start_date, null: false
       t.datetime :start_time
-      t.string :url
+      t.string :url, null: false
 
       t.timestamps
     end

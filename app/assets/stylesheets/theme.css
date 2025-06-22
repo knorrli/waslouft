@@ -2,7 +2,6 @@ body {
   --color-text: var(--color-black);
   --color-accent: var(--color-green);
   --color-background: var(--color-pink);
-  --color-past: var(--color-light-gray);
 
   --border-width: 2px;
   --border-color: var(--theme-accent-color);
@@ -12,7 +11,7 @@ body {
   --theme-accent-color: var(--color-accent);
   --theme-fg-muted: hsl(from var(--theme-fg-color) h s calc(l + 30));
   --theme-bg-muted: hsl(from var(--theme-bg-color) h s calc(l - 10));
-  --theme-accent-muted: hsl(from var(--theme-accent-color) h calc(s - 50) calc(l + 15));
+  --theme-accent-muted: hsl(from var(--theme-accent-color) h calc(s - 60) calc(l + 15));
 
   background-color: var(--theme-bg-color);
   color: var(--theme-fg-color);

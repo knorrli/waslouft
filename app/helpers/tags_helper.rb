@@ -3,10 +3,10 @@ module TagsHelper
     case context.to_s
     when 'date'
       'ti-calendar'
-    when 'groups'
+    when 'styles'
       'ti-music-alt'
     when 'genres'
-      'ti-music'
+      'ti-tag'
     when 'locations'
       'ti-home'
     else

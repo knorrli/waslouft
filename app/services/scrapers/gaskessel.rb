@@ -31,7 +31,7 @@ module Scrapers
     end
 
     def event_url(program_entry:)
-      program_entry.css('a.previewlink').attr('href').to_s
+      "https://gaskessel.ch/#{program_entry.css('a.previewlink').attr('data-url')}"
     end
 
     def event_genres(program_entry:)

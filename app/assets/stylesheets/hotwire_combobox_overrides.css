@@ -16,9 +16,12 @@ body {
     max-width: var(--search-field-width);
   }
 
-  .hw-combobox__input {
+  .hw-combobox__dialog {
+    background-color: var(--theme-bg-color);
+  }
+
+  .hw-combobox__input, .hw-combobox__dialog__input {
     background-color: var(--theme-bg-color);
     color: var(--theme-fg-color);
   }
 }
-

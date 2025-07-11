@@ -7,7 +7,7 @@ class TagsController < ApplicationController
       .ransack(name_cont: params[:q])
       .result
       .joins(:taggings)
-      .where(taggings: { taggable_type: Event.name })
-      .select(:name, :context).distinct
+      .where(taggings: { context: params[:context].presence, taggable_type: Event.name })
+      .select(:name, :context).distinct.order(name: :asc)
   end
 end

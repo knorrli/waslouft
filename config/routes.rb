@@ -16,12 +16,13 @@ Rails.application.routes.draw do
 
   resources :events, only: [:index, :destroy]
   resources :tags, only: :index
+  resources :filters, only: :index do
+    collection do
+      post :upsert
+    end
+  end
 
   get 'calendar', to: 'calendars#show'
-
-  scope 'tests' do
-    get ':name', to: 'tests#show'
-  end
 
   scope :admin do
     get '', to: 'admin#index', as: :admin

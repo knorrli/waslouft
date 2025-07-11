@@ -5,24 +5,23 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
-    @locations = params[:l]&.first&.split(',') || []
-    @styles = params[:s]&.first&.split(',') || []
-    @genres = params[:g]&.first&.split(',') || []
-    @date_ranges = params[:d]&.first&.split(',') || []
+    @filter = Filter.find_by(id: params[:f]) || Filter.find_or_initialize_by(name: params[:n])
+    @filter.query = params[:q] if params[:q].present?
+    @filter.location_list = params[:l] if params[:l].present?
+    @filter.style_list = params[:s] if params[:s].present?
+    @filter.genre_list = params[:g] if params[:g].present?
+    @filter.date_ranges = params[:d]&.first&.split(',') if params[:d].present?
 
-    ransack_query = {}
-    ransack_query = { m: :or }
-    ransack_query[:title_or_subtitle_cont] = params[:q] if params[:q].present?
-    ransack_query[:locations_name_in] = @locations if @locations.present?
-    ransack_query[:styles_name_in] = @styles if @styles.present?
-    ransack_query[:genres_name_in] = @genres if @genres.present?
-    if date_ranges = extract_date_ranges(@date_ranges).presence
-      ransack_query[:start_date_between_any] = date_ranges
-    else
-      ransack_query[:start_date_gteq] = Date.today.beginning_of_day
-    end
+    # @filter ||= Filter.new(
+    #   name: params[:filter],
+    #   query: params[:q],
+    #   location_list: params[:l]&.first&.split(','),
+    #   style_list: params[:s]&.first&.split(','),
+    #   genre_list: params[:g]&.first&.split(','),
+    #   date_ranges: params[:d]&.first&.split(',') || []
+    # )
 
-    @q = Event.ransack(ransack_query)
+    @q = Event.ransack(@filter.to_ransack_query)
     @events = @q.result(distinct: true).order(start_date: :asc).page(params[:page])
   end
 
@@ -36,16 +35,5 @@ class EventsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_event
     @event = Event.find(params.expect(:id))
-  end
-
-  def extract_date_ranges(date_queries)
-    date_queries.map do |date_query|
-      if preset = helpers.datepicker_preset[date_query]
-        start_date, end_date = preset[:values]
-        "#{start_date.to_date.iso8601} - #{end_date.to_date.iso8601}"
-      else
-        /\d{4}-\d{2}-\d{2}\s-\s\d{4}-\d{2}-\d{2}/.match?(date_query) ? date_query : nil
-      end
-    end
   end
 end

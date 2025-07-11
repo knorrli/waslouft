@@ -9,7 +9,7 @@ export default class extends Controller {
     genres: { type: Array, default: [] },
   }
 
-  static targets = ['combobox', 'search', 'locations', 'styles', 'genres'];
+  static targets = ['filter', 'createFilter', 'search', 'locations', 'styles', 'genres'];
 
   connect() {
   }
@@ -28,6 +28,11 @@ export default class extends Controller {
   addTagFromCombobox(event) {
     const context = event.detail.value;
     const tag = event.detail.display;
+    // if (event.detail.fieldName === 'filter') {
+    //   this.filterTarget.value = event.detail.display;
+    //   this.createFilterTarget.click();
+    //   return;
+    // }
     if (event.detail.fieldName == 'search') {
       this.searchTarget.value = event.detail.query;
       this.searchTarget.dispatchEvent(new Event('change', { bubbles: true }));

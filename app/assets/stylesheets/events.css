@@ -1,9 +1,9 @@
-.filter {
-  margin-top: var(--gap-large);
-}
+/* .filter { */
+/*   margin-top: var(--gap-large); */
+/* } */
 
 .searchbar {
-  gap: 10vw;
+  gap: 5vw;
 }
 
 .date {

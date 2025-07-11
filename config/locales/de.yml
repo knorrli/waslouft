@@ -1,7 +1,8 @@
 de:
   date:
     formats:
-      default: "%A, %d.%m.%Y"
+      default: "%d.%m.%Y"
+      detailed: "%A, %d.%m.%Y"
   datepicker:
     today: Heute
     tomorrow: Morgen

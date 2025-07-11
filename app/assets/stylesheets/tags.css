@@ -1,8 +1,15 @@
 .tag {
-  border: none;
   padding: 5px;
-  cursor: pointer;
   font-size: 80%;
+  background-color: var(--theme-bg-color);
+  color: var(--theme-fg-color);
+  line-height: 1.1;
+  border: var(--border-width) solid var(--theme-fg-color);
+}
+
+button.tag {
+  cursor: pointer;
+  border: none;
   background-color: var(--theme-bg-muted);
   color: var(--theme-fg-color);
 

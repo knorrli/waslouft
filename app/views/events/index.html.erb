@@ -1,73 +1,108 @@
 <% content_for :title, "Events" %>
 
-<div class="flex flex-col gap-large align-stretch" data-controller='combobox-filter' data-action='hw-combobox:selection->combobox-filter#addTagFromCombobox' data-combobox-filter-locations-value="<%= @locations %>" data-combobox-filter-styles-value="<%= @styles %> "data-combobox-filter-genres-value="<%= @genres %>">
+<div class="flex flex-col gap-large align-stretch" data-controller='combobox-filter' data-action='hw-combobox:selection->combobox-filter#addTagFromCombobox' data-combobox-filter-locations-value="<%= @filter.location_list.to_json %>" data-combobox-filter-styles-value="<%= @filter.style_list.to_json %> "data-combobox-filter-genres-value="<%= @filter.genre_list.to_json %>">
 
-  <section class="filter flex flex-col gap-large" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @date_ranges.to_json %>" data-datepicker-grid-value="1" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= datepicker_preset.to_json %>" data-datepicker-preset-position-value="left">
-    <div class="">
+  <section class="filter" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @filter.date_ranges.to_json %>" data-datepicker-grid-value="1" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= Datepicker.preset.to_json %>" data-datepicker-preset-position-value="left">
 
-      <%= form_with url: events_url, method: :get, class: 'searchbar flex justify-between flex-grow' do |f| %>
-        <%= f.hidden_field 'q', value: params[:q], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'search' } %>
-        <%= f.hidden_field 'l[]', value: params[:l], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'locations' } %>
-        <%= f.hidden_field 's[]', value: params[:s], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'styles' } %>
-        <%= f.hidden_field 'g[]', value: params[:g], onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'genres' } %>
-
+    <%= form_with url: events_url, method: :get, class: 'flex flex-col gap-large' do |f| %>
+      <div class="searchbar flex justify-between flex-grow">
+        <%= f.hidden_field 'f', value: @filter.id %>
+        <%= f.hidden_field 'q', value: @filter.query, onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'search' } %>
+        <%= f.hidden_field 'l[]', value: @filter.location_list.join(','), onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'locations' } %>
+        <%= f.hidden_field 's[]', value: @filter.style_list.join(','), onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'styles' } %>
+        <%= f.hidden_field 'g[]', value: @filter.genre_list.join(','), onchange: 'this.form.requestSubmit()', data: { combobox_filter_target: 'genres' } %>
         <div>
-          <%= combobox_tag "tags", tags_path(applied: (@locations | @styles | @genres)), name_when_new: 'search', placeholder: 'Was?', data: { combobox_filter_target: 'combobox' } do |combobox| %>
+          <%= combobox_tag "locations", tags_path(context: 'locations', applied: @filter.location_list), placeholder: 'Wo?', data: { combobox_filter_target: 'combobox' } do |combobox| %>
+            <% combobox.customize_fieldset class: 'flex-grow' %>
+          <% end %>
+        </div>
+        <div>
+          <%= combobox_tag "styles", tags_path(context: 'styles', applied: @filter.style_list), placeholder: 'Was?', data: { combobox_filter_target: 'combobox' } do |combobox| %>
             <% combobox.customize_fieldset class: 'flex-grow' %>
           <% end %>
         </div>
 
         <div>
           <div class="datepicker" data-datepicker-target="wrapper">
-            <%= f.hidden_field 'd[]', value: params[:d], onchange: 'this.form.requestSubmit()', data: { datepicker_target: 'input' } %>
+            <%= f.hidden_field 'd[]', value: @filter.date_ranges.join(','), onchange: 'this.form.requestSubmit()', data: { datepicker_target: 'input' } %>
             <%= f.text_field '', placeholder: 'Wann?', data: { datepicker_target: 'decoy' } %>
             <span class="datepicker-handle" data-action="click->datepicker#toggle"></span>
           </div>
         </div>
-      <% end %>
-    </div>
+      </div>
 
-    <div class="tag-list flex justify-start wrap gap-medium">
-      <% if params[:q].present? %>
-        <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeSearch' } do %>
-          <div class="flex gap-small">
-            <span class="ti-search"></span>
-            <span><%= params[:q] %></span>
+      <div class="flex flex-row justify-between">
+        <div class="grid col-2 active-filters">
+          <div>
+            Wo:
           </div>
-        <% end %>
-      <% end %>
-      <% @locations.each do |location| %>
-        <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': location, 'combobox-filter-context-param': 'locations' } do %>
-          <div class="flex gap-small">
-            <span class="<%= tag_icon_class(context: 'locations') %>"></span>
-            <span><%= location %></span>
+
+          <div class="flex gap-small wrap location-list">
+            <% @filter.location_list.each do |location| %>
+              <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': location, 'combobox-filter-context-param': 'locations' } do %>
+                <div class="flex gap-small">
+                  <span class="<%= tag_icon_class(context: 'locations') %>"></span>
+                  <span><%= location %></span>
+                </div>
+              <% end %>
+            <% end %>
           </div>
-        <% end %>
-      <% end %>
 
-      <% @styles.each do |style| %>
-        <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': style, 'combobox-filter-context-param': 'styles' } do %>
-          <div class="flex gap-small">
-            <span class="<%= tag_icon_class(context: 'styles') %>"></span>
-            <span><%= style %></span>
+          <div>
+            Was:
           </div>
-        <% end %>
-      <% end %>
 
-      <% @genres.each do |genre| %>
-        <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': genre, 'combobox-filter-context-param': 'genres' } do %>
-          <div class="flex gap-small">
-            <span class="<%= tag_icon_class(context: 'genres') %>"></span>
-            <span><%= genre %></span>
+          <div class="flex gap-small wrap style-list">
+            <% if params[:q].present? %>
+              <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeSearch' } do %>
+                <div class="flex gap-small">
+                  <span class="ti-search"></span>
+                  <span><%= params[:q] %></span>
+                </div>
+              <% end %>
+            <% end %>
+
+            <% @filter.style_list.each do |style| %>
+              <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': style, 'combobox-filter-context-param': 'styles' } do %>
+                <div class="flex gap-small">
+                  <span class="<%= tag_icon_class(context: 'styles') %>"></span>
+                  <span><%= style %></span>
+                </div>
+              <% end %>
+            <% end %>
+
+            <% @filter.genre_list.each do |genre| %>
+              <%= button_tag type: :button, class: 'tag active', data: { action: 'combobox-filter#removeTag', 'combobox-filter-tag-param': genre, 'combobox-filter-context-param': 'genres' } do %>
+                <div class="flex gap-small">
+                  <span class="<%= tag_icon_class(context: 'genres') %>"></span>
+                  <span><%= genre %></span>
+                </div>
+              <% end %>
+            <% end %>
           </div>
-        <% end %>
-      <% end %>
 
-      <% @date_ranges.each do |date_range| %>
-        <%= datepicker_tag(date_range) %>
-      <% end %>
+          <div>
+            Wann:
+          </div>
 
-    </div>
+          <div class="flex gap-small wrap date-range-list">
+            <% @filter.date_ranges.each do |date_range| %>
+              <%= datepicker_tag(date_range) %>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="filter flex flex-col gap-small">
+          <%= combobox_tag "filter", filters_path, value: @filter.name, name_when_new: 'filter', placeholder: 'Filter' do |combobox| %>
+            <% combobox.customize_fieldset class: 'flex-grow' %>
+          <% end %>
+
+          <%= f.hidden_field :n, value: @filter.name, data: { combobox_filter_target: 'filter' } %>
+          <%= submit_tag @filter.persisted? ? 'filter anpassen' : 'filter erstellen', formaction: upsert_filters_path, formmethod: :post, data: { combobox_filter_target: 'createFilter' } %>
+        </div>
+      </div>
+
+    <% end %>
   </section>
 
 
@@ -76,10 +111,10 @@
     <% events_by_date = @events.group_by(&:start_date) %>
     <% events_by_date.each do |date, events| %>
       <div class="flex flex-col gap-small date-events <%= class_names(past: date < Date.current.beginning_of_day) %>">
-        <h2 id="<%= date.iso8601 %>" class="flex date"><%= l date, format: :default %></h2>
+        <h2 id="<%= date.iso8601 %>" class="flex date"><%= l date, format: :detailed %></h2>
         <div class="flex flex-col gap-medium">
           <% events.each do |event| %>
-            <%= render event %>
+            <%= render event, filter: @filter %>
           <% end %>
         </div>
       </div>

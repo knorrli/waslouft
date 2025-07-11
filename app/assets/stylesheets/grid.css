@@ -1,0 +1,9 @@
+.grid {
+  display: grid;
+
+  &.col-2 {
+    grid-template-columns: auto 1fr;
+    column-gap: var(--gap-small);
+    row-gap: var(--gap-small);
+  }
+}

@@ -1,7 +1,6 @@
 module Scrapers
   class NouveauMonde
     include Base
-    register_scraper
 
     def self.location
       'Nouveau Monde'

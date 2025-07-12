@@ -1,7 +1,6 @@
 module Scrapers
   class Dachstock
     include Base
-    register_scraper
 
     def self.location
       'Dachstock'
@@ -26,6 +25,10 @@ module Scrapers
     def event_start_date(program_entry:)
       date_string = program_entry.css('.event-date').content.squish
       Time.zone.parse(date_string)
+    end
+
+    def event_start_time(program_entry:)
+      event_start_date(program_entry: program_entry)
     end
 
     def event_url(program_entry:)

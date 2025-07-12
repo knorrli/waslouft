@@ -1,0 +1,2 @@
+module GenreStyleAssociationsHelper
+end

@@ -1,7 +1,6 @@
 module Scrapers
   class BadBonn
     include Base
-    register_scraper
 
     def self.location
       'Bad Bonn'

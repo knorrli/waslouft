@@ -1,7 +1,6 @@
 module Scrapers
   class Gaskessel
     include Base
-    register_scraper
 
     def self.location
       'Gaskessel'

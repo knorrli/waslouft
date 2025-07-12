@@ -1,7 +1,6 @@
 module Scrapers
   class Roessli
     include Base
-    register_scraper
 
     def self.location
       'Rössli'

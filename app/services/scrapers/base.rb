@@ -5,6 +5,10 @@ module Scrapers
   module Base
     extend ActiveSupport::Concern
 
+    included do
+      register_scraper
+    end
+
     class_methods do
       def call
         new.call if active?
@@ -38,8 +42,9 @@ module Scrapers
         genres = event_genres(program_entry: program_entry)
         event.update(
           title: event_title(program_entry: program_entry).squish,
-          url: event_url(program_entry: program_entry)&.squish,
           subtitle: event_subtitle(program_entry: program_entry)&.squish,
+          url: event_url(program_entry: program_entry)&.squish,
+          start_time: event_start_time(program_entry: program_entry),
           genre_list: genres,
           style_list: event_styles(genres: genres),
           location_list: location

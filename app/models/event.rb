@@ -1,6 +1,8 @@
 class Event < ApplicationRecord
   acts_as_taggable_on :locations, :styles, :genres
 
+  validates :title, :start_date, :url, presence: true
+
   def self.ransackable_attributes(auth_object = nil)
     ['title', 'subtitle', 'start_date']
   end

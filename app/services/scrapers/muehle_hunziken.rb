@@ -1,7 +1,6 @@
 module Scrapers
   class MuehleHunziken
     include Base
-    register_scraper
 
     def self.active?
       false

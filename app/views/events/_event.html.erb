@@ -1,10 +1,14 @@
 <article id="<%= dom_id event %>" class="flex justify-between gap-small <%= class_names(:event, past: event.start_date < Date.current.beginning_of_day) %>">
   <div class="flex event-info flex-col gap-medium">
 
-    <div class="event-title">
-      <h3><%= link_to event.title, event.url, target: :blank %></h3>
+    <div class="event-details flex flex-col gap-medium">
+      <% if event.start_time.present? %>
+        <h5 class="event-time"><%= l event.start_time, format: :time %></h5>
+      <% end %>
+      <h3 class="event-title"><%= link_to event.title, event.url, target: :blank %></h3>
+
       <% if event.subtitle.present? %>
-        <h4><%= event.subtitle %></h4>
+        <h4 class="event-subtitle"><%= event.subtitle %></h4>
       <% end %>
     </div>
 

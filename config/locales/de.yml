@@ -1,46 +1,65 @@
+---
 de:
+  activemodel:
+    models:
+      Genre:
+        one: Genre
+        other: Genres
+      location:
+        one: Location
+        other: Locations
   activerecord:
     models:
+      acts_as_taggable_on/tag:
+        one: Tag
+        other: Tags
       event:
         one: Event
         other: Events
+      style:
+        one: Style
+        other: Styles
+  admin:
+    index:
+      total: Total
   date:
     formats:
       default: "%d.%m.%Y"
       detailed: "%A, %d.%m.%Y"
   datepicker:
-    today: Heute
-    tomorrow: Morgen
-    this_week: Diese Woche
-    this_weekend: Dieses Wochenende
+    next_month: Nächsten Monat
     next_week: Nächste Woche
     next_weekend: Nächstes Wochenende
     this_month: Diesen Monat
-    next_month: Nächsten Monat
+    this_week: Diese Woche
+    this_weekend: Dieses Wochenende
+    today: Heute
+    tomorrow: Morgen
   events:
     filter:
-      where: Wo?
+      create_filter: Filter erstellen
+      delete_filter: Filter löschen
+      update_filter: Filter anpassen
       what: Was?
       when: Wann?
-      create_filter: Filter erstellen
-      update_filter: Filter anpassen
-      delete_filter: Filter löschen
+      where: Wo?
+  helpers:
+    page_entries_info:
+      more_pages:
+        display_entries: Zeige %{entry_name} <b>%{first}–%{last}</b> von total <b>%{total}</b>
+      one_page:
+        display_entries:
+          one: Zeige <b>1</b> %{entry_name}
+          other: Zeige <b>all %{count}</b> %{entry_name}
+          zero: Keine %{entry_name} gefunden
   time:
     formats:
       default: "%d.%m.%Y, %H:%M"
+      time: "%H:%M"
   views:
     pagination:
       first: "&laquo; Start"
-      last: "Ende &raquo;"
+      last: Ende &raquo;
+      next: Weiter &rsaquo;
       previous: "&lsaquo; Zurück"
-      next: "Weiter &rsaquo;"
       truncate: "&hellip;"
-  helpers:
-    page_entries_info:
-      one_page:
-        display_entries:
-          zero: "Keine %{entry_name} gefunden"
-          one: "Zeige <b>1</b> %{entry_name}"
-          other: "Zeige <b>all %{count}</b> %{entry_name}"
-      more_pages:
-        display_entries: "Zeige %{entry_name} <b>%{first}–%{last}</b> von total <b>%{total}</b>"

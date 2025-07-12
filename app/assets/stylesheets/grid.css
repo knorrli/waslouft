@@ -3,7 +3,11 @@
 
   &.col-2 {
     grid-template-columns: auto 1fr;
-    column-gap: var(--gap-small);
-    row-gap: var(--gap-small);
+    column-gap: var(--gap-large);
+    row-gap: var(--gap-large);
+  }
+
+  &.align-center {
+    align-items: center;
   }
 }

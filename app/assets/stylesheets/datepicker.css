@@ -1,12 +1,18 @@
 /* TODO: use own CSS variables */
 .datepicker {
-  max-width: var(--search-field-width);
   border: var(--border-width) solid var(--border-color);
   padding: var(--hw-padding--slim) calc(var(--hw-handle-width) + var(--hw-padding--slimmer)) var(--hw-padding--slim) var(--hw-padding--thick);
+  line-height: var(--filter-input-lineheight);
   position: relative;
 
   &:focus-within {
     box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
+  }
+
+  &:has(.hw-combobox__chip) {
+    .datepicker-input::placeholder {
+      color: transparent;
+    }
   }
 
   input {
@@ -15,10 +21,12 @@
     border: none;
     font-size: inherit;
     line-height: var(--hw-line-height);
-    min-width: 0;
+    min-width: calc(var(--hw-combobox-width) / 2);
     padding: 0;
     text-overflow: ellipsis;
-    width: 100%;
+    max-width: 100%;
+    flex-grow: 1;
+    line-height: var(--filter-input-lineheight);
 
     &:focus,
     &:focus-visible,
@@ -33,19 +41,12 @@
     position: absolute;
     right: var(--hw-handle-offset-right);
     top: 0;
-    width: var(--hw-handle-width);
+    width: var(--filter-icon-size);
 
     &::before {
-      background-image: var(--datepicker-handle-image);
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: var(--hw-handle-width);
-      bottom: 0;
-      content: '';
-      left: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
+      background-size: var(--filter-icon-size);
+      position: initial;
+      vertical-align: middle;
     }
   }
 

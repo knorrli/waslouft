@@ -5,23 +5,13 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
-    @filter = Filter.find_by(id: params[:f]) || Filter.find_or_initialize_by(name: params[:n])
-    @filter.query = params[:q] if params[:q].present?
-    @filter.location_list = params[:l] if params[:l].present?
-    @filter.style_list = params[:s] if params[:s].present?
-    @filter.genre_list = params[:g] if params[:g].present?
-    @filter.date_ranges = params[:d]&.first&.split(',') if params[:d].present?
+    @filter = Filter.find_or_initialize_by(id: params[:f])
+    @filter.location_list = params[:l].split(',') if params[:l]
+    @filter.style_list = params[:s].split(',') if params[:s]
+    @filter.genre_list = params[:g].split(',') if params[:g]
+    @filter.date_ranges = params[:d].split(',') if params[:d]
 
-    # @filter ||= Filter.new(
-    #   name: params[:filter],
-    #   query: params[:q],
-    #   location_list: params[:l]&.first&.split(','),
-    #   style_list: params[:s]&.first&.split(','),
-    #   genre_list: params[:g]&.first&.split(','),
-    #   date_ranges: params[:d]&.first&.split(',') || []
-    # )
-
-    @q = Event.ransack(@filter.to_ransack_query)
+    @q = Event.ransack(@filter.ransack_query)
     @events = @q.result(distinct: true).order(start_date: :asc).page(params[:page])
   end
 

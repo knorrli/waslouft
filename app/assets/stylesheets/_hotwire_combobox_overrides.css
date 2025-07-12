@@ -1,0 +1,46 @@
+:root {
+  --hw-combobox-width: unset;
+  --hw-combobox-width--multiple: unset;
+}
+
+body {
+  --hw-line-height--multiple: var(--filter-input-lineheight);
+  --hw-border-width--slim: var(--border-width);
+  --hw-border-radius: 0px;
+  --hw-component-bg-color: var(--theme-bg-color);
+  --hw-active-bg-color: var(--theme-bg-muted);
+  --hw-option-bg-color: var(--theme-bg-color);
+  --hw-border-color: var(--border-color);
+  --hw-focus-color: var(--theme-accent-color);
+  --hw-handle-width: var(--filter-icon-size);
+
+  .hw-combobox__dialog {
+    background-color: var(--theme-bg-color);
+  }
+
+  .hw-combobox__handle {
+    &::before {
+      background-image: none;
+      position: initial;
+      vertical-align: middle;
+    }
+  }
+
+  .hw-combobox__input, .hw-combobox__dialog__input {
+    background-color: var(--theme-bg-color);
+    color: var(--theme-fg-color);
+  }
+
+  .hw-combobox__chip {
+    border: none;
+    padding: 5px;
+    font-size: 80%;
+    background-color: var(--theme-accent-color);
+    color: var(--theme-bg-color);
+    white-space: nowrap;
+  }
+
+  .hw-combobox__chip__remover {
+    background-image: none;
+  }
+}

@@ -1,7 +1,30 @@
 en:
+  activerecord:
+    models:
+      event:
+        one: Event
+        other: Events
   date:
     formats:
       default: "%d.%m.%Y"
+      detailed: "%A, %d.%m.%Y"
+  datepicker:
+    today: Today
+    tomorrow: Tomorrow
+    this_week: This Week
+    this_weekend: This Weekend
+    next_week: Next Week
+    next_weekend: Next Weekend
+    this_month: This Month
+    next_month: Next Month
+  events:
+    filter:
+      where: Where?
+      what: What?
+      when: When?
+      create_filter: Create Filter
+      update_filter: Update Filter
+      delete_filter: Delete Filter
   time:
     formats:
       default: "%d.%m.%Y, %H:%M"

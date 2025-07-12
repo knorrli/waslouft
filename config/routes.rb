@@ -15,14 +15,15 @@ Rails.application.routes.draw do
   resource :session
 
   resources :events, only: [:index, :destroy]
-  resources :tags, only: :index
-  resources :filters, only: :index do
+
+  resources :tags, only: :index do
     collection do
-      post :upsert
+      post :chips
     end
   end
 
-  get 'calendar', to: 'calendars#show'
+  resources :filters, only: [:index, :create, :update, :destroy]
+  get 'calendar/:id', to: 'filters#show', defaults: { format: :ics }
 
   scope :admin do
     get '', to: 'admin#index', as: :admin

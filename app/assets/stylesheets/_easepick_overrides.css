@@ -62,9 +62,12 @@
   }
 }
 
+.container.preset-plugin main.preset-left .preset-plugin-container {
+  width: 100%;
+}
 
 .preset-plugin-container {
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: var(--gap-medium);
 
   button {
@@ -79,6 +82,8 @@
     }
 
     &.preset-button {
+      flex-grow: 1;
+
       &.active {
         background-color: var(--theme-accent-color);
         color: var(--theme-bg-color);

@@ -1,6 +1,8 @@
-/* .filter { */
-/*   margin-top: var(--gap-large); */
-/* } */
+.filter-icon {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+}
 
 .searchbar {
   gap: 5vw;

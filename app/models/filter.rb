@@ -1,6 +1,8 @@
 class Filter < ApplicationRecord
   acts_as_taggable_on :locations, :styles, :genres
 
+  validates :name, presence: true
+
   def self.ransackable_attributes(auth_object = nil)
     ['name']
   end
@@ -14,10 +16,23 @@ class Filter < ApplicationRecord
   end
 
   def to_combobox_display
-    to_s
+    name
   end
 
-  def to_ransack_query
+  def events
+    Event.ransack(ransack_query).result(distinct: true).order(start_date: :asc)
+  end
+
+  def to_params
+    params = { f: id }
+    params[:l] = location_list.presence || ''
+    params[:s] = style_list.presence || ''
+    params[:g] = genre_list.presence || ''
+    params[:d] = date_ranges.join(',')
+    params
+  end
+
+  def ransack_query
     ransack_query = {}
     ransack_query = { m: :or }
     ransack_query[:title_or_subtitle_cont] = query
@@ -34,6 +49,10 @@ class Filter < ApplicationRecord
   end
 
   private
+
+  def tags_for_ids(joined_ids)
+    ActsAsTaggableOn::Tag.where(id: joined_ids&.split(','))
+  end
 
   def map_date_ranges(date_ranges)
     return [] if date_ranges.blank?

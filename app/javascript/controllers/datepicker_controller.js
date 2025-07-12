@@ -33,8 +33,10 @@ export default class extends Controller {
     const element = this.hasInputTarget ? this.decoyTarget : this.element;
     const wrapperTarget = this.wrapperTarget;
     const inputTarget = this.inputTarget;
+    const decoyTarget = this.decoyTarget;
     const presetValue = this.presetValue;
     const activeDateRanges = this.dateRangesValue;
+    const gridValue = this.gridValue;
 
     this.datepicker = new easepick.create({
       element: element,
@@ -47,7 +49,7 @@ export default class extends Controller {
       inline: this.inlineValue,
       css: [
         RAILS_ASSET_URL("/easepick.min.css"),
-        RAILS_ASSET_URL("/easepick_overrides.css"),
+        RAILS_ASSET_URL("/_easepick_overrides.css"),
       ],
       setup(picker) {
         picker.on('select', (e) => {
@@ -65,16 +67,27 @@ export default class extends Controller {
             inputTarget.value = [...activeDateRanges, selectedRange];
           }
           this.element.value = '';
-          inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+          inputTarget.dispatchEvent(new Event('datepicker:selection', { bubbles: true }));
         });
         picker.on('clear', (e) => {
           inputTarget.value = '';
-          inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+          inputTarget.dispatchEvent(new Event('datepicker.removal', { bubbles: true }));
         });
         picker.on('show', () => {
-          picker.ui.container.style.left = 'unset'
-          picker.ui.container.style.top = '32px';
-          picker.ui.container.style.right = '-29px';
+          const originalWidth = picker.ui.container.getBoundingClientRect().width;
+          const calculatedWidth = wrapperTarget.getBoundingClientRect().width - 15;
+          console.log("orig", originalWidth);
+          console.log("calc", calculatedWidth);
+
+          if (originalWidth >= calculatedWidth) {
+            picker.options.grid = 1;
+            console.log("small grid");
+          }
+
+          picker.ui.container.style.left = '-13px';
+          picker.ui.container.style.top = '42px';
+          picker.ui.container.style.right = `-${calculatedWidth}px`;
+          picker.renderAll();
         });
         picker.on('view', (e) => {
           if (e.detail.view == 'PresetPluginButton') {
@@ -118,7 +131,7 @@ export default class extends Controller {
     const rangeString = event.params.range;
     const newRanges = this.dateRangesValue.filter((range) => range !== event.params.range);
     this.inputTarget.value = newRanges;
-    this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+    this.inputTarget.dispatchEvent(new Event('datepicker:removal', { bubbles: true }));
   }
 
   #clear() {
@@ -195,9 +208,5 @@ export default class extends Controller {
       customPreset[label] = [new DateTime(startDate, this.formatValue), new DateTime(endDate, this.formatValue)];
       return customPreset;
     }, {});
-  }
-
-  #getWeekday(date, weekDay, weekInFuture) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + ((date.getDay() == 0 ? -6 : 1) + (weekInFuture * 7)) + weekDay).getDate();
   }
 }

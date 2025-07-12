@@ -1,0 +1,42 @@
+<section class="filter" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @filter.date_ranges.to_json %>" data-datepicker-grid-value="2" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= Datepicker.preset.to_json %>" data-datepicker-preset-position-value="left">
+  <%= form_with model: @filter, id: 'filter-form', class: 'flex flex-col gap-large', data: { turbo: true, filter_target: 'form' } do |f| %>
+
+    <%= f.combobox :style_list, tags_path(context: 'styles', applied: @filter.style_list), multiselect_chip_src: chips_tags_path(context: 'styles'), preload: true, placeholder: t('.what') do |combobox| %>
+      <% combobox.customize_hidden_field data: { filter_target: 'styles' } %>
+      <% combobox.customize_handle class: "filter-icon #{tag_icon_class(context: 'styles')}" %>
+    <% end %>
+
+    <%= f.combobox :location_list, tags_path(context: 'locations', applied: @filter.location_list), multiselect_chip_src: chips_tags_path(context: 'locations'), preload: true, placeholder: t('.where') do |combobox| %>
+      <% combobox.customize_hidden_field data: { filter_target: 'locations' } %>
+      <% combobox.customize_handle class: "filter-icon #{tag_icon_class(context: 'locations')}" %>
+    <% end %>
+
+
+    <%= f.hidden_field :date_ranges, value: @filter.date_ranges&.join(','), data: { datepicker_target: 'input' } %>
+    <div class="datepicker flex wrap gap-small" data-datepicker-target="wrapper">
+        <% @filter.date_ranges.each do |date_range| %>
+          <div class="hw-combobox__chip flex flex-row gap-small align-baseline">
+            <span><%= datepicker_tag_content(date_range) %></span>
+            <span tabindex="0" class="hw-combobox__chip__remover ti-close" aria-label="Remove <%= date_range %>" data-action="click->datepicker#removeRange:stop" data-datepicker-range-param="<%= date_range %>"></span>
+          </div>
+        <% end %>
+      <%= text_field_tag '', '', class: 'datepicker-input', placeholder: t('.when'), data: { datepicker_target: 'decoy' } %>
+      <span class="datepicker-handle filter-icon ti-calendar" data-action="click->datepicker#toggle"></span>
+    </div>
+
+    <div class="save flex wrap justify-between gap-large">
+      <%= f.text_field :name, class: 'flex-grow', placeholder: 'Mein eigener Filter :)' %>
+
+      <% if @filter.new_record? %>
+        <%= f.submit t('.create_filter'), class: 'flex-grow' %>
+      <% else %>
+        <%= f.submit t('.update_filter'), class: 'flex-grow', disabled: !@filter.changed? %>
+        <%= link_to filter_path(@filter), data: { turbo_method: :delete } do %>
+          <%= t('.delete_filter') %>
+        <% end %>
+      <% end %>
+    </div>
+
+  <% end %>
+</section>
+

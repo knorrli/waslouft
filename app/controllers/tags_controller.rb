@@ -8,6 +8,17 @@ class TagsController < ApplicationController
       .result
       .joins(:taggings)
       .where(taggings: { context: params[:context].presence, taggable_type: Event.name })
-      .select(:name, :context).distinct.order(name: :asc)
+      .distinct
+      .order(name: :asc)
+  end
+
+  def chips
+    @tags = ActsAsTaggableOn::Tag
+      .where.not(name: params[:applied])
+      .where(name: params[:combobox_values].split(','))
+      .joins(:taggings)
+      .where(taggings: { context: params[:context].presence, taggable_type: Event.name })
+      .distinct
+      .order(name: :asc)
   end
 end

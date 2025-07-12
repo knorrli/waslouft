@@ -1,0 +1,8 @@
+<% @tags.each do |chip_tag| %>
+  <%= within_combobox_selection_chip do %>
+    <%= tag.div class: "hw-combobox__chip flex flex-row gap-small align-baseline" do %>
+      <%= tag.span chip_tag.name %>
+      <%= tag.span **combobox_chip_remover_attrs(display: chip_tag.name, value: chip_tag.name, class: 'ti-close') %>
+    <% end %>
+  <% end %>
+<% end %>

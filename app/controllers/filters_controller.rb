@@ -5,23 +5,73 @@ class FiltersController < ApplicationController
     @filters = Filter.ransack(name_cont: params[:q]).result
   end
 
-  def upsert
-    @filter = Filter.find_or_initialize_by(name: params.expect(:n))
+  def create
+    @filter = Filter.new(filter_params)
 
-    if @filter.update(
-        query: params.fetch(:q),
-        location_list: params.expect(l: []).split(','),
-        style_list: params.expect(s: []).split(','),
-        genre_list: params.expect(g: []).split(','),
-        date_ranges: params.expect(d: [])&.first&.split(',')
-    )
+    if params[:commit].present? && @filter.save
       redirect_to events_path(f: @filter.id)
     else
-      redirect_to events_path
+      redirect_to events_path(@filter.to_params)
     end
   end
 
+  def show
+    @filter = Filter.find(params[:id])
+
+    cal = Icalendar::Calendar.new
+    cal.x_wr_calname = "WasLouft - #{@filter.name}"
+    @filter.events.group_by(&:start_date).each do |date, events|
+      sorted_events = events.sort_by { |e| e.locations.sort }
+      cal.event do |e|
+        e.dtstart = Icalendar::Values::Date.new(date.strftime('%Y%m%d'))
+        e.uid = "waslouft.ch@#{@filter.id}-#{date.strftime('%Y%m%d')}"
+        e.summary = "#{events.count} #{Event.model_name.human(count: events.count)}"
+        e.description = sorted_events.map do |event|
+          locations = event.locations.join(', ')
+          title = event.title
+          tags = (event.styles + event.genres).uniq.sort.join(', ')
+
+          buffer = StringIO.new
+          buffer << "#{locations}: #{title}"
+          if tags.present?
+            buffer << " [#{tags}]"
+          end
+          buffer.string
+        end.join("\n------------\n")
+      end
+    end
+    cal.publish
+    render plain: cal.to_ical
+  end
+
+  def update
+    @filter = Filter.find(params[:id])
+    @filter.assign_attributes(filter_params)
+
+    if params[:commit].present? && @filter.save
+      redirect_to events_path(f: @filter.id)
+    else
+      redirect_to events_path(@filter.to_params)
+    end
+  end
+
+  def destroy
+    @filter = Filter.find(params[:id])
+    @filter.destroy
+    redirect_to events_path
+  end
+
   def filter_params
-    params.permit(:name, :q, :l, :s, :g, :d)
+    joined_params = params.expect(
+      filter: [
+        :name,
+        :location_list,
+        :style_list,
+        :genre_list,
+        :date_ranges
+      ]
+    )
+
+    { **joined_params, date_ranges: joined_params[:date_ranges]&.split(',') }.with_indifferent_access
   end
 end

@@ -1,3 +1,21 @@
+.input-wrapper {
+  border: var(--border-width) solid var(--border-color);
+  /* padding: var(--gap-small) var(--gap-medium); */
+  /* padding: var(--hw-padding--slim) calc(var(--hw-handle-width) + var(--hw-padding--slimmer)) var(--hw-padding--slim) var(--hw-padding--thick); */
+  line-height: var(--filter-input-lineheight);
+  position: relative;
+
+  &:focus-within {
+    box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
+  }
+
+  &:has(.hw-combobox__chip) {
+    input::placeholder {
+      color: transparent;
+    }
+  }
+}
+
 .filter-icon {
   font-size: 1.5rem;
   display: flex;
@@ -6,6 +24,10 @@
 
 .searchbar {
   gap: 5vw;
+}
+
+.filter-select {
+  line-height: var(--filter-input-lineheight);
 }
 
 .date {

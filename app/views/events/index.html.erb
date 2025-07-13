@@ -1,6 +1,6 @@
 <% content_for :title, "Events" %>
 
-<div class="flex flex-col gap-xlarge align-stretch" data-controller="filter" data-action='hw-combobox:selection->filter#submit hw-combobox:removal->filter#submit datepicker:selection->filter#submit datepicker:removal->filter#submit'>
+<div class="flex flex-col gap-xlarge align-stretch" data-controller="filter" data-action='hw-combobox:selection->filter#submit datepicker:selection->filter#submit datepicker:removal->filter#removeFilter'>
 
     <%= render 'filter', filter: @filter %>
 

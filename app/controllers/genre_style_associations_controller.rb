@@ -1,2 +1,0 @@
-class GenreStyleAssociationsController < ApplicationController
-end

@@ -1,26 +1,12 @@
 /* TODO: use own CSS variables */
 .datepicker {
-  border: var(--border-width) solid var(--border-color);
   padding: var(--hw-padding--slim) calc(var(--hw-handle-width) + var(--hw-padding--slimmer)) var(--hw-padding--slim) var(--hw-padding--thick);
-  line-height: var(--filter-input-lineheight);
-  position: relative;
-
-  &:focus-within {
-    box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
-  }
-
-  &:has(.hw-combobox__chip) {
-    .datepicker-input::placeholder {
-      color: transparent;
-    }
-  }
 
   input {
     background-color: inherit;
     color: inherit;
     border: none;
     font-size: inherit;
-    line-height: var(--hw-line-height);
     min-width: calc(var(--hw-combobox-width) / 2);
     padding: 0;
     text-overflow: ellipsis;

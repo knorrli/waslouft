@@ -19,16 +19,12 @@ class Filter < ApplicationRecord
     name
   end
 
-  def events
-    Event.ransack(ransack_query).result(distinct: true).order(start_date: :asc)
-  end
-
   def to_params
     params = { f: id }
     params[:l] = location_list.presence || ''
     params[:s] = style_list.presence || ''
     params[:g] = genre_list.presence || ''
-    params[:d] = date_ranges.join(',')
+    params[:d] = date_ranges.presence || ''
     params
   end
 
@@ -46,6 +42,10 @@ class Filter < ApplicationRecord
     end
 
     ransack_query
+  end
+
+  def date_ranges=(new_date_ranges)
+    super(ActsAsTaggableOn.default_parser.new(new_date_ranges).parse)
   end
 
   private

@@ -7,7 +7,7 @@ window.DateTime = easepick.DateTime;
 // Connects to data-controller="datepicker"
 export default class extends Controller {
 
-  static targets = ["wrapper", "input", "decoy"];
+  static targets = ["wrapper", "input"];
   static values = {
     firstDay: { type: Number, default: 1 },
     lang: { type: String, default: "en-US" },
@@ -30,10 +30,8 @@ export default class extends Controller {
   #presetPositions = ["top", "left", "right", "bottom"];
   #preset = this.#buildPreset();
   connect() {
-    const element = this.hasInputTarget ? this.decoyTarget : this.element;
+    const element = this.hasInputTarget ? this.inputTarget : this.element;
     const wrapperTarget = this.wrapperTarget;
-    const inputTarget = this.inputTarget;
-    const decoyTarget = this.decoyTarget;
     const presetValue = this.presetValue;
     const activeDateRanges = this.dateRangesValue;
     const gridValue = this.gridValue;
@@ -60,14 +58,19 @@ export default class extends Controller {
             return startMatch && endMatch;
           });
           const selectedRange = (selectedPreset || this.element.value);
-
-          if (inputTarget.value.includes(selectedRange)) {
-            inputTarget.value = activeDateRanges.filter((range) => range !== selectedRange);
-          } else {
-            inputTarget.value = [...activeDateRanges, selectedRange];
-          }
-          this.element.value = '';
-          inputTarget.dispatchEvent(new Event('datepicker:selection', { bubbles: true }));
+          this.element.value = selectedRange;
+          this.element.dispatchEvent(
+            new CustomEvent(
+              'datepicker:selection',
+              {
+                bubbles: true,
+                detail: {
+                  value: this.element.value,
+                  fieldName: this.element.id
+                }
+              }
+            )
+          );
         });
         picker.on('clear', (e) => {
           inputTarget.value = '';
@@ -109,9 +112,7 @@ export default class extends Controller {
 
 
     this.#setupPlugins();
-
     this.datepicker.renderAll();
-    this.decoyTarget.value = '';
   }
 
   disconnect() {

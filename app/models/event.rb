@@ -12,6 +12,11 @@ class Event < ApplicationRecord
   end
 
   def to_s
-    title
+    [
+      start_date.strftime('%y-%m-%d'),
+      title.truncate(40),
+      subtitle&.truncate(20),
+      locations.map(&:name).join(', ')
+    ].compact_blank.join(' || ')
   end
 end

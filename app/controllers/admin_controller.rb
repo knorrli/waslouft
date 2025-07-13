@@ -17,7 +17,6 @@ class AdminController < ApplicationController
   def scrape_events
     Scrapers::All.run
   rescue StandardError => e
-    debugger
   ensure
     redirect_to admin_path
   end

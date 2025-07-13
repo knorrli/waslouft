@@ -12,6 +12,7 @@ module DatepickerHelper
     if preset = Datepicker.preset[date_range]
       content_tag(:span, preset[:label])
     else
+      debugger
       start_date, end_date = date_range.split(' - ').map { |date_string| Time.zone.parse(date_string).to_date.iso8601 }
       if start_date == end_date
         content_tag(:span, l(start_date.to_date, format: :default))

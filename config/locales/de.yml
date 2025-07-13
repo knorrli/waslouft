@@ -1,8 +1,14 @@
 ---
 de:
+  genre_style_assignments:
+    index:
+      suggestions: Vorschläge
+      manual_entry: Manuelle Zuweisung
+  actions:
+    save: Speichern
   activemodel:
     models:
-      Genre:
+      genre:
         one: Genre
         other: Genres
       location:
@@ -22,6 +28,7 @@ de:
   admin:
     index:
       total: Total
+      assign_unassigned_genres: Zuweisungen erstellen
   date:
     formats:
       default: "%d.%m.%Y"
@@ -37,9 +44,10 @@ de:
     tomorrow: Morgen
   events:
     filter:
-      create_filter: Filter erstellen
+      create_filter: Neuen Filter erstellen
       delete_filter: Filter löschen
       update_filter: Filter anpassen
+      filter: Deine Filter
       what: Was?
       when: Wann?
       where: Wo?

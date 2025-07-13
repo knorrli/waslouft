@@ -1,8 +1,10 @@
 ---
 en:
+  actions:
+    save: Save
   activemodel:
     models:
-      Genre:
+      genre:
         one: Genre
         other: Genres
       location:
@@ -22,6 +24,7 @@ en:
   admin:
     index:
       total: Total
+      assign_unassigned_genres: Create assignments
   date:
     formats:
       default: "%d.%m.%Y"

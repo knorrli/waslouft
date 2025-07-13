@@ -5,9 +5,55 @@ class FiltersController < ApplicationController
     @filters = Filter.ransack(name_cont: params[:q]).result
   end
 
-  def create
-    @filter = Filter.new(filter_params)
+  def show
+    @filter = Filter.find(params[:f])
+    respond_to do |format|
+      format.html do
+        redirect_to events_path(f: @filter.id)
+      end
 
+      format.ics do
+        cal = Icalendar::Calendar.new
+        cal.x_wr_calname = "WasLouft - #{@filter.name}"
+        @filter.events.group_by(&:start_date).each do |date, events|
+          sorted_events = events.sort_by { |e| e.locations.sort }
+          cal.event do |e|
+            e.dtstart = Icalendar::Values::Date.new(date.strftime('%Y%m%d'))
+            e.uid = "waslouft.ch@#{@filter.id}-#{date.strftime('%Y%m%d')}"
+            e.summary = "#{events.count} #{Event.model_name.human(count: events.count)}"
+            e.description = sorted_events.map do |event|
+              locations = event.locations.join(', ')
+              title = event.title
+              tags = (event.styles + event.genres).uniq.sort.join(', ')
+
+              buffer = StringIO.new
+              buffer << "#{locations}: #{title}"
+              if tags.present?
+                buffer << " [#{tags}]"
+              end
+              buffer.string
+            end.join("\n------------\n")
+          end
+        end
+        cal.publish
+        render plain: cal.to_ical
+      end
+    end
+  end
+
+  def render
+    @filter = Filter.new(filter_params)
+    redirect_to events_path(@filter.to_params)
+  end
+
+  def create
+    if params[:f].present?
+      @filter = Filter.find(params[:f])
+      redirect_to events_path(f: @filter.id)
+      return
+    end
+
+    @filter = Filter.new(filter_params)
     if params[:commit].present? && @filter.save
       redirect_to events_path(f: @filter.id)
     else
@@ -15,37 +61,8 @@ class FiltersController < ApplicationController
     end
   end
 
-  def show
-    @filter = Filter.find(params[:id])
-
-    cal = Icalendar::Calendar.new
-    cal.x_wr_calname = "WasLouft - #{@filter.name}"
-    @filter.events.group_by(&:start_date).each do |date, events|
-      sorted_events = events.sort_by { |e| e.locations.sort }
-      cal.event do |e|
-        e.dtstart = Icalendar::Values::Date.new(date.strftime('%Y%m%d'))
-        e.uid = "waslouft.ch@#{@filter.id}-#{date.strftime('%Y%m%d')}"
-        e.summary = "#{events.count} #{Event.model_name.human(count: events.count)}"
-        e.description = sorted_events.map do |event|
-          locations = event.locations.join(', ')
-          title = event.title
-          tags = (event.styles + event.genres).uniq.sort.join(', ')
-
-          buffer = StringIO.new
-          buffer << "#{locations}: #{title}"
-          if tags.present?
-            buffer << " [#{tags}]"
-          end
-          buffer.string
-        end.join("\n------------\n")
-      end
-    end
-    cal.publish
-    render plain: cal.to_ical
-  end
-
   def update
-    @filter = Filter.find(params[:id])
+    @filter = Filter.find(params[:f])
     @filter.assign_attributes(filter_params)
 
     if params[:commit].present? && @filter.save
@@ -56,7 +73,7 @@ class FiltersController < ApplicationController
   end
 
   def destroy
-    @filter = Filter.find(params[:id])
+    @filter = Filter.find(params[:f])
     @filter.destroy
     redirect_to events_path
   end

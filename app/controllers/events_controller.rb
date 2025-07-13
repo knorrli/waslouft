@@ -6,10 +6,10 @@ class EventsController < ApplicationController
   # GET /events
   def index
     @filter = Filter.find_or_initialize_by(id: params[:f])
-    @filter.location_list = params[:l].split(',') if params[:l]
-    @filter.style_list = params[:s].split(',') if params[:s]
-    @filter.genre_list = params[:g].split(',') if params[:g]
-    @filter.date_ranges = params[:d].split(',') if params[:d]
+    @filter.location_list = params[:l] if params[:l].present?
+    @filter.style_list = params[:s] if params[:s].present?
+    # @filter.genre_list = params[:g].split(',') if params[:g]
+    @filter.date_ranges = params[:d].compact_blank if params[:d].present?
 
     @q = Event.ransack(@filter.ransack_query)
     @events = @q.result(distinct: true).order(start_date: :asc).page(params[:page])

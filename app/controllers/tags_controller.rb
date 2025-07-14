@@ -20,4 +20,11 @@ class TagsController < ApplicationController
       .distinct
       .order(name: :asc)
   end
+
+  def destroy
+    @tag = ActsAsTaggableOn::Tag.find(params[:id])
+    @tag.discard
+
+    redirect_back fallback_location: admin_path
+  end
 end

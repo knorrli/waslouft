@@ -51,6 +51,7 @@
           </div>
 
           <%= f.submit t('actions.save'), class: '' %>
+          <%= link_to t('actions.delete'), tag_path(genre_tag), class: 'button delete', data: { turbo_method: :delete, turbo_frame: '_top' } %>
         <% end %>
 
       </fieldset>

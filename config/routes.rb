@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       post :chips
     end
   end
-  resources :tags, only: :index do
+  resources :tags, only: [:index, :destroy] do
     collection do
       post :chips
     end

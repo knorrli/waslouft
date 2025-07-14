@@ -13,6 +13,8 @@ module ActsAsTaggableOn
   end
 
   class Tag < ActsAsTaggableOn.base_class.constantize
+    include Discard::Model
+
     def self.ransackable_associations(auth_object = nil)
       ['taggings']
     end

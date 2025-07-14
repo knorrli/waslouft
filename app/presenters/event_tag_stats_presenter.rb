@@ -18,17 +18,21 @@ class EventTagStatsPresenter
   end
 
   def assigned_genre_tags
-    genre_tags.where(
-      'EXISTS (:taggings_for_genre_and_style)',
-      taggings_for_genre_and_style: subquery_genre_tags_associated_to_style
-    )
+    genre_tags
+      .kept
+      .where(
+        'EXISTS (:taggings_for_genre_and_style)',
+        taggings_for_genre_and_style: subquery_genre_tags_associated_to_style
+      )
   end
 
   def unassigned_genre_tags
-    genre_tags.where(
-      'NOT EXISTS (:taggings_for_genre_and_style)',
-      taggings_for_genre_and_style: subquery_genre_tags_associated_to_style
-    )
+    genre_tags
+      .kept
+      .where(
+        'NOT EXISTS (:taggings_for_genre_and_style)',
+        taggings_for_genre_and_style: subquery_genre_tags_associated_to_style
+      )
   end
 
   private

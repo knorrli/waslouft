@@ -5,9 +5,12 @@ class GenreStyleAssignmentsController < ApplicationController
   end
 
   def create
-    @style = Style.find(genre_style_assignment_params[:style_id])
-    @style.genre_list.add(genre_style_assignment_params[:tag_value])
-    @style.save
+    styles = Style.where(id: genre_style_assignment_params[:style_ids].split(','))
+    styles.each do |style|
+      style.genre_list.add(genre_style_assignment_params[:tag_value])
+      style.save
+    end
+
     redirect_to genre_style_assignments_path
   end
 

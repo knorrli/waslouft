@@ -14,7 +14,6 @@ class TagsController < ApplicationController
 
   def chips
     @tags = ActsAsTaggableOn::Tag
-      .where.not(name: params[:applied])
       .where(name: params[:combobox_values].split(','))
       .joins(:taggings)
       .where(taggings: { context: params[:context].presence, taggable_type: Event.name })

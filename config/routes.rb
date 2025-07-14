@@ -15,7 +15,11 @@ Rails.application.routes.draw do
   resource :session
 
   resources :events, only: [:index, :destroy]
-
+  resources :styles, only: :index do
+    collection do
+      post :chips
+    end
+  end
   resources :tags, only: :index do
     collection do
       post :chips

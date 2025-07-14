@@ -22,7 +22,7 @@
           <% SimilarTaggingsFinder.call(context: 'genres', taggable_type: Style.name, tag: genre_tag.name).limit(10).group_by(&:taggable).each do |taggable, taggings| %>
             <div class="suggestion flex flex-col gap-small">
               <h4><%= taggable %></h4>
-              <div class="flex flex-row justify-between align-stretch">
+              <div class="flex flex-row justify-between align-baseline">
                 <div class="flex gap-small wrap">
                   <% taggings.each do |tagging| %>
                     <span class="tag"><%= tagging.tag.name %></span>
@@ -41,11 +41,14 @@
 
         <h4><%= t('.manual_entry') %></h4>
         <%= form_with url: genre_style_assignments_path, class: 'flex justify-between gap-large' do |f| %>
-          <%= f.hidden_field 'genre_style_assignment[tag_value]', value: genre_tag.name %>
-          <%= f.combobox 'genre_style_assignment[style_id]', Style.order(name: :asc) do |combobox| %>
+          <div class="input-wrapper flex flex-grow">
 
-            <% combobox.customize_fieldset class: 'flex-grow' %>
-          <% end %>
+            <%= f.hidden_field 'genre_style_assignment[tag_value]', value: genre_tag.name %>
+            <%= f.combobox 'genre_style_assignment[style_ids]', Style.order(name: :asc), id: "genre_#{genre_tag.id}", multiselect_chip_src: chips_styles_path do |combobox| %>
+
+              <% combobox.customize_fieldset class: 'flex-grow' %>
+            <% end %>
+          </div>
 
           <%= f.submit t('actions.save'), class: '' %>
         <% end %>

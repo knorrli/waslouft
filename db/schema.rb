@@ -12,6 +12,7 @@
 
 ActiveRecord::Schema[8.0].define(version: 2025_06_23_213444) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "fuzzystrmatch"
   enable_extension "pg_catalog.plpgsql"
 
   create_table "events", force: :cascade do |t|

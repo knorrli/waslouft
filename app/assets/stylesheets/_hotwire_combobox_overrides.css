@@ -49,15 +49,9 @@ body {
   }
 
   .hw-combobox__chip {
-    border: none;
+    border-width: var(--tag-border-width);
     padding: 5px;
     font-size: 80%;
-    background-color: var(--theme-accent-color);
-    color: var(--theme-bg-color);
     white-space: nowrap;
-  }
-
-  .hw-combobox__chip__remover {
-    background-image: none;
   }
 }

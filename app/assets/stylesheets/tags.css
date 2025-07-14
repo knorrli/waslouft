@@ -3,7 +3,7 @@
   font-size: 80%;
   background-color: var(--theme-bg-color);
   color: var(--theme-fg-color);
-  line-height: 1.1;
+  line-height: var(--tag-line-height);
   border: var(--border-width) solid var(--theme-fg-color);
 }
 

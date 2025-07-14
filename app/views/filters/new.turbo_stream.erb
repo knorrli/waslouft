@@ -5,13 +5,13 @@
     <%= f.hidden_field :date_ranges, value: @filter.date_ranges, data: { source_name: 'd[]', filter_target: 'filterInput' } %>
 
     <div class="filter-select input-wrapper flex flex-grow flex-wrap gap-small">
-      <%= f.text_field :name %>
+      <%= f.text_field :name, placeholder: 'mein neuer Filter', autofocus: true, required: true %>
     </div>
 
-    <div class="actions flex flex-wrap justify-between">
-      <%= link_to t('actions.cancel'), :back, class: 'button' %>
-
+    <div class="actions flex flex-wrap gap-medium justify-between">
       <%= submit_tag t('actions.create_filter'), data: { turbo_frame: '_top' } %>
+
+      <%= link_to t('actions.cancel'), :back, class: 'button' %>
     </div>
   <% end %>
 <% end %>

@@ -1,7 +1,7 @@
 class Filter < ApplicationRecord
   acts_as_taggable_on :locations, :styles, :genres
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 
   def self.ransackable_attributes(auth_object = nil)
     ['name']

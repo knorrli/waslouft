@@ -21,4 +21,30 @@ input[type=submit] {
   border-radius: var(--border-radius);
   background-color: var(--theme-accent-color);
   color: var(--theme-bg-color);
+
+  &[disabled] {
+    color: var(--theme-fg-color);
+    cursor: not-allowed;
+    background-color: var(--theme-bg-color);
+  }
+}
+
+input[type=text] {
+  background-color: inherit;
+  color: inherit;
+  border: none;
+  font-size: inherit;
+  min-width: calc(var(--hw-combobox-width) / 2);
+  padding: 0;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  flex-grow: 1;
+  line-height: var(--filter-input-line-height);
+
+  &:focus,
+  &:focus-visible,
+  &:focus-within {
+    box-shadow: none;
+    outline: none;
+  }
 }

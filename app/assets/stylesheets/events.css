@@ -1,4 +1,5 @@
 .input-wrapper {
+  padding: var(--gap-small);
   border: var(--border-width) solid var(--border-color);
   line-height: var(--filter-input-line-height);
   position: relative;
@@ -7,24 +8,11 @@
     box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
   }
 
-  &:has(.chip) {
+  &:has(.tag) {
     input::placeholder {
       color: transparent;
     }
   }
-}
-
-.chips {
-  padding-left: var(--gap-medium);
-}
-
-.chip {
-  border: none;
-  padding: 3px 5px;
-  font-size: 80%;
-  background-color: var(--theme-accent-color);
-  color: var(--theme-bg-color);
-  white-space: nowrap;
 }
 
 .filter-icon {

@@ -14,7 +14,7 @@
 
     <div class="flex flex-row gap-small wrap">
       <% event.locations.each do |location| %>
-        <%= button_tag type: :button, class: class_names(:tag, active: filter.location_list.include?(location.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': location.name, 'combobox-filter-context-param': 'locations' } do %>
+        <%= button_tag type: :button, class: class_names(:tag, active: filter.location_list.include?(location.name)), data: { action: 'filter#toggleFilter', filter_field_name_param: 'l[]', filter_value_param: location.name } do %>
           <div class="flex gap-small">
             <span class="<%= tag_icon_class(context: 'locations') %>"></span>
             <span><%= location %></span>
@@ -24,7 +24,7 @@
 
       <% if event.styles.any? %>
         <% event.styles.each do |style| %>
-          <%= button_tag type: :button, class: class_names(:tag, active: filter.style_list.include?(style.name)), data: { action: 'combobox-filter#toggleTag', 'combobox-filter-tag-param': style.name, 'combobox-filter-context-param': 'styles' } do %>
+          <%= button_tag type: :button, class: class_names(:tag, active: filter.style_list.include?(style.name)), data: { action: 'filter#toggleFilter', filter_field_name_param: 's[]', filter_value_param: style.name } do %>
             <div class="flex gap-small">
               <span class="<%= tag_icon_class(context: 'styles') %>"></span>
               <span><%= style %></span>

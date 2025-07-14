@@ -31,6 +31,23 @@ export default class extends Controller {
     this.filterFormTarget.submit();
   }
 
+  toggleFilter(event) {
+    const value = event.params.value;
+    const fieldName = event.params.fieldName;
+    const input = this.formTarget.querySelector(`[name="${event.params.fieldName}"]`);
+    const existingValues = JSON.parse(input.dataset.existingValues);
+    let newValues;
+    if (existingValues.includes(value)) {
+      newValues = existingValues.filter((existingValue) => existingValue !== value)
+    } else {
+      newValues = [...existingValues, value];
+    }
+    debugger;
+    input.dataset.existingValues = JSON.stringify(newValues);
+
+    this.submit();
+  }
+
   removeFilter(event) {
     const value = event.params.value;
     const fieldName = event.params.fieldName;

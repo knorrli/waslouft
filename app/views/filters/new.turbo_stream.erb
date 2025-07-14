@@ -1,0 +1,17 @@
+<%= turbo_stream.update(:filter_form) do %>
+  <%= form_with model: @filter, class: 'flex flex-col gap-large', data: { filter_target: 'filterForm' } do |f| %>
+    <%= f.hidden_field :style_list, value: @filter.style_list, data: { source_name: 's[]', filter_target: 'filterInput' } %>
+    <%= f.hidden_field :location_list, value: @filter.location_list, data: { source_name: 'l[]', filter_target: 'filterInput' } %>
+    <%= f.hidden_field :date_ranges, value: @filter.date_ranges, data: { source_name: 'd[]', filter_target: 'filterInput' } %>
+
+    <div class="filter-select input-wrapper flex flex-grow flex-wrap gap-small">
+      <%= f.text_field :name %>
+    </div>
+
+    <div class="actions flex flex-wrap justify-between">
+      <%= link_to t('actions.cancel'), :back, class: 'button' %>
+
+      <%= submit_tag t('actions.create_filter'), data: { turbo_frame: '_top' } %>
+    </div>
+  <% end %>
+<% end %>

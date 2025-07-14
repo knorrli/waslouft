@@ -45,6 +45,7 @@ export default class extends Controller {
       calendars: this.calendarsValue,
       readonly: this.readonlyValue,
       inline: this.inlineValue,
+      zIndex: 1000,
       css: [
         RAILS_ASSET_URL("/easepick.min.css"),
         RAILS_ASSET_URL("/_easepick_overrides.css"),
@@ -87,8 +88,8 @@ export default class extends Controller {
             console.log("small grid");
           }
 
-          picker.ui.container.style.left = '-13px';
           picker.ui.container.style.top = '42px';
+          picker.ui.container.style.left = `-${wrapperTarget.getBoundingClientRect().left - 40}px`;
           picker.ui.container.style.right = `-${calculatedWidth}px`;
           picker.renderAll();
         });

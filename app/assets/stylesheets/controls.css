@@ -1,0 +1,24 @@
+button, a.button {
+  cursor: pointer;
+  text-decoration: none;
+  padding: 5px;
+  border: var(--border-width) solid var(--theme-bg-muted);
+  border-radius: var(--border-radius);
+  background-color: var(--theme-bg-muted);
+  color: var(--theme-fg-color);
+
+  &[disabled] {
+    cursor: not-allowed;
+    background-color: var(--theme-bg-color);
+  }
+}
+
+input[type=submit] {
+  cursor: pointer;
+  text-decoration: none;
+  padding: 5px;
+  border: var(--border-width) solid var(--theme-accent-color);
+  border-radius: var(--border-radius);
+  background-color: var(--theme-accent-color);
+  color: var(--theme-bg-color);
+}

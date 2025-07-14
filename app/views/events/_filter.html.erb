@@ -1,13 +1,16 @@
-<section class="filter" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @filter.date_ranges.to_json %>" data-datepicker-grid-value="2" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= Datepicker.preset.to_json %>" data-datepicker-preset-position-value="left">
-  <%= form_with url: events_path, method: :get, id: 'filter-form', class: 'flex flex-col gap-large', data: { turbo: true, filter_target: 'form' } do |f| %>
+<section class="filter flex flex-col gap-large" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @filter.date_ranges.to_json %>" data-datepicker-grid-value="2" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= Datepicker.preset.to_json %>" data-datepicker-preset-position-value="left">
+  <%= form_with url: events_path, method: :get, id: 'filter-form', class: 'flex flex-col gap-large', data: { filter_target: 'form' } do |f| %>
+    <%= f.hidden_field 'f', value: @filter.id %>
 
-    <div class="input-wrapper flex wrap gap-small">
-      <% @filter.style_list.each do |style| %>
-        <div class="hw-combobox__chip flex flex-row gap-small align-baseline">
-          <span><%= style %></span>
-          <span tabindex="0" class="hw-combobox__chip__remover ti-close" aria-label="Remove <%= style %>" data-action="click->filter#removeFilter:stop" data-filter-field-name-param='s[]' data-filter-value-param="<%= style %>"></span>
-        </div>
-      <% end %>
+    <div class="input-wrapper flex wrap gap-small align-center">
+      <div class="chips flex flex-row gap-small">
+        <% @filter.style_list.each do |style| %>
+          <div class="chip flex flex-row gap-small align-baseline">
+            <span><%= style %></span>
+            <span tabindex="0" class="hw-combobox__chip__remover ti-close" aria-label="Remove <%= style %>" data-action="click->filter#removeFilter:stop" data-filter-field-name-param='s[]' data-filter-value-param="<%= style %>"></span>
+          </div>
+        <% end %>
+      </div>
       <%= f.combobox 's[]', tags_path(context: 'styles', applied: @filter.style_list), value: '', preload: true, placeholder: t('.what') do |combobox| %>
         <% combobox.customize_fieldset class: 'flex-grow' %>
         <% combobox.customize_hidden_field data: { filter_target: 'input', existing_values: @filter.style_list.to_json } %>
@@ -15,13 +18,15 @@
       <% end %>
     </div>
 
-    <div class="input-wrapper flex wrap gap-small">
-      <% @filter.location_list.each do |location| %>
-        <div class="hw-combobox__chip flex flex-row gap-small align-baseline">
-          <span><%= location %></span>
-          <span tabindex="0" class="hw-combobox__chip__remover ti-close" aria-label="Remove <%= location %>" data-action="click->filter#removeFilter:stop" data-filter-field-name-param='l[]' data-filter-value-param="<%= location %>"></span>
-        </div>
-      <% end %>
+    <div class="input-wrapper flex wrap gap-small align-center">
+      <div class="chips flex flex-row gap-small">
+        <% @filter.location_list.each do |location| %>
+          <div class="chip flex flex-row gap-small align-baseline">
+            <span><%= location %></span>
+            <span tabindex="0" class="hw-combobox__chip__remover ti-close" aria-label="Remove <%= location %>" data-action="click->filter#removeFilter:stop" data-filter-field-name-param='l[]' data-filter-value-param="<%= location %>"></span>
+          </div>
+        <% end %>
+      </div>
       <%= f.combobox 'l[]', tags_path(context: 'locations', applied: @filter.location_list), value: nil, preload: true, placeholder: t('.where') do |combobox| %>
         <% combobox.customize_fieldset class: 'flex-grow' %>
         <% combobox.customize_hidden_field data: { filter_target: 'input', existing_values: @filter.location_list.to_json } %>
@@ -30,40 +35,46 @@
     </div>
 
     <%= f.hidden_field 'd[]', id: 'd[]-hidden-input', data: { existing_values: @filter.date_ranges.to_json, filter_target: 'input' } %>
-    <div class="datepicker input-wrapper flex wrap gap-small" data-datepicker-target="wrapper">
+    <div class="datepicker input-wrapper flex wrap gap-small align-center" data-datepicker-target="wrapper">
+      <div class="chips flex flex-row gap-small">
         <% @filter.date_ranges.each do |date_range| %>
-          <div class="hw-combobox__chip flex flex-row gap-small align-baseline">
+          <div class="chip flex flex-row gap-small align-baseline">
             <span><%= datepicker_tag_content(date_range) %></span>
             <span tabindex="0" class="hw-combobox__chip__remover ti-close" aria-label="Remove <%= date_range %>" data-action="click->filter#removeFilter:stop" data-filter-field-name-param="d[]" data-filter-value-param="<%= date_range %>"></span>
           </div>
         <% end %>
-      <%= text_field_tag '', '', id: 'd[]', class: 'datepicker-input', placeholder: t('.when'), data: { datepicker_target: 'input' } %>
-      <span class="datepicker-handle filter-icon ti-calendar" data-action="click->datepicker#toggle"></span>
+      </div>
+      <div class="hw-combobox__main__wrapper flex-grow">
+        <%= text_field_tag '', '', id: 'd[]', class: 'datepicker-input', placeholder: t('.when'), data: { datepicker_target: 'input' } %>
+        <span class="datepicker-handle filter-icon ti-calendar" data-action="click->datepicker#toggle"></span>
+      </div>
     </div>
+  <% end %>
 
-    <%# <div class="save flex wrap justify-between gap-large"> %>
-    <%#   <div class="filter-select flex flex-grow flex-wrap gap-small"> %>
-    <%#     <%= f.combobox :f, filters_path, preload: true, placeholder: t('.filter') do |combobox| %1> %>
-    <%#       <% combobox.customize_fieldset class: 'flex-grow' %1> %>
-    <%#       <% combobox.customize_hidden_field data: { filter_target: 'filters' } %1> %>
-    <%#       <% combobox.customize_handle class: "filter-icon ti-filter" %1> %>
-    <%#     <% end %1> %>
-    <%#   </div> %>
+  <%= turbo_frame_tag :filter_form do %>
+    <%= form_with model: @filter, class: 'flex flex-col gap-large', data: { filter_target: 'filterForm' } do |f| %>
+      <%= f.hidden_field :style_list, value: @filter.style_list, data: { source_name: 's[]', filter_target: 'filterInput' } %>
+      <%= f.hidden_field :location_list, value: @filter.location_list, data: { source_name: 'l[]', filter_target: 'filterInput' } %>
+      <%= f.hidden_field :date_ranges, value: @filter.date_ranges, data: { source_name: 'd[]', filter_target: 'filterInput' } %>
 
-    <%#   <%1# <%= f.text_field :name, class: 'flex-grow', placeholder: 'Mein eigener Filter :)' %2> %1> %>
+      <div class="filter-select input-wrapper flex flex-grow flex-wrap gap-small">
+        <%= f.combobox :name, filters_path, preload: true, placeholder: t('.filter') do |combobox| %>
+          <% combobox.customize_fieldset class: 'flex-grow' %>
+          <% combobox.customize_hidden_field data: { filter_target: 'filters' } %>
+          <% combobox.customize_handle class: "filter-icon ti-filter" %>
+        <% end %>
+      </div>
 
-    <%#   <div class="flex"> %>
-    <%#     <% if @filter.new_record? %1> %>
-    <%#       <%= f.submit t('.create_filter'), class: 'flex-grow' %1> %>
-    <%#     <% else %1> %>
-    <%#       <%= f.submit t('.update_filter'), class: 'flex-grow', disabled: !@filter.changed? %1> %>
-    <%#       <%= link_to filter_path(@filter), data: { turbo_prefetch: false, turbo_method: :delete } do %1> %>
-    <%#         <%= t('.delete_filter') %1> %>
-    <%#       <% end %1> %>
-    <%#     <% end %1> %>
-    <%#   </div> %>
-    <%# </div> %>
+      <div class="actions flex flex-wrap justify-between">
+        <%= link_to t('actions.new_filter'), new_filter_path, class: 'button', data: { turbo_stream: true } %>
+        <% if @filter.persisted? %>
+          <%= button_tag t('actions.update_filter'), type: :button, class: 'filter-button', disabled: !@filter.changed?, data: { action: 'filter#updateFilter:stop' } %>
+          <%= link_to t('actions.reset_filter'), filter_path(@filter), disabled: !@filter.changed?, method: :get, class: 'button filter-button', data: { turbo_frame: '_top' } %>
+        <%= link_to t('actions.delete_filter'), filter_path(@filter), class: 'button', data: { turbo_method: :delete, turbo_frame: '_top' } %>
+        <% end %>
 
+      </div>
+    <% end %>
   <% end %>
 </section>
 

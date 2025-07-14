@@ -1,19 +1,30 @@
 .input-wrapper {
   border: var(--border-width) solid var(--border-color);
-  /* padding: var(--gap-small) var(--gap-medium); */
-  /* padding: var(--hw-padding--slim) calc(var(--hw-handle-width) + var(--hw-padding--slimmer)) var(--hw-padding--slim) var(--hw-padding--thick); */
-  line-height: var(--filter-input-lineheight);
+  line-height: var(--filter-input-line-height);
   position: relative;
 
   &:focus-within {
     box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
   }
 
-  &:has(.hw-combobox__chip) {
+  &:has(.chip) {
     input::placeholder {
       color: transparent;
     }
   }
+}
+
+.chips {
+  padding-left: var(--gap-medium);
+}
+
+.chip {
+  border: none;
+  padding: 3px 5px;
+  font-size: 80%;
+  background-color: var(--theme-accent-color);
+  color: var(--theme-bg-color);
+  white-space: nowrap;
 }
 
 .filter-icon {
@@ -22,12 +33,16 @@
   align-items: center;
 }
 
+.filter-button {
+  line-height: var(--filter-input-line-height);
+}
+
 .searchbar {
   gap: 5vw;
 }
 
 .filter-select {
-  line-height: var(--filter-input-lineheight);
+  line-height: var(--filter-input-line-height);
 }
 
 .date {

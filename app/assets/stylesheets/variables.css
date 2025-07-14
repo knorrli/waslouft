@@ -14,6 +14,6 @@
   --gap-medium: 10px;
   --gap-large: 20px;
   --gap-xlarge: 50px;
-  --filter-input-lineheight: 2.125rem;
-  --filter-icon-size: var(--filter-input-lineheight);
+  --filter-input-line-height: 1.5rem;
+  --filter-icon-size: var(--filter-input-line-height);
 }

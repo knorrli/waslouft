@@ -23,8 +23,7 @@ Rails.application.routes.draw do
   end
 
   resources :filters
-  post 'filters/render', to: 'filters#render', as: :render_filters
-  get 'calendar/:f', to: 'filters#show', defaults: { format: :ics }
+  get 'calendar/:id', to: 'filters#show', defaults: { format: :ics }
 
   scope :admin do
     get '', to: 'admin#index', as: :admin

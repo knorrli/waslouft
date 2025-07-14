@@ -3,9 +3,16 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="filter"
 export default class extends Controller {
 
-  static targets = ['form', 'input', 'locations', 'styles', 'dateRanges'];
+  static targets = ['form', 'filterForm', 'input', 'filterInput'];
 
   submit(event) {
+    if (event?.detail?.fieldName == 'filter[name]') {
+      if (event.detail.value) {
+        window.location.href = `/filters/${event.detail.value}`;
+      }
+      return;
+    }
+
     this.inputTargets.forEach((input) => {
       const existingValues = JSON.parse(input.dataset.existingValues);
       const newValue = document.getElementById(input.name).value;
@@ -15,10 +22,19 @@ export default class extends Controller {
     this.formTarget.submit();
   }
 
+  updateFilter() {
+    this.filterInputTargets.forEach((filterInput) => {
+      const sourceInput = this.formTarget.querySelector(`[name="${filterInput.dataset.sourceName}"]`);
+      const existingValues = JSON.parse(sourceInput.dataset.existingValues);
+      filterInput.value = existingValues;
+    });
+    this.filterFormTarget.submit();
+  }
+
   removeFilter(event) {
     const value = event.params.value;
     const fieldName = event.params.fieldName;
-    const input = event.target.closest('#filter-form').querySelector(`[name="${event.params.fieldName}"]`);
+    const input = this.formTarget.querySelector(`[name="${event.params.fieldName}"]`);
     const existingValues = JSON.parse(input.dataset.existingValues);
     input.dataset.existingValues = JSON.stringify(existingValues.filter((existingValue) => existingValue !== value))
 

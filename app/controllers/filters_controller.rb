@@ -6,7 +6,8 @@ class FiltersController < ApplicationController
   end
 
   def show
-    @filter = Filter.find(params[:f])
+    @filter = Filter.find(params[:id])
+
     respond_to do |format|
       format.html do
         redirect_to events_path(f: @filter.id)
@@ -41,20 +42,13 @@ class FiltersController < ApplicationController
     end
   end
 
-  def render
-    @filter = Filter.new(filter_params)
-    redirect_to events_path(@filter.to_params)
+  def new
+    @filter = Filter.new
   end
 
   def create
-    if params[:f].present?
-      @filter = Filter.find(params[:f])
-      redirect_to events_path(f: @filter.id)
-      return
-    end
-
     @filter = Filter.new(filter_params)
-    if params[:commit].present? && @filter.save
+    if @filter.save
       redirect_to events_path(f: @filter.id)
     else
       redirect_to events_path(@filter.to_params)
@@ -62,10 +56,9 @@ class FiltersController < ApplicationController
   end
 
   def update
-    @filter = Filter.find(params[:f])
-    @filter.assign_attributes(filter_params)
+    @filter = Filter.find(params[:id])
 
-    if params[:commit].present? && @filter.save
+    if @filter.update(filter_params)
       redirect_to events_path(f: @filter.id)
     else
       redirect_to events_path(@filter.to_params)
@@ -73,7 +66,7 @@ class FiltersController < ApplicationController
   end
 
   def destroy
-    @filter = Filter.find(params[:f])
+    @filter = Filter.find(params[:id])
     @filter.destroy
     redirect_to events_path
   end

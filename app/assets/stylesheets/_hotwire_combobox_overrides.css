@@ -11,6 +11,7 @@ body {
   --hw-border-color: var(--border-color);
   --hw-focus-color: var(--theme-accent-color);
   --hw-handle-width: var(--filter-icon-size);
+  --hw-line-height: var(--filter-input-line-height);
 
   .hw-combobox__dialog {
     background-color: var(--theme-bg-color);
@@ -25,6 +26,10 @@ body {
     }
   }
 
+  .hw-combobox__input[data-queried] + .hw-combobox__handle::before {
+    background-image: none;
+    background-size: var(--hw-handle-width--queried);
+  }
   .hw-combobox__handle {
     &::before {
       background-image: none;

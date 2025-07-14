@@ -6,6 +6,12 @@ de:
       manual_entry: Manuelle Zuweisung
   actions:
     save: Speichern
+    cancel: Abbrechen
+    new_filter: Neuer Filter
+    reset_filter: Filter zurücksetzen
+    create_filter: Filter erstellen
+    update_filter: Filter anpassen
+    delete_filter: Filter löschen
   activemodel:
     models:
       genre:
@@ -44,9 +50,6 @@ de:
     tomorrow: Morgen
   events:
     filter:
-      create_filter: Neuen Filter erstellen
-      delete_filter: Filter löschen
-      update_filter: Filter anpassen
       filter: Deine Filter
       what: Was?
       when: Wann?

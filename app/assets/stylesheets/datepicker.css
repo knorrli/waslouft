@@ -1,7 +1,5 @@
 /* TODO: use own CSS variables */
 .datepicker {
-  padding: var(--hw-padding--slim) calc(var(--hw-handle-width) + var(--hw-padding--slimmer)) var(--hw-padding--slim) var(--hw-padding--thick);
-
   input {
     background-color: inherit;
     color: inherit;
@@ -12,7 +10,7 @@
     text-overflow: ellipsis;
     max-width: 100%;
     flex-grow: 1;
-    line-height: var(--filter-input-lineheight);
+    line-height: var(--filter-input-line-height);
 
     &:focus,
     &:focus-visible,

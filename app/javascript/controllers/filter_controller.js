@@ -34,7 +34,11 @@ export default class extends Controller {
     }
   }
 
-  submit(event) {
+  apply(event) {
+    if (!event?.detail?.value) {
+      return;
+    }
+
     // update filter name
     if (event?.detail?.fieldName == 'filter[name]') {
       if (event?.detail?.value) {
@@ -77,7 +81,9 @@ export default class extends Controller {
     }
     input.dataset.existingValues = JSON.stringify(newValues);
 
-    this.submit();
+    this.#copyFormToFilterForm();
+
+    this.formTarget.requestSubmit();
   }
 
   removeFilter(event) {
@@ -87,7 +93,9 @@ export default class extends Controller {
     const existingValues = JSON.parse(input.dataset.existingValues);
     input.dataset.existingValues = JSON.stringify(existingValues.filter((existingValue) => existingValue !== value))
 
-    this.submit();
+    this.#copyFormToFilterForm();
+
+    this.formTarget.requestSubmit();
   }
 
   #copyFormToFilterForm() {

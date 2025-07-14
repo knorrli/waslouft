@@ -1,7 +1,6 @@
 <section class="filter flex flex-col gap-large" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @filter.date_ranges.to_json %>" data-datepicker-grid-value="2" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= Datepicker.preset.to_json %>" data-datepicker-preset-position-value="left">
   <%= form_with url: events_path, method: :get, id: 'filter-form', class: 'flex flex-col gap-large', data: { filter_target: 'form' } do |f| %>
     <%= f.hidden_field 'f', value: @filter.id, data: { filter_target: 'filterIdInput' } %>
-
     <div class="input-wrapper flex flex-row gap-small">
       <% if @filter.style_list.any? %>
         <div class="chips flex flex-row wrap gap-small">

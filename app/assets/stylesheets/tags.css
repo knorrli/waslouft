@@ -4,17 +4,18 @@
   background-color: var(--theme-bg-color);
   color: var(--theme-fg-color);
   line-height: var(--tag-line-height);
-  border: var(--border-width) solid var(--theme-fg-color);
+  border: var(--tag-border-width) solid var(--theme-fg-color);
 }
 
 button.tag {
   cursor: pointer;
-  border: none;
+  border-color: var(--theme-bg-muted);
   background-color: var(--theme-bg-muted);
   color: var(--theme-fg-color);
 
   &.active {
     background-color: var(--theme-accent-color);
+    border-color: var(--theme-accent-color);
     color: var(--theme-bg-color);
   }
 }

@@ -1,28 +1,8 @@
 /* TODO: use own CSS variables */
 .datepicker {
-  input {
-    background-color: inherit;
-    color: inherit;
-    border: none;
-    font-size: inherit;
-    min-width: calc(var(--hw-combobox-width) / 2);
-    padding: 0;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    flex-grow: 1;
-    line-height: var(--filter-input-line-height);
-
-    &:focus,
-    &:focus-visible,
-    &:focus-within {
-      box-shadow: none;
-      outline: none;
-    }
-  }
-
   .datepicker-handle {
     height: 100%;
-    position: absolute;
+    /* position: absolute; */
     right: var(--hw-handle-offset-right);
     top: 0;
     width: var(--filter-icon-size);

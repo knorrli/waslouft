@@ -61,7 +61,7 @@ class FiltersController < ApplicationController
     if @filter.update(filter_params)
       redirect_to events_path(f: @filter.id)
     else
-      redirect_to events_path(@filter.to_params)
+      redirect_to events_path(@filter.to_params.except(:f))
     end
   end
 

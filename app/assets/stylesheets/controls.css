@@ -7,6 +7,11 @@ button, a.button {
   background-color: var(--theme-bg-muted);
   color: var(--theme-fg-color);
 
+  &.delete {
+    border-color: var(--theme-warn-color);
+    background-color: var(--theme-warn-color);
+  }
+
   &[disabled] {
     cursor: not-allowed;
     background-color: var(--theme-bg-color);

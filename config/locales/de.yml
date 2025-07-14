@@ -7,6 +7,7 @@ de:
   actions:
     save: Speichern
     cancel: Abbrechen
+    delete: Löschen
     new_filter: Neuer Filter
     reset_filter: Filter zurücksetzen
     create_filter: Filter erstellen
@@ -50,7 +51,7 @@ de:
     tomorrow: Morgen
   events:
     filter:
-      filter: Deine Filter
+      filter: Filter auswählen oder erstellen
       what: Was?
       when: Wann?
       where: Wo?

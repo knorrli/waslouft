@@ -77,22 +77,6 @@ export default class extends Controller {
           inputTarget.value = '';
           inputTarget.dispatchEvent(new Event('datepicker.removal', { bubbles: true }));
         });
-        picker.on('show', () => {
-          const originalWidth = picker.ui.container.getBoundingClientRect().width;
-          const calculatedWidth = wrapperTarget.getBoundingClientRect().width - 15;
-          console.log("orig", originalWidth);
-          console.log("calc", calculatedWidth);
-
-          if (originalWidth >= calculatedWidth) {
-            picker.options.grid = 1;
-            console.log("small grid");
-          }
-
-          picker.ui.container.style.top = '42px';
-          picker.ui.container.style.left = `-${wrapperTarget.getBoundingClientRect().left - 40}px`;
-          picker.ui.container.style.right = `-${calculatedWidth}px`;
-          picker.renderAll();
-        });
         picker.on('view', (e) => {
           if (e.detail.view == 'PresetPluginButton') {
             const activeLabels = Object.keys(presetValue).reduce((activeLabels, key) => {

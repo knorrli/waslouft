@@ -3,7 +3,7 @@
 }
 
 body {
-  /* --hw-border-width--slim: 0; */
+  --hw-border-width--slim: var(--border-width);
   --hw-border-radius: 0px;
   --hw-component-bg-color: var(--theme-bg-color);
   --hw-active-bg-color: var(--theme-bg-muted);
@@ -20,6 +20,9 @@ body {
   .hw-combobox__main__wrapper {
     padding: 0;
     border: none;
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
 
     &:focus-within {
       box-shadow: none;
@@ -31,6 +34,8 @@ body {
     background-size: var(--hw-handle-width--queried);
   }
   .hw-combobox__handle {
+    position: unset;
+
     &::before {
       background-image: none;
       position: initial;

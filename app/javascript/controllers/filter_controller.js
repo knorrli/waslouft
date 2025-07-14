@@ -3,22 +3,55 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="filter"
 export default class extends Controller {
 
-  static targets = ['form', 'filterForm', 'input', 'filterInput'];
+  static targets = ['form', 'filterIdInput', 'input', 'filterForm', 'filterInput', 'enabledWhenModifiedControl', 'disabledWhenModifiedControl'];
+
+  handleClear(event) {
+    if (event.explicitOriginalTarget.classList.contains('ti-close')) {
+      event.currentTarget.dataset.hwComboboxExpandedValue = false;
+      this.filterIdInputTarget.value = '';
+      this.formTarget.submit();
+      return;
+    }
+  }
+
+  handleFocus(event) {
+    if (event.explicitOriginalTarget.classList.contains('hw-combobox__handle')) {
+      event.currentTarget.querySelector('input[role=combobox]').focus();
+    }
+  }
+
+  updateControlsStatus(event) {
+    const comboboxWrapper = event.target.closest('.hw-combobox');
+    const combobox = comboboxWrapper.querySelector('input[role=combobox]');
+    const filterModified = comboboxWrapper.dataset.originalValue !== combobox.value;
+
+    if (filterModified && combobox.value) {
+      this.disabledWhenModifiedControlTargets.forEach((target) => target.setAttribute('disabled', 'disabled'));
+      this.enabledWhenModifiedControlTargets.forEach((target) => target.removeAttribute('disabled'));
+    } else {
+      this.disabledWhenModifiedControlTargets.forEach((target) => target.removeAttribute('disabled'));
+      this.enabledWhenModifiedControlTargets.forEach((target) => target.setAttribute('disabled', 'disabled'));
+    }
+  }
 
   submit(event) {
+    // update filter name
     if (event?.detail?.fieldName == 'filter[name]') {
+      if (event?.detail?.value) {
+        this.filterFormTarget.submit();
+      }
+      return;
+    }
+
+    // select new filter
+    if (event?.detail?.fieldName == 'f') {
       if (event.detail.value) {
         window.location.href = `/filters/${event.detail.value}`;
       }
       return;
     }
 
-    this.inputTargets.forEach((input) => {
-      const existingValues = JSON.parse(input.dataset.existingValues);
-      const newValue = document.getElementById(input.name).value;
-      input.value = [...existingValues, newValue];
-    });
-
+    this.#copyFormToFilterForm();
     this.formTarget.submit();
   }
 
@@ -28,7 +61,7 @@ export default class extends Controller {
       const existingValues = JSON.parse(sourceInput.dataset.existingValues);
       filterInput.value = existingValues;
     });
-    this.filterFormTarget.submit();
+    this.filterFormTarget.requestSubmit();
   }
 
   toggleFilter(event) {
@@ -42,7 +75,6 @@ export default class extends Controller {
     } else {
       newValues = [...existingValues, value];
     }
-    debugger;
     input.dataset.existingValues = JSON.stringify(newValues);
 
     this.submit();
@@ -56,5 +88,16 @@ export default class extends Controller {
     input.dataset.existingValues = JSON.stringify(existingValues.filter((existingValue) => existingValue !== value))
 
     this.submit();
+  }
+
+  #copyFormToFilterForm() {
+    this.inputTargets.forEach((input) => {
+      const existingValues = JSON.parse(input.dataset.existingValues);
+      const comboboxInput = document.getElementById(input.name);
+      if (comboboxInput) {
+        const newValue = comboboxInput.value;
+        input.value = [...existingValues, newValue];
+      }
+    });
   }
 }

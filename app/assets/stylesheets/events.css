@@ -4,10 +4,6 @@
   line-height: var(--filter-input-line-height);
   position: relative;
 
-  &:focus-within {
-    box-shadow: 0 0 0 var(--hw-border-width--thick) var(--hw-focus-color);
-  }
-
   &:has(.tag) {
     input::placeholder {
       color: transparent;
@@ -35,12 +31,12 @@
 
 .date {
   color: var(--theme-accent-color);
-  border-bottom: 5px solid var(--border-color);
+  border-bottom: 5px solid var(--theme-accent-color);
   border-bottom-style: double;
 }
 
 .event {
-  border-bottom: var(--border-width) solid var(--border-color);
+  border-bottom: var(--border-width) solid var(--theme-accent-color);
   padding-bottom: var(--gap-medium);
 
   .event-details {

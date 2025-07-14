@@ -19,6 +19,10 @@ class Filter < ApplicationRecord
     name
   end
 
+  def events
+    Event.ransack(ransack_query).result(distinct: true).order(start_date: :asc)
+  end
+
   def to_params
     params = { f: id }
     params[:l] = location_list.presence || ''

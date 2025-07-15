@@ -8,8 +8,8 @@ class TagsController < ApplicationController
       .result
       .joins(:taggings)
       .where(taggings: { context: params[:context].presence, taggable_type: Event.name })
-      .distinct
       .order(name: :asc)
+      .select(:name, :context).distinct
   end
 
   def chips

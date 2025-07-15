@@ -19,3 +19,8 @@ button.tag {
   background-color: var(--theme-bg-muted);
   color: var(--theme-fg-color);
 }
+
+.filter .tag {
+  font-size: 75%;
+  line-height: 1;
+}

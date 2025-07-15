@@ -1,13 +1,12 @@
-<section class="filter flex flex-col gap-large" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @filter.date_ranges.to_json %>" data-datepicker-grid-value="2" data-datepicker-calendars-value="2" data-datepicker-format-value="YYYY-MM-DD" data-datepicker-lang-value="de-DE" data-datepicker-readonly-value="true" data-datepicker-preset-value="<%= Datepicker.preset.to_json %>" data-datepicker-preset-position-value="left">
-  <%= form_with url: events_path, method: :get, id: 'filter-form', class: 'flex flex-col gap-large', data: { filter_target: 'form', turbo_frame: '_top' } do |f| %>
+<section class="filter flex flex-col gap-medium" >
+  <%= form_with url: events_path, method: :get, id: 'filter-form', class: 'flex flex-col gap-medium', data: { filter_target: 'form', turbo_frame: '_top' } do |f| %>
     <%= f.hidden_field 'f', value: @filter.id, data: { filter_target: 'filterIdInput' } %>
-    <%= f.hidden_field 'q[]', value: @filter.queries.join(','), data: { existing_values: @filter.queries.to_json } %>
 
-    <div class="input-wrapper flex flex-row gap-small">
+    <div class="input-wrapper flex flex-row gap-small" data-action="hw-combobox:selection->filter#addStyleOrQuery">
       <% if @filter.style_list.present? || @filter.queries.present? %>
         <div class="chips flex flex-row wrap gap-small">
           <% @filter.style_list.each do |style| %>
-            <%= button_tag type: :button, class: class_names(:tag, :active), data: { action: 'filter#removeFilter', filter_field_name_param: 's[]', filter_value_param: style.to_s } do %>
+            <%= button_tag type: :button, class: class_names(:tag, :active), data: { action: 'filter#removeStyle', filter_value_param: style.to_s } do %>
               <div class="flex gap-small">
                 <span class="<%= tag_icon_class(context: 'styles') %>"></span>
                 <span><%= style %></span>
@@ -16,7 +15,7 @@
           <% end %>
 
           <% @filter.queries.each do |query| %>
-            <%= button_tag type: :button, class: class_names(:tag, :active), data: { action: 'filter#removeFilter', filter_field_name_param: 'q[]', filter_value_param: query.to_s } do %>
+            <%= button_tag type: :button, class: class_names(:tag, :active), data: { action: 'filter#removeQuery', filter_value_param: query.to_s } do %>
               <div class="flex gap-small">
                 <span class="<%= tag_icon_class(context: 'query') %>"></span>
                 <span><%= query %></span>
@@ -26,19 +25,19 @@
         </div>
       <% end %>
 
-      <%= f.combobox 's[]', tags_path(context: 'styles', applied: @filter.style_list), name_when_new: 'q', value: '', placeholder: t('.what') do |combobox| %>
+      <%= f.hidden_field 'q[]', value: '', data: { filter_target: 'comboboxInput queriesInput', existing_values: @filter.queries.to_json } %>
+      <%= f.combobox('s[]', combobox_options(available_tags(context: :styles, applied: @filter.style_list), render_in: { partial: 'tags/tag' }, value: :name), input: { data: { action: 'input->filter#switchQueryHandle' } }, name_when_new: 'query', placeholder: t('.what')) do |combobox| %>
         <% combobox.customize_fieldset class: 'flex-grow' %>
-        <% combobox.customize_input data: { filter_target: 'combobox', alternative_input_id: 'q' } %>
-        <% combobox.customize_hidden_field data: { existing_values: @filter.style_list.to_json } %>
-        <% combobox.customize_handle class: "filter-icon #{tag_icon_class(context: 'styles')}" %>
+        <% combobox.customize_hidden_field data: { filter_target: 'comboboxInput stylesInput', existing_values: @filter.style_list.to_json } %>
+        <% combobox.customize_handle class: "filter-icon #{tag_icon_class(context: 'styles')}", data: { filter_target: 'queryHandle', default_handle: tag_icon_class(context: 'styles') } %>
       <% end %>
     </div>
 
-    <div class="input-wrapper flex flex-row gap-small">
+    <div class="input-wrapper flex flex-row gap-small" data-action="hw-combobox:selection->filter#addLocation">
       <% if @filter.location_list.any? %>
         <div class="chips flex flex-row wrap gap-small">
           <% @filter.location_list.each do |location| %>
-            <%= button_tag type: :button, class: class_names(:tag, :active), data: { action: 'filter#removeFilter', filter_field_name_param: 'l[]', filter_value_param: location.to_s } do %>
+            <%= button_tag type: :button, class: class_names(:tag, :active), data: { action: 'filter#removeLocation', filter_value_param: location.to_s } do %>
               <div class="flex gap-small">
                 <span class="<%= tag_icon_class(context: 'locations') %>"></span>
                 <span><%= location %></span>
@@ -48,20 +47,19 @@
         </div>
       <% end %>
 
-      <%= f.combobox 'l[]', tags_path(context: 'locations', applied: @filter.location_list), value: nil, placeholder: t('.where') do |combobox| %>
+      <%= f.combobox 'l[]', combobox_options(available_tags(context: :locations, applied: @filter.location_list), render_in: { partial: 'tags/tag' }, value: :name), placeholder: t('.where') do |combobox| %>
         <% combobox.customize_fieldset class: 'flex-grow' %>
-        <% combobox.customize_input data: { filter_target: 'combobox' } %>
-        <% combobox.customize_hidden_field data: { existing_values: @filter.location_list.to_json } %>
+        <% combobox.customize_hidden_field value: 'test', data: { filter_target: 'comboboxInput locationsInput', existing_values: @filter.location_list.to_json } %>
         <% combobox.customize_handle class: "filter-icon #{tag_icon_class(context: 'locations')}" %>
       <% end %>
     </div>
 
-    <%= f.hidden_field 'd[]', id: 'd[]-hidden-input', data: { existing_values: @filter.date_ranges.to_json } %>
-    <div class="datepicker input-wrapper flex gap-small" data-datepicker-target="wrapper">
+    <div class="datepicker input-wrapper flex gap-small" data-controller="datepicker" data-datepicker-date-ranges-value="<%= @filter.date_ranges.to_json %>" data-datepicker-lang-value="<%= I18n.locale %>" data-datepicker-preset-value="<%= Datepicker.preset.to_json %>" data-action="datepicker:selection->filter#addDateRange" data-datepicker-target="wrapper">
+      <%= f.hidden_field 'd[]', id: 'd[]-hidden-input', data: { filter_target: 'comboboxInput dateRangesInput', existing_values: @filter.date_ranges.to_json } %>
       <% if @filter.date_ranges.any? %>
         <div class="chips flex flex-row wrap gap-small">
           <% @filter.date_ranges.each do |date_range| %>
-            <%= button_tag type: :button, class: class_names(:tag, :active), data: { action: 'filter#removeFilter', filter_field_name_param: 'd[]', filter_value_param: date_range.to_s } do %>
+            <%= button_tag type: :button, class: class_names(:tag, :active), data: { action: 'filter#removeDateRange', filter_value_param: date_range.to_s } do %>
               <div class="flex gap-small">
                 <span class="<%= tag_icon_class(context: 'date') %>"></span>
                 <span><%= datepicker_tag_content(date_range) %></span>
@@ -72,7 +70,7 @@
       <% end %>
       <div class="flex-grow">
         <div class="hw-combobox__main__wrapper flex flex-grow">
-          <%= text_field_tag '', '', id: 'd[]', placeholder: t('.when'), data: { filter_target: 'combobox', datepicker_target: 'input' } %>
+          <%= text_field_tag '', '', id: 'd[]', placeholder: t('.when'), data: { datepicker_target: 'input' } %>
           <span class="datepicker-handle filter-icon ti-calendar" data-action="click->datepicker#toggle"></span>
         </div>
       </div>
@@ -85,9 +83,9 @@
     <%= f.hidden_field :location_list, value: @filter.location_list.join(','), data: { source_name: 'l[]', filter_target: 'filterInput' } %>
     <%= f.hidden_field :date_ranges, value: @filter.date_ranges.join(','), data: { source_name: 'd[]', filter_target: 'filterInput' } %>
 
-    <div class="flex flex-row gap-large justify-between">
-      <div class="filter-select input-wrapper flex flex-grow flex-wrap gap-large justify-between">
-        <%= combobox_tag 'f', Filter.order(name: :asc), value: @filter.id, name_when_new: 'filter[name]', placeholder: t('.filter'), data: { original_value: @filter.name.to_s, action: 'input->filter#updateControlsStatus click->filter#handleFocus click->filter#handleClear'  } do |combobox| %>
+    <div class="flex flex-row gap-medium justify-between">
+      <div class="filter-select input-wrapper flex flex-grow flex-wrap gap-large justify-between" data-action="hw-combobox:selection->filter#updateFilter">
+        <%= combobox_tag 'f', Filter.order(name: :asc), value: @filter.id, name_when_new: 'filter[name]', placeholder: t('.filter'), data: { original_value: @filter.name.to_s, action: 'input->filter#updateControlsStatus click->filter#clearFilter'  } do |combobox| %>
           <% combobox.customize_fieldset class: 'flex-grow' %>
           <% combobox.customize_hidden_field data: { filter_target: 'filterIdInput' } %>
           <% if @filter.persisted? %>

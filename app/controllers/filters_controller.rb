@@ -2,7 +2,7 @@ class FiltersController < ApplicationController
   allow_unauthenticated_access
 
   def index
-    @filters = Filter.ransack(name_cont: params[:q]).result
+    @filters = Filter.ransack(name_cont: params[:q]).result.order(name: :asc)
   end
 
   def show

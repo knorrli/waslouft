@@ -1,1 +1,1 @@
-<%= async_combobox_options @filters, display: :name, render_in: { partial: 'filters/filter' }, selected: ->(filter) { filter.id.to_s == params[:f] } %>
+<%= async_combobox_options @filters, render_in: { partial: 'filters/filter' } %>

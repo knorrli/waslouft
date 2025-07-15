@@ -1,11 +1,19 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Override "lock-in" functionality of hotwire combobox
-import HwComboboxController from "controllers/hw_combobox_controller"
-// Prevent filtering of the list when closing the listbox
 // That way, it feels more like a select tag...
-HwComboboxController.prototype._lockInSelection = function () {
-  // do not force selection
+import HwComboboxController from "controllers/hw_combobox_controller"
+
+// Prevent filtering of the list when closing the listbox
+HwComboboxController.prototype._lockInSelection = function() {
+  // if (this._shouldLockInSelection) {
+  //   this._forceSelectionAndFilter(this._ensurableOption, "hw:lockInSelection");
+  // }
+}
+// Do not filter when forcing selection
+HwComboboxController.prototype._forceSelectionAndFilter = function(option, inputType) {
+  this._forceSelectionWithoutFiltering(option);
+  // this._filter(inputType);
 }
 
 // Connects to data-controller="filter"
@@ -139,7 +147,7 @@ export default class extends Controller {
       input.value = JSON.parse(input.dataset.existingValues);
     });
 
-    this.formTarget.submit();
+    this.formTarget.requestSubmit();
   }
 
   #submitFilterForm() {
@@ -148,7 +156,7 @@ export default class extends Controller {
       input.value = JSON.parse(sourceInput.dataset.existingValues);
     });
 
-    this.filterFormTarget.submit();
+    this.filterFormTarget.requestSubmit();
   }
 
 

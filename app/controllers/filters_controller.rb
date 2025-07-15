@@ -75,6 +75,7 @@ class FiltersController < ApplicationController
     joined_params = params.expect(
       filter: [
         :name,
+        :queries,
         :location_list,
         :style_list,
         :genre_list,

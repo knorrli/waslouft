@@ -3,13 +3,14 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="filter"
 export default class extends Controller {
 
-  static targets = ['form', 'filterIdInput', 'input', 'filterForm', 'filterInput', 'enabledWhenModifiedControl', 'disabledWhenModifiedControl'];
+  static targets = ['form', 'filterIdInput', 'combobox', 'input', 'filterForm', 'filterInput', 'enabledWhenModifiedControl', 'disabledWhenModifiedControl'];
 
   handleClear(event) {
     if (event.explicitOriginalTarget.classList.contains('ti-close')) {
       event.currentTarget.dataset.hwComboboxExpandedValue = false;
       this.filterIdInputTarget.value = '';
-      this.formTarget.submit();
+      this.#copyFormToFilterForm();
+      this.formTarget.requestSubmit();
       return;
     }
   }
@@ -41,21 +42,18 @@ export default class extends Controller {
 
     // update filter name
     if (event?.detail?.fieldName == 'filter[name]') {
-      if (event?.detail?.value) {
-        this.filterFormTarget.submit();
-      }
+      this.filterFormTarget.submit();
       return;
     }
 
-    // select new filter
+    // select filter
     if (event?.detail?.fieldName == 'f') {
-      if (event.detail.value) {
-        window.location.href = `/filters/${event.detail.value}`;
-      }
+      window.location.href = `/filters/${event.detail.value}`;
       return;
     }
 
     this.#copyFormToFilterForm();
+
     this.formTarget.submit();
   }
 
@@ -65,7 +63,6 @@ export default class extends Controller {
       const existingValues = JSON.parse(sourceInput.dataset.existingValues);
       filterInput.value = existingValues;
     });
-    this.filterFormTarget.requestSubmit();
   }
 
   toggleFilter(event) {
@@ -83,28 +80,38 @@ export default class extends Controller {
 
     this.#copyFormToFilterForm();
 
-    this.formTarget.requestSubmit();
+    this.formTarget.submit();
   }
 
   removeFilter(event) {
-    const value = event.params.value;
+    const value = event.params.value.toString();
     const fieldName = event.params.fieldName;
     const input = this.formTarget.querySelector(`[name="${event.params.fieldName}"]`);
     const existingValues = JSON.parse(input.dataset.existingValues);
-    input.dataset.existingValues = JSON.stringify(existingValues.filter((existingValue) => existingValue !== value))
+
+    const newValues = existingValues.filter((existingValue) => existingValue !== value);
+    input.dataset.existingValues = JSON.stringify(newValues)
+    input.value = newValues.join(',')
 
     this.#copyFormToFilterForm();
 
-    this.formTarget.requestSubmit();
+    this.formTarget.submit();
   }
 
   #copyFormToFilterForm() {
-    this.inputTargets.forEach((input) => {
-      const existingValues = JSON.parse(input.dataset.existingValues);
-      const comboboxInput = document.getElementById(input.name);
-      if (comboboxInput) {
-        const newValue = comboboxInput.value;
-        input.value = [...existingValues, newValue];
+    this.comboboxTargets.forEach((combobox) => {
+      const formInput = document.querySelector(`[name='${combobox.id}']`);
+      if (formInput) {
+        const existingValues = JSON.parse(formInput.dataset.existingValues);
+        formInput.value = [...existingValues, combobox.value];
+      } else {
+        const alternativeFormInput = document.getElementById(`${combobox.dataset.alternativeInputId}[]`);
+        const regularFormInput = document.querySelector(`[name='${combobox.dataset.alternativeInputId}']`);
+
+        const existingValues = JSON.parse(alternativeFormInput.dataset.existingValues);
+        alternativeFormInput.value = [...existingValues, combobox.value];
+        regularFormInput.value = JSON.parse(regularFormInput.dataset.existingValues);
+        regularFormInput.setAttribute('name', combobox.id);
       }
     });
   }

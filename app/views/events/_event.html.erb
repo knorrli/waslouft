@@ -31,7 +31,7 @@
       <% if event.styles.exists? || event.genres.exists? %>
         <div class="style-and-genre-tags flex gap-small">
           <% event.styles.each do |style| %>
-            <%= button_tag type: :button, class: class_names(:tag, active: filter.style_list.include?(style.name)), data: { action: 'filter#toggleFilter', filter_field_name_param: 's[]', filter_value_param: style.name } do %>
+            <%= button_tag type: :button, class: class_names(:tag, active: (filter.style_list.include?(style.name) || filter.queries.any? {|query| style.name =~ %r{.*#{query}.*}i })), data: { action: 'filter#toggleFilter', filter_field_name_param: 's[]', filter_value_param: style.name } do %>
               <div class="flex gap-small">
                 <span class="<%= tag_icon_class(context: 'styles') %>"></span>
                 <span><%= style %></span>
@@ -40,7 +40,7 @@
           <% end %>
 
           <% event.genres.each do |genre| %>
-            <div class="tag">
+            <div class="<%= class_names(:tag, active: filter.queries.any? {|query| genre.name =~ %r{.*#{query}.*}i }) %>">
               <div class="flex gap-small">
                 <span class="<%= tag_icon_class(context: 'genres') %>"></span>
                 <span><%= genre %></span>

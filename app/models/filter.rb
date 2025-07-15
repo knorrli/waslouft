@@ -1,7 +1,7 @@
 class Filter < ApplicationRecord
   acts_as_taggable_on :locations, :styles, :genres
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true
 
   def self.ransackable_attributes(auth_object = nil)
     ['name']
@@ -25,27 +25,42 @@ class Filter < ApplicationRecord
 
   def to_params
     params = { f: id }
-    params[:l] = location_list.presence || ''
-    params[:s] = style_list.presence || ''
-    params[:g] = genre_list.presence || ''
-    params[:d] = date_ranges.presence || ''
+    params[:q] = queries.presence
+    params[:l] = location_list.presence
+    params[:s] = style_list.presence
+    params[:g] = genre_list.presence
+    params[:d] = date_ranges.presence
     params
   end
 
   def ransack_query
-    ransack_query = {}
-    ransack_query = { m: :or }
-    ransack_query[:title_or_subtitle_cont] = query
-    ransack_query[:locations_name_in] = location_list.presence
-    ransack_query[:styles_name_in] = style_list.presence
-    ransack_query[:genres_name_in] = genre_list.presence
-    if mapped_ranges = map_date_ranges(date_ranges).presence
-      ransack_query[:start_date_between_any] = mapped_ranges
-    else
-      ransack_query[:start_date_gteq] = Date.current.beginning_of_day
-    end
+    ransack_query = {
+      g: [
+        {
+          title_or_subtitle_or_styles_name_or_genres_name_cont_any: queries,
+          styles_name_in: style_list.presence,
+          genres_name_in: genre_list.presence,
+          m: Ransack::Constants::OR
+        },
+        {
+          locations_name_in: location_list.presence
+        },
+        {}.tap do |date_group|
+          if mapped_ranges = map_date_ranges(date_ranges).presence
+            date_group[:start_date_between_any] = mapped_ranges
+          else
+            date_group[:start_date_gteq] = Date.current.beginning_of_day
+          end
+        end
+      ]
+    }
 
     ransack_query
+  end
+
+
+  def queries=(new_queries)
+    super(ActsAsTaggableOn.default_parser.new(new_queries).parse)
   end
 
   def date_ranges=(new_date_ranges)
@@ -53,10 +68,6 @@ class Filter < ApplicationRecord
   end
 
   private
-
-  def tags_for_ids(joined_ids)
-    ActsAsTaggableOn::Tag.where(id: joined_ids&.split(','))
-  end
 
   def map_date_ranges(date_ranges)
     return [] if date_ranges.blank?

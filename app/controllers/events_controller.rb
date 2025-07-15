@@ -6,9 +6,9 @@ class EventsController < ApplicationController
   # GET /events
   def index
     @filter = Filter.find_or_initialize_by(id: params[:f])
+    @filter.queries = params[:q].compact_blank if params[:q].present?
     @filter.location_list = params[:l] if params[:l].present?
     @filter.style_list = params[:s] if params[:s].present?
-    # @filter.genre_list = params[:g].split(',') if params[:g]
     @filter.date_ranges = params[:d].compact_blank if params[:d].present?
 
     @q = Event.ransack(@filter.ransack_query)

@@ -1,6 +1,8 @@
 module TagsHelper
   def tag_icon_class(context:)
     case context.to_s
+    when 'query'
+      'ti-search'
     when 'date'
       'ti-calendar'
     when 'styles'

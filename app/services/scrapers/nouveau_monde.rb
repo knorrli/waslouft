@@ -27,6 +27,10 @@ module Scrapers
     end
 
     def event_start_date(program_entry:)
+      event_start_time(program_entry: program_entry)
+    end
+
+    def event_start_time(program_entry:)
       date_string = program_entry.css('.date').content.squish
       time_string = program_entry.css('.dateHM').content.squish
       Time.zone.parse("#{date_string} #{time_string}")

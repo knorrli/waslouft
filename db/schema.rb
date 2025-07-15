@@ -27,11 +27,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_14_232851) do
 
   create_table "filters", force: :cascade do |t|
     t.string "name"
-    t.string "query"
+    t.jsonb "queries", default: []
     t.jsonb "date_ranges", default: []
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_filters_on_name", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|

@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   end
 
   resources :filters
-  get 'calendar/:id', to: 'filters#show', defaults: { format: :ics }
+  get 'calendar/:id', to: 'filters#show', as: :calendar, defaults: { format: :ics }
 
   scope :admin do
     get '', to: 'admin#index', as: :admin

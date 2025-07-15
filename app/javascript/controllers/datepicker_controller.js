@@ -29,12 +29,14 @@ export default class extends Controller {
 
   #presetPositions = ["top", "left", "right", "bottom"];
   #preset = this.#buildPreset();
+
   connect() {
     const element = this.hasInputTarget ? this.inputTarget : this.element;
     const wrapperTarget = this.wrapperTarget;
     const presetValue = this.presetValue;
     const activeDateRanges = this.dateRangesValue;
     const gridValue = this.gridValue;
+
 
     this.datepicker = new easepick.create({
       element: element,
@@ -52,21 +54,22 @@ export default class extends Controller {
       ],
       setup(picker) {
         picker.on('select', (e) => {
+          const rangeString = this.element.value;
+          this.element.value = '';
           const selectedPreset = Object.keys(presetValue).find((key) => {
             const { label, values: [start, end] } = presetValue[key];
             const startMatch = picker.getStartDate().format(picker.options.format) === start
             const endMatch = picker.getEndDate().format(picker.options.format) == end;
             return startMatch && endMatch;
           });
-          const selectedRange = (selectedPreset || this.element.value);
-          this.element.value = selectedRange;
+          const selectedRange = (selectedPreset || rangeString);
           this.element.dispatchEvent(
             new CustomEvent(
               'datepicker:selection',
               {
                 bubbles: true,
                 detail: {
-                  value: this.element.value,
+                  value: selectedRange,
                   fieldName: this.element.id
                 }
               }
@@ -113,11 +116,21 @@ export default class extends Controller {
     }
   }
 
-  removeRange(event) {
-    const rangeString = event.params.range;
-    const newRanges = this.dateRangesValue.filter((range) => range !== event.params.range);
+  removeDateRange(event) {
+    const rangeString = event.params.value;
+    const newRanges = this.dateRangesValue.filter((range) => range !== rangeString);
     this.inputTarget.value = newRanges;
-    this.inputTarget.dispatchEvent(new Event('datepicker:removal', { bubbles: true }));
+    this.inputTarget.dispatchEvent(
+      new CustomEvent(
+        'datepicker:removal',
+        {
+          bubbles: true,
+          detail: {
+            value: rangeString
+          }
+        }
+      )
+    );
   }
 
   #clear() {

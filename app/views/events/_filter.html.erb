@@ -1,5 +1,5 @@
 <section class="filter flex flex-col gap-medium" >
-  <%= form_with url: events_path, method: :get, id: 'filter-form', class: 'flex flex-col gap-medium', data: { filter_target: 'form', turbo_frame: '_top' } do |f| %>
+  <%= form_with url: events_path, method: :get, id: 'filter-form', class: 'flex flex-col gap-medium', html: { autocomplete: 'off' }, data: { filter_target: 'form', turbo_frame: '_top' } do |f| %>
     <%= f.hidden_field 'f', value: @filter.id, data: { filter_target: 'filterIdInput' } %>
 
     <div class="input-wrapper flex flex-row gap-small" data-action="hw-combobox:selection->filter#addStyleOrQuery">
@@ -54,7 +54,7 @@
       <% end %>
     </div>
 
-    <div class="datepicker input-wrapper flex gap-small" data-controller="datepicker" data-datepicker-date-ranges-value="<%= @filter.date_ranges.to_json %>" data-datepicker-lang-value="<%= I18n.locale %>" data-datepicker-preset-value="<%= Datepicker.preset.to_json %>" data-action="datepicker:selection->filter#addDateRange" data-datepicker-target="wrapper">
+    <div class="datepicker input-wrapper flex gap-small" data-controller="datepicker" data-datepicker-date-range-value="" data-datepicker-date-ranges-value="<%= @filter.date_ranges.to_json %>" data-datepicker-lang-value="<%= I18n.locale %>" data-datepicker-preset-value="<%= Datepicker.preset.to_json %>" data-action="datepicker:selection->filter#addDateRange datepicker:removal->filter#removeDateRange" data-datepicker-target="wrapper">
       <%= f.hidden_field 'd[]', id: 'd[]-hidden-input', data: { filter_target: 'comboboxInput dateRangesInput', existing_values: @filter.date_ranges.to_json } %>
       <% if @filter.date_ranges.any? %>
         <div class="chips flex flex-row wrap gap-small">
@@ -70,7 +70,7 @@
       <% end %>
       <div class="flex-grow">
         <div class="hw-combobox__main__wrapper flex flex-grow">
-          <%= text_field_tag '', '', id: 'd[]', placeholder: t('.when'), data: { datepicker_target: 'input' } %>
+          <%= text_field_tag '', nil, id: 'd[]', readonly: true, placeholder: t('.when'), data: { datepicker_target: 'input' } %>
           <span class="datepicker-handle filter-icon ti-calendar" data-action="click->datepicker#toggle"></span>
         </div>
       </div>

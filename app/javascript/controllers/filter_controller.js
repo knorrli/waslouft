@@ -53,15 +53,18 @@ export default class extends Controller {
       originalInput.setAttribute('name', event.target.dataset.hwComboboxOriginalNameValue);
       this.#addComboboxValue(event.detail.value, this.queriesInputTarget);
     } else {
+      this.#clearComboboxInput(event.detail.fieldName);
       this.#addComboboxValue(event.detail.value, this.stylesInputTarget);
     }
   }
 
   addLocation(event) {
+    this.#clearComboboxInput(event.detail.fieldName);
     this.#addComboboxValue(event.detail.value, this.locationsInputTarget);
   }
 
   addDateRange(event) {
+    this.#clearComboboxInput(event.detail.fieldName);
     this.#addComboboxValue(event.detail.value, this.dateRangesInputTarget);
   }
 
@@ -99,7 +102,7 @@ export default class extends Controller {
     if (event.explicitOriginalTarget.classList.contains('ti-close')) {
       event.currentTarget.dataset.hwComboboxExpandedValue = false;
       this.filterIdInputTarget.value = '';
-      this.#submitForm();
+      this.formTarget.requestSubmit();
     }
   }
 
@@ -126,6 +129,10 @@ export default class extends Controller {
       this.disabledWhenModifiedControlTargets.forEach((target) => target.removeAttribute('disabled'));
       this.enabledWhenModifiedControlTargets.forEach((target) => target.setAttribute('disabled', 'disabled'));
     }
+  }
+
+  #clearComboboxInput(comboboxId) {
+    document.getElementById(comboboxId).value = '';
   }
 
   #addComboboxValue(value, target) {
@@ -158,8 +165,4 @@ export default class extends Controller {
 
     this.filterFormTarget.requestSubmit();
   }
-
-
-  // ------------------------------------------------------
-
 }

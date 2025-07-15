@@ -19,3 +19,7 @@ body {
   background-color: var(--theme-bg-color);
   color: var(--theme-fg-color);
 }
+
+input {
+  color: var(--theme-accent-color);
+}

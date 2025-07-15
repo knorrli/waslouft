@@ -6,6 +6,10 @@ module Scrapers
       'Gaskessel'
     end
 
+    def self.locations
+      super + ['Bern', 'BE']
+    end
+
     def self.url
       'https://gaskessel.ch/programm/'
     end

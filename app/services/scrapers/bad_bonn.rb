@@ -6,6 +6,10 @@ module Scrapers
       'Bad Bonn'
     end
 
+    def self.locations
+      super + ['Düdingen', 'Fribourg', 'FR']
+    end
+
     def self.url
       'https://club.badbonn.ch/program'
     end

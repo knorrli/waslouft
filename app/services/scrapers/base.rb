@@ -22,6 +22,10 @@ module Scrapers
         raise 'implement in subclass'
       end
 
+      def locations
+        [location]
+      end
+
       def url
         raise 'implement in subclass'
       end
@@ -47,7 +51,7 @@ module Scrapers
           start_time: event_start_time(program_entry: program_entry),
           genre_list: genres,
           style_list: event_styles(genres: genres),
-          location_list: location
+          location_list: locations
         )
       rescue StandardError => e
         debugger
@@ -69,6 +73,10 @@ module Scrapers
 
     def location
       self.class.location
+    end
+
+    def locations
+      self.class.locations
     end
 
     def program_entries

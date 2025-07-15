@@ -8,6 +8,10 @@ module Scrapers
       'ISC'
     end
 
+    def self.locations
+      super + ['Bern', 'BE']
+    end
+
     def self.url
       'https://isc-club.ch/'
     end

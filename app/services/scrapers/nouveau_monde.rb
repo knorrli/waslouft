@@ -6,6 +6,10 @@ module Scrapers
       'Nouveau Monde'
     end
 
+    def self.locations
+      super + ['Fribourg', 'FR']
+    end
+
     def self.url
       'https://www.nouveaumonde.ch/agenda/'
     end

@@ -11,12 +11,12 @@ class GenreStyleAssignmentsController < ApplicationController
       style.save
     end
 
-    redirect_to genre_style_assignments_path
+    redirect_to genre_style_assignments_path(page: params[:page])
   end
 
   private
 
   def genre_style_assignment_params
-    params.expect(genre_style_assignment: [:style_ids, :tag_value])
+    params.expect(genre_style_assignment: [:style_ids, :style_id, :tag_value])
   end
 end

@@ -6,6 +6,10 @@ module Scrapers
       'Dachstock'
     end
 
+    def self.locations
+      super + ['Reitschule', 'Bern', 'BE']
+    end
+
     def self.url
       'https://www.dachstock.ch/events'
     end

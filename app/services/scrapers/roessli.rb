@@ -6,6 +6,10 @@ module Scrapers
       'Rössli'
     end
 
+    def self.locations
+      super + ['Reitschule', 'Bern', 'BE']
+    end
+
     def self.url
       'https://www.souslepont-roessli.ch/'
     end

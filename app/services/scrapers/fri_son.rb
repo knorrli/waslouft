@@ -6,6 +6,10 @@ module Scrapers
       'FriSon'
     end
 
+    def self.locations
+      super + ['Fribourg', 'FR']
+    end
+
     def self.url
       'https://www.fri-son.ch/fr/programme?f%5B0%5D=category%3A1'
     end

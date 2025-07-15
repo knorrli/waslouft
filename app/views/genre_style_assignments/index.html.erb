@@ -1,64 +1,65 @@
-<div class="flex flex-col gap-small">
+<%= turbo_frame_tag :unassigned_genre_tags do %>
+  <div class="flex flex-col gap-small" data-controller="genre-style-assignments">
 
-  <h1><%= t('.unassigned_genre_tags') %></h1>
+    <h1><%= "#{t('.unassigned_genre_tags')} (#{@event_tag_stats.unassigned_genre_tags.count})" %></h1>
 
-  <div class="flex flex-col gap-large">
-    <% @unassigned_genre_tags.each do |genre_tag| %>
-      <fieldset class="flex flex-col gap-medium">
-        <legend><%= genre_tag %></legend>
+    <div class="flex flex-col gap-large">
+      <% @unassigned_genre_tags.each do |genre_tag| %>
+        <fieldset class="flex flex-col gap-medium">
+          <legend><%= genre_tag %></legend>
 
-        <div class="flex flex-col gap-small">
-          <h4><%= t('.usage') %></h4>
+          <div class="flex flex-col gap-small">
+            <h4><%= t('.usage') %></h4>
 
-          <ul>
-          <% Event.tagged_with(genre_tag, on: :genres).order(start_date: :asc).limit(10).each do |event| %>
-            <li><%= link_to event, event.url %></li>
-          <% end %>
-          </ul>
-        </div>
+            <ul>
+              <% Event.tagged_with(genre_tag, on: :genres).order(start_date: :asc).limit(10).each do |event| %>
+                <li><%= link_to event, event.url %></li>
+              <% end %>
+            </ul>
+          </div>
 
-        <div class="flex flex-col gap-small">
-          <h4><%= t('.suggestions') %></h4>
-          <% SimilarTaggingsFinder.call(context: 'genres', taggable_type: Style.name, tag: genre_tag.name).limit(10).group_by(&:taggable).each do |taggable, taggings| %>
-            <div class="suggestion flex flex-col gap-small">
-              <h4><%= taggable %></h4>
-              <div class="flex flex-row justify-between align-baseline">
-                <div class="flex gap-small wrap">
-                  <% taggings.each do |tagging| %>
-                    <span class="tag"><%= tagging.tag.name %></span>
+          <div class="flex flex-col gap-small">
+            <h4><%= t('.suggestions') %></h4>
+            <% SimilarTaggingsFinder.call(context: 'genres', taggable_type: Style.name, tag: genre_tag.name).limit(10).group_by(&:taggable).each do |taggable, taggings| %>
+              <div class="suggestion flex flex-col gap-small">
+                <h4><%= taggable %></h4>
+                <div class="flex flex-row justify-between align-bottom">
+                  <div class="flex gap-small wrap align-center">
+                    <% taggings.each do |tagging| %>
+                      <span class="tag"><%= tagging.tag.name %></span>
+                    <% end %>
+                  </div>
+                  <%= form_with url: genre_style_assignments_path, class: 'flex align-end', data: { turbo_frame: '_top' } do |f| %>
+                    <%= f.hidden_field 'genre_style_assignment[tag_value]', value: genre_tag.name %>
+                    <%= f.hidden_field 'genre_style_assignment[style_ids]', value: taggable.id %>
+                    <%= f.submit t('actions.assign') %>
                   <% end %>
                 </div>
-
-                <%= form_with url: genre_style_assignments_path, class: 'flex align-end' do |f| %>
-                  <%= f.hidden_field 'genre_style_assignment[tag_value]', value: genre_tag.name %>
-                  <%= f.hidden_field 'genre_style_assignment[style_id]', value: taggable.id %>
-                  <%= f.submit t('actions.save') %>
-                <% end %>
               </div>
-            </div>
-          <% end %>
-        </div>
-
-        <h4><%= t('.manual_entry') %></h4>
-        <%= form_with url: genre_style_assignments_path, class: 'flex justify-between gap-large' do |f| %>
-          <div class="input-wrapper flex flex-grow">
-
-            <%= f.hidden_field 'genre_style_assignment[tag_value]', value: genre_tag.name %>
-            <%= f.combobox 'genre_style_assignment[style_ids]', Style.order(name: :asc), id: "genre_#{genre_tag.id}", multiselect_chip_src: chips_styles_path do |combobox| %>
-
-              <% combobox.customize_fieldset class: 'flex-grow' %>
             <% end %>
           </div>
 
-          <%= f.submit t('actions.save'), class: '' %>
-          <%= link_to t('actions.delete'), tag_path(genre_tag), class: 'button delete', data: { turbo_method: :delete, turbo_frame: '_top' } %>
-        <% end %>
+          <h4><%= t('.manual_entry') %></h4>
+          <%= form_with url: genre_style_assignments_path(page: params[:page]), class: 'flex justify-between gap-large', data: { turbo_frame: '_top' } do |f| %>
+            <div class="input-wrapper flex flex-grow">
 
-      </fieldset>
-    <% end %>
-  </div>
+              <%= f.hidden_field 'genre_style_assignment[tag_value]', value: genre_tag.name %>
+              <%= f.combobox 'genre_style_assignment[style_ids]', Style.order(name: :asc), id: "genre_#{genre_tag.id}", multiselect_chip_src: chips_styles_path do |combobox| %>
 
-  <div class="flex justify-center">
-    <%= paginate @unassigned_genre_tags %>
+                <% combobox.customize_fieldset class: 'flex-grow' %>
+              <% end %>
+            </div>
+
+            <%= f.submit t('actions.save'), class: '' %>
+            <%= link_to t('actions.delete'), tag_path(genre_tag), class: 'button delete', data: { turbo_method: :delete, turbo_frame: '_top' } %>
+          <% end %>
+
+        </fieldset>
+      <% end %>
+    </div>
+
+    <div class="flex justify-center">
+      <%= paginate @unassigned_genre_tags %>
+    </div>
   </div>
-</div>
+<% end %>

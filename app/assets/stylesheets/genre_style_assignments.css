@@ -1,4 +1,4 @@
 .suggestion {
-  border: var(--border-width) solid var(--theme-fg-color);
+  border-bottom: var(--border-width) solid var(--theme-fg-color);
   padding: var(--gap-small);
 }

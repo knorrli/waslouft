@@ -2,9 +2,11 @@
 de:
   genre_style_assignments:
     index:
+      unassigned_genre_tags: Nicht zugewiesene Genre-Tags
       suggestions: Vorschläge
       manual_entry: Manuelle Zuweisung
   actions:
+    assign: Zuweisen
     save: Speichern
     cancel: Abbrechen
     delete: Löschen

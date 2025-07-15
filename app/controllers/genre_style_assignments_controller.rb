@@ -1,7 +1,7 @@
 class GenreStyleAssignmentsController < ApplicationController
   def index
     @event_tag_stats = EventTagStatsPresenter.new
-    @unassigned_genre_tags = EventTagStatsPresenter.new.unassigned_genre_tags.order(name: :asc).page(params[:page])
+    @unassigned_genre_tags = @event_tag_stats.unassigned_genre_tags.order(name: :asc).page(params[:page]).per(1)
   end
 
   def create
@@ -17,6 +17,6 @@ class GenreStyleAssignmentsController < ApplicationController
   private
 
   def genre_style_assignment_params
-    params.expect(genre_style_assignment: [:style_id, :tag_value])
+    params.expect(genre_style_assignment: [:style_ids, :tag_value])
   end
 end

@@ -1,5 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 
+// Override "lock-in" functionality of hotwire combobox
+import HwComboboxController from "controllers/hw_combobox_controller"
+// Prevent filtering of the list when closing the listbox
+// That way, it feels more like a select tag...
+HwComboboxController.prototype._lockInSelection = function () {
+  // do not force selection
+}
+
 // Connects to data-controller="filter"
 export default class extends Controller {
 

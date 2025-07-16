@@ -2,12 +2,12 @@ module Scrapers
   class MuehleHunziken
     include Base
 
-    def self.active?
-      false
-    end
-
     def self.location
       'Mühle Hunziken'
+    end
+
+    def self.locations
+      super + ['Rubigen', 'Bern', 'BE']
     end
 
     def self.url

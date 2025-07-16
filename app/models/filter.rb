@@ -64,7 +64,8 @@ class Filter < ApplicationRecord
   end
 
   def date_ranges=(new_date_ranges)
-    super(ActsAsTaggableOn.default_parser.new(new_date_ranges).parse)
+    ranges = ActsAsTaggableOn.default_parser.new(new_date_ranges).parse
+    super(ranges.sort_by { |r| index = Datepicker.preset.keys.index(r); [index ? 0 : 1, index] })
   end
 
   private

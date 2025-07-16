@@ -37,7 +37,7 @@ module Scrapers
     end
 
     def event_url(program_entry:)
-      program_entry.attr('href').to_s
+      "https://www.nouveaumonde.ch#{program_entry.attr('href').to_s}"
     end
   end
 end

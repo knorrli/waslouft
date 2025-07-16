@@ -23,5 +23,6 @@ module TagsHelper
       .where(taggings: { context: context, taggable_type: Event.name })
       .select(:name, :context)
       .distinct
+      .order(name: :asc)
   end
 end

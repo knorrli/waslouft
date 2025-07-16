@@ -40,8 +40,7 @@ module Scrapers
     end
 
     def event_genres(program_entry:)
-      # make sure we don't add full sentences as genre tags
-      event_subtitle(program_entry: program_entry).split(/,|\s\-\s|\s[a|u]nd\s|&|\//).map { |content| content.titleize.squish }.reject { |genre| genre.length > 30 }
+      nil
     end
   end
 end

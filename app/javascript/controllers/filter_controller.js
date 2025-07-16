@@ -85,11 +85,7 @@ export default class extends Controller {
   }
 
   updateFilter(event) {
-    if (!event?.detail?.value) {
-      return;
-    }
-
-    if(event.detail.fieldName == 'f') {
+    if(event.detail.fieldName == 'f' && event.detail.value) {
       if (this.filterIdInputTarget.value !== event.detail.value) {
         window.location.href = `/filters/${event.detail.value}`;
       }

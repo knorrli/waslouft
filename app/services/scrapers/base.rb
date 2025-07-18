@@ -54,7 +54,6 @@ module Scrapers
           location_list: locations
         )
       rescue StandardError => e
-        debugger
         Rails.logger.error(e)
       end
     end

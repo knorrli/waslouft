@@ -30,8 +30,8 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-# nokogiri replacement, web scraping
-gem 'nokolexbor', require: false
+# I18n
+gem 'rails-i18n', '~> 8.0.0'
 
 # Genres and Tags for Events
 gem 'acts-as-taggable-on'
@@ -50,6 +50,12 @@ gem "hotwire_combobox"
 
 # Soft delete
 gem 'discard'
+
+# Web Scraping
+gem 'mechanize'
+
+# Tracking Jobs
+gem "mission_control-jobs"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/ndebugging_rails_applications.html#debugging-with-the-debug-gem

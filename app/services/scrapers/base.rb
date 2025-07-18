@@ -1,6 +1,3 @@
-require 'nokolexbor'
-require 'open-uri'
-
 module Scrapers
   module Base
     extend ActiveSupport::Concern

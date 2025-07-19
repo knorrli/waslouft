@@ -9,8 +9,8 @@ class GenreStyleAssignmentsController < ApplicationController
     styles.each do |style|
       style.genre_list.add(genre_style_assignment_params[:tag_value])
       style.save
-      Event.tagged_with(genre_style_assignment_params[:tag_value], on: :genres).each do |tagged_event|
-        tagged_event.style_list.add(style)
+      Event.tagged_with(genre_style_assignment_params[:tag_value], on: :genres).find_each do |tagged_event|
+        tagged_event.style_list.add(style.name)
         tagged_event.save
       end
     end

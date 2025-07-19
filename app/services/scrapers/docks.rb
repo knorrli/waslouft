@@ -53,8 +53,8 @@ module Scrapers
     end
 
     def event_genres(event_page:)
-      main_tags = event_page.css('.event-info-style').map { |node| node.text }.compact_blank.map(&:squish)
-      artist_tags = event_page.css('.artist-item .artist-info').map { |node| node.text }.compact_blank.map(&:squish)
+      main_tags = event_page.css('.event-info-style').map { |node| node.text }.compact_blank.map { |content| content.squish.titleize }
+      artist_tags = event_page.css('.artist-item .artist-info').map { |node| node.text.squish }.compact_blank.map { |content| content.squish.titleize }
       (main_tags | artist_tags).sort
     end
   end

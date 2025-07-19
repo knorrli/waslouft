@@ -15,7 +15,7 @@ services:
       - key: RAILS_MASTER_KEY
         sync: false # You'll provide this value on Blueprint creation
       - key: WEB_CONCURRENCY
-        value: 1
+        value: 2
 databases:
   - name: waslouft-db
     plan: free

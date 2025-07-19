@@ -8,7 +8,7 @@
       <h3 class="event-title"><%= link_to event.title, event.url, target: :blank %></h3>
 
       <% if event.subtitle.present? %>
-        <h4 class="event-subtitle"><%= event.subtitle %></h4>
+        <h4 class="event-subtitle"><%= simple_format(event.subtitle) %></h4>
       <% end %>
     </div>
 
@@ -29,7 +29,7 @@
       <% end %>
 
       <% if event.styles.exists? || event.genres.exists? %>
-        <div class="style-and-genre-tags flex gap-small">
+        <div class="style-and-genre-tags flex gap-small wrap">
           <% event.styles.each do |style| %>
             <%= button_tag type: :button, class: class_names(:tag, active: (filter.style_list.include?(style.name) || filter.queries.any? {|query| style.name =~ %r{.*#{query}.*}i })), data: { action: 'filter#toggleFilter', filter_field_name_param: 's[]', filter_value_param: style.name } do %>
               <div class="flex gap-small">

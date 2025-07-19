@@ -1,47 +1,54 @@
 module Scrapers
-  class MahoganyHall
-    include Base
-
+  class MahoganyHall < Agent
     def self.location
       'Mahogany Hall'
     end
 
     def self.locations
-      super + ['Bern', 'BE']
+      [location, 'Bern', 'BE']
     end
 
     def self.url
-      'https://www.mahogany.ch/konzerte'
+      URI.parse('https://www.mahogany.ch/konzerte')
     end
 
-    def program_entries
-      page.css('.view-konzerte .views-row')
+    def process_events
+      get(self.class.url)
+
+      page.css('.view-konzerte .views-row').each do |event_container|
+        url = URI.join(self.class.url, event_container.at_css('.views-field-title .field-content a').attr('href')).to_s
+        Rails.logger.info "Processing event URL #{url}"
+
+        event = Event.find_or_initialize_by(url: url)
+        event.start_time = event_start_time(event_container: event_container)
+        event.start_date = event.start_time.to_date
+        event.title = event_title(event_container: event_container)
+        event.subtitle = event_subtitle(event_container: event_container)
+        event.genre_list = event_genres(event_container: event_container)
+        event.style_list = event_styles(genres: event.genre_list)
+        event.location_list = self.class.locations
+        event.save!
+      rescue StandardError => e
+        raise ScrapeError.new e.message, event
+      end
     end
 
-    def event_title(program_entry:)
-      program_entry.css('.views-field-title .field-content').content.squish
-    end
-
-    def event_subtitle(program_entry:)
-      program_entry.css('.views-field-field-subtitle .field-content').content.squish
-    end
-
-    def event_start_date(program_entry:)
-      event_start_time(program_entry: program_entry)
-    end
-
-    def event_start_time(program_entry:)
-      date_string = program_entry.css('.views-field-field-tueroeffnung time').attr('datetime')
+    def event_start_time(event_container:)
+      date_string = event_container.css('.views-field-field-tueroeffnung time').attr('datetime')
       Time.zone.parse(date_string)
     end
 
-    def event_url(program_entry:)
-      "https://www.mahogany.ch#{program_entry.css('.views-field-title .field-content a').attr('href').to_s.squish}"
+    def event_title(event_container:)
+      event_container.css('.views-field-title .field-content').text.squish
     end
 
-    def event_genres(program_entry:)
+    def event_subtitle(event_container:)
+      event_container.css('.views-field-field-subtitle .field-content').text.squish
+    end
+
+    def event_genres(event_container:)
       # make sure we don't add full sentences as genre tags
-      event_subtitle(program_entry: program_entry).split(/,|\s\-\s|\s[a|u]nd\s|&|\//).map { |content| content.titleize.squish }.reject { |genre| genre.length > 30 }
+      event_subtitle(event_container: event_container).split(/,|\s\-\s|\s[a|u]nd\s|&|\//).map { |content| content.titleize.squish }.reject { |genre| genre.length > 30 }
     end
   end
 end

@@ -1,44 +1,63 @@
 module Scrapers
-  class Gaskessel
-    include Base
-
+  class Gaskessel < Agent
     def self.location
       'Gaskessel'
     end
 
     def self.locations
-      super + ['Bern', 'BE']
+      [location, 'Bern', 'BE']
     end
 
     def self.url
-      'https://gaskessel.ch/programm/'
+      URI.parse('https://gaskessel.ch/programm/')
     end
 
-    def program_entries
-      page.css('.eventpreview')
+    def process_events
+      get(self.class.url)
+
+      page.css('.eventpreview').each do |event_container|
+        url = URI.join(self.class.url, event_container.at_css('a.previewlink').attr('data-url')).to_s
+        Rails.logger.info "Processing event URL #{url}"
+
+        event = Event.find_or_initialize_by(url: url)
+        event.start_time = event_start_time(event_container: event_container)
+        event.start_date = event.start_time.to_date
+        event.title = event_title(event_container: event_container)
+        event.subtitle = event_subtitle(event_container: event_container)
+        event.genre_list = event_genres(event_container: event_container)
+        event.style_list = event_styles(genres: event.genre_list)
+        event.location_list = self.class.locations
+        event.save!
+      rescue StandardError => e
+        raise ScrapeError.new e.message, event
+      end
     end
 
-    def event_title(program_entry:)
-      program_entry.css('.eventname').content.squish
-    end
-
-    def event_subtitle(program_entry:)
-      program_entry.css('.subtitle').content.squish
-    end
-
-    def event_start_date(program_entry:)
-      date_string = program_entry.css('.eventdatum').content.squish
+    def event_start_time(event_container:)
+      date_string = event_container.css('.previewlink .eventdatum').text.squish
+      time_string = event_container.css('.infobox .tcell').children.select { |node| node.text.squish =~ /^\d{1,2}:\d{1,2}$/ }.map(&:text).join
 
       /(?<day>\d{1,2})?\.(?<month>\d{1,2})?\.(?<year>\d+)/ =~ date_string
-      Time.zone.parse("20#{year}-#{month}-#{day}")
+      /(?<hour>\d{1,2})?:(?<minute>\d{1,2})?/ =~ time_string
+
+      Time.zone.parse("20#{year}-#{month}-#{day} #{hour}:#{minute}")
     end
 
-    def event_url(program_entry:)
-      "https://gaskessel.ch/#{program_entry.css('a.previewlink').attr('data-url')}"
+    def event_title(event_container:)
+      title = event_container.css('.eventname').text.squish
+      title.presence || event_container.at_css('p').children.map do |node|
+        next "(#{node.text.squish})" if node.name == 'sup' && node.text.squish.present?
+
+        node.text.squish
+      end.compact_blank.join(' ')
     end
 
-    def event_genres(program_entry:)
-      program_entry.css('.eventgenre').content.split(',').map(&:squish)
+    def event_subtitle(event_container:)
+      event_container.css('.subtitle').text.split(',').map { |content| content.squish }.compact_blank.join(', ')
+    end
+
+    def event_genres(event_container:)
+      event_container.css('.eventgenre').map { |node| node.text }.compact_blank.map(&:squish)
     end
   end
 end

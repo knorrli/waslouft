@@ -45,8 +45,6 @@ module Scrapers
 
       time_string = event_page.css('.elementor-widget-container').select { |node| node.text.squish.starts_with?('Show Start') }.map(&:text).join[/\d{2}:\d{2}/]
 
-      debugger if event_title(event_page: event_page) == 'The Gems'
-
       Time.zone.parse("#{year}-#{month_number(month: month)}-#{day}, #{time_string}")
     end
 

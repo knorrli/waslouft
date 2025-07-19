@@ -49,5 +49,9 @@ module Events
 
     # Disable MissionControl basic auth
     config.mission_control.jobs.http_basic_auth_enabled = false
+
+
+    # Replace the default in-process and non-durable queuing backend for Active Job.
+    config.active_job.queue_adapter = :solid_queue
   end
 end

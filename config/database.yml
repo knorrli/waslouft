@@ -7,13 +7,8 @@ default: &default
 
 
 development:
-  primary:
-    <<: *default
-    database: events_development
-  queue:
-    <<: *default
-    database: events_development_queue
-    migrations_paths: db/queue_migrate
+  <<: *default
+  database: events_development
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
@@ -70,12 +65,7 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  primary: &primary_production
-    <<: *default
-    database: events_production
-    username: events
-    password: <%= ENV["EVENTS_DATABASE_PASSWORD"] %>
-  queue:
-    <<: *primary_production
-    database: events_production_queue
-    migrations_paths: db/queue_migrate
+  <<: *default
+  database: events_production
+  username: events
+  password: <%= ENV["EVENTS_DATABASE_PASSWORD"] %>

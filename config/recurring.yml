@@ -1,12 +1,20 @@
-<% Scrapers::All.scrapers.each do |name, scraper_class| %>
- scrape_<%= name.underscore %>:
-   class: 'ScrapeEventsJob'
-   args: [ { scraper_class: "<%= scraper_class.name %>" } ]
-   queue: events
-   schedule: every day at midnight
- <% end %>
+development:
+  <% Scrapers::All.scrapers.each do |name, scraper_class| %>
+   scrape_<%= name.underscore %>:
+     class: 'ScrapeEventsJob'
+     args: [ { scraper_class: "<%= scraper_class.name %>" } ]
+     queue: events
+     schedule: every day at midnight
+   <% end %>
 
 production:
+  <% Scrapers::All.scrapers.each do |name, scraper_class| %>
+   scrape_<%= name.underscore %>:
+     class: 'ScrapeEventsJob'
+     args: [ { scraper_class: "<%= scraper_class.name %>" } ]
+     queue: events
+     schedule: every day at midnight
+   <% end %>
   clear_solid_queue_finished_jobs:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
     schedule: every hour at minute 12

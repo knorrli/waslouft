@@ -1,5 +1,6 @@
 :root {
   --hw-combobox-width: unset;
+  --hw-combobox-width--multiple: unset;
 }
 
 body {

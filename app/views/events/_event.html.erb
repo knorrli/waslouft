@@ -44,6 +44,11 @@
               <div class="flex gap-small">
                 <span class="<%= tag_icon_class(context: 'genres') %>"></span>
                 <span><%= genre %></span>
+                <% if authenticated? %>
+                  <%= link_to edit_tag_path(genre), target: :blank do %>
+                    <span class="ti-settings"></span>
+                  <% end %>
+                <% end %>
               </div>
             </div>
           <% end %>

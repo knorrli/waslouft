@@ -9,19 +9,6 @@ class GenreStyleAssignmentsController < ApplicationController
   def create
     styles = Style.where(id: genre_style_assignment_params[:style_ids].split(','))
 
-    styles.each do |style|
-      # manually creating taggable instead of #genre_list.add for performance reasons
-      ActsAsTaggableOn::Tagging.create(
-        taggable: style,
-        tag: ActsAsTaggableOn::Tag.find_by(name: genre_style_assignment_params[:tag_value]),
-        context: :genres
-      )
-
-      Event.tagged_with(genre_style_assignment_params[:tag_value], on: :genres).find_each do |tagged_event|
-        tagged_event.style_list.add(style.name)
-        tagged_event.save
-      end
-    end
 
     redirect_to genre_style_assignments_path(page: params[:page])
   end

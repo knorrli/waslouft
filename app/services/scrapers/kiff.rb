@@ -19,7 +19,7 @@ module Scrapers
         link = Page::Link.new(event_container.at_css('.Card__Link'), @mech, page)
         url = URI.parse(link.href).to_s
 
-        Rails.logger.info "Processing event URL #{link.href}"
+        Rails.logger.info "Processing event URL #{url}"
 
         event = Event.find_or_initialize_by(url: url)
         event.start_time = Time.zone.parse(event_container.css('.Card__Date time').attr('datetime'))

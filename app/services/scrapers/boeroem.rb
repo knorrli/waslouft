@@ -19,7 +19,7 @@ module Scrapers
         link = Page::Link.new(event_container.at_css('.elementor-heading-title a'), @mech, page)
         url = URI.parse(link.href).to_s
 
-        Rails.logger.info "Processing event URL #{link.href}"
+        Rails.logger.info "Processing event URL #{url}"
 
         event = Event.find_or_initialize_by(url: url)
         puts "(#{event.id}): #{event.url}"
@@ -41,9 +41,11 @@ module Scrapers
 
     def event_start_time(event_page:)
       date_string = event_page.at_css('.event-single-datum').text.squish
-      /(?<day>\d{1,2})\.\W*(?<month>\w*)\W*(?<year>\d{4})*/ =~ date_string
+      /(?<day>\d{1,2})\.\W*(?<month>\S*)\W*(?<year>\d{4})*/ =~ date_string
 
       time_string = event_page.css('.elementor-widget-container').select { |node| node.text.squish.starts_with?('Show Start') }.map(&:text).join[/\d{2}:\d{2}/]
+
+      debugger if event_title(event_page: event_page) == 'The Gems'
 
       Time.zone.parse("#{year}-#{month_number(month: month)}-#{day}, #{time_string}")
     end

@@ -37,7 +37,7 @@ module Scrapers
 
     def event_start_time(event_container:)
       event_date_time = event_container.css('.viz-event-date').text.squish
-      /(?<day>\d{1,2})\.\W*(?<month>\w*)\W*(?<year>\d{4})*/ =~ event_date_time
+      /(?<day>\d{1,2})\.\W*(?<month>\S*)\W*(?<year>\d{4})*/ =~ event_date_time
       /(?<hour>\d{1,2}):(?<minute>\d{1,2})/ =~ event_date_time
 
       Time.zone.parse("#{year}-#{month_number(month: month)}-#{day}, #{hour}:#{minute}")

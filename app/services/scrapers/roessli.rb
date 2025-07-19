@@ -36,7 +36,7 @@ module Scrapers
     def event_start_time(event_container:)
       event_date_string = event_container.css('.event-date').attr('datetime').to_s
       /(?<date_string>\d{1,2}\.\s*\w{3}\s\d{4})/ =~ event_date_string
-      /(?<day>\d{1,2})\.\s*(?<month>\w{3})\s*(?<year>\d{4})/ =~ date_string
+      /(?<day>\d{1,2})\.\s*(?<month>\S{3})\s*(?<year>\d{4})/ =~ date_string
       /(?<time_string>\d{1,2}:\d{1,2})/ =~ event_date_string
 
       Time.zone.parse("#{year}-#{month_number(month: month)}-#{day}, #{time_string}")

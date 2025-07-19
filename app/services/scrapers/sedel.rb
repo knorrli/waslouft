@@ -19,7 +19,7 @@ module Scrapers
         link = Page::Link.new(event_container.at_css('a'), @mech, page)
         url = URI.join(self.class.url, link.href).to_s
 
-        Rails.logger.info "Processing event URL #{link.href}"
+        Rails.logger.info "Processing event URL #{url}"
 
         event = Event.find_or_initialize_by(url: url)
         transact do

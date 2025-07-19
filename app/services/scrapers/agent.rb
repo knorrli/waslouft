@@ -3,7 +3,7 @@ require 'mechanize'
 
 module Scrapers
   class Agent < Mechanize
-    # include Registerable
+    include Registerable
 
     class ScrapeError < StandardError
       attr_reader :event

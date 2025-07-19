@@ -6,13 +6,13 @@ class GenreStyleAssignmentsController < ApplicationController
 
   def create
     styles = Style.where(id: genre_style_assignment_params[:style_ids].split(','))
-    styles.each do |style|
+    styles.find_each do |style|
       style.genre_list.add(genre_style_assignment_params[:tag_value])
       style.save
-      Event.tagged_with(genre_style_assignment_params[:tag_value], on: :genres).find_each do |tagged_event|
-        tagged_event.style_list.add(style.name)
-        tagged_event.save
-      end
+    end
+    Event.tagged_with(genre_style_assignment_params[:tag_value], on: :genres).find_each do |tagged_event|
+      tagged_event.style_list.add(styles.map(&:name), parse: true)
+      tagged_event.save
     end
 
     redirect_to genre_style_assignments_path(page: params[:page])

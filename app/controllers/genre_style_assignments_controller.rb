@@ -7,11 +7,9 @@ class GenreStyleAssignmentsController < ApplicationController
   end
 
   def create
-    Rails.logger.info 'Start assignment'
     styles = Style.where(id: genre_style_assignment_params[:style_ids].split(','))
 
-    Rails.logger.info 'Before updating styles'
-    styles.find_each do |style|
+    styles.each do |style|
       Rails.logger.info "Updating style #{style} with genre #{genre_style_assignment_params[:tag_value]}..."
       style.genre_list.add(genre_style_assignment_params[:tag_value])
       Rails.logger.info "Addded tag to style"

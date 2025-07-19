@@ -14,6 +14,7 @@ class GenreStyleAssignmentsController < ApplicationController
     styles.find_each do |style|
       Rails.logger.info "Updating style #{style} with genre #{genre_style_assignment_params[:tag_value]}..."
       style.genre_list.add(genre_style_assignment_params[:tag_value])
+      Rails.logger.info "Addded tag to style"
       style.save
       Rails.logger.info 'Done!'
     end

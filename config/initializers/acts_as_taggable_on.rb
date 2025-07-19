@@ -1,3 +1,4 @@
+# ActsAsTaggableOn.strict_case_match = true
 ActsAsTaggableOn.remove_unused_tags = true
 
 # monkey patched to allow ransack searches

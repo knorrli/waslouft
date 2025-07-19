@@ -1,43 +1,67 @@
 module Scrapers
-  class NouveauMonde
-    include Base
-
+  class NouveauMonde < Agent
     def self.location
       'Nouveau Monde'
     end
 
     def self.locations
-      super + ['Fribourg', 'FR']
+      [location, 'Fribourg', 'FR']
     end
 
     def self.url
-      'https://www.nouveaumonde.ch/agenda/'
+      URI.parse('https://www.nouveaumonde.ch/agenda/')
     end
 
-    def program_entries
-      page.css('.poster[data-tofilter*=concert]')
+    def process_events
+      get(self.class.url)
+
+      page.css('.poster[data-tofilter*=concert]').each do |event_container|
+        link = Page::Link.new(event_container, @mech, page)
+        url = URI.join(self.class.url, link.href).to_s
+
+        Rails.logger.info "Processing event URL #{link.href}"
+
+        event = Event.find_or_initialize_by(url: url)
+        transact do
+          event_page = click(link)
+          event.start_time = event_start_time(event_page: event_page)
+          event.start_date = event.start_time.to_date
+          event.title = event_title(event_page: event_page)
+          event.subtitle = event_subtitle(event_page: event_page)
+          event.genre_list = event_genres(event_page: event_page)
+          event.style_list = event_styles(genres: event.genre_list)
+          event.location_list = self.class.locations
+          event.save!
+        rescue StandardError => e
+          raise ScrapeError.new e.message, event
+        end
+      end
     end
 
-    def event_title(program_entry:)
-      program_entry.css('h4:not(.dateHM)').content.squish
+    def event_start_time(event_page:)
+      date_string = event_page.css('#section-schedule').children.first.text.squish[/\d{1,2}\.\d{1,2}\.\d{4}/]
+      time_string = event_page.css('#section-schedule .scheduleLine').find { |node| node.text.squish.starts_with?(/Beginn|Debut/) }.text.squish[/\d{1,2}h\d{1,2}/]
+      Time.zone.parse("#{date_string}, #{time_string}")
     end
 
-    def event_subtitle(program_entry:)
+    def event_title(event_page:)
+      event_page.css('.groupIntro').map do |node|
+        country_code = node.css('.plateMedium').text.squish
+        act_name = StringIO.new
+        act_name << node.children.find { |child| child.name == 'h2' }.text
+        act_name << " (#{country_code})" if country_code.present?
+        act_name.string
+      end.compact_blank.join(', ')
+    end
+
+    def event_subtitle(event_page:)
       nil
     end
 
-    def event_start_date(program_entry:)
-      event_start_time(program_entry: program_entry)
-    end
-
-    def event_start_time(program_entry:)
-      date_string = program_entry.css('.date').content.squish
-      time_string = program_entry.css('.dateHM').content.squish
-      Time.zone.parse("#{date_string} #{time_string}")
-    end
-
-    def event_url(program_entry:)
-      "https://www.nouveaumonde.ch#{program_entry.attr('href').to_s}"
+    def event_genres(event_page:)
+      main_tags = event_page.css('.plateSmall').map { |node| node.text.squish }
+      artist_tags = event_page.css('.groupIntro .genTexArea h5').map { |node| node.text.squish }.split(/,|\s\-\s|\s[a|u]nd\s|&|\//).compact_blank
+      (main_tags | artist_tags).sort
     end
   end
 end

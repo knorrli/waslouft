@@ -1,45 +1,58 @@
 module Scrapers
-  class BadBonn
-    include Base
-
+  class BadBonn < Agent
     def self.location
       'Bad Bonn'
     end
 
     def self.locations
-      super + ['Düdingen', 'Fribourg', 'FR']
+      [location, 'Düdingen', 'Fribourg', 'FR']
     end
 
     def self.url
-      'https://club.badbonn.ch/program'
+      URI.parse('https://club.badbonn.ch/program')
     end
 
-    def program_entries
-      page.css('.program-row')
+    def process_events
+      get(self.class.url)
+
+      page.css('.program-row').each do |event_container|
+        link = Page::Link.new(event_container.at_css('.program-bands a'), @mech, page)
+        url = URI.parse(link.href).to_s
+
+        Rails.logger.info "Processing event URL #{link.href}"
+
+        event = Event.find_or_initialize_by(url: url)
+        transact do
+          event_page = click(link)
+          event.start_time = event_start_time(event_page: event_page)
+          event.start_date = event.start_time.to_date
+          event.title = event_title(event_page: event_page)
+          event.subtitle = event_subtitle(event_page: event_page)
+          event.genre_list = event_genres(event_page: event_page)
+          event.style_list = event_styles(genres: event.genre_list)
+          event.location_list = self.class.locations
+          event.save!
+        rescue StandardError => e
+          raise ScrapeError.new e.message, event
+        end
+      end
     end
 
-    def event_title(program_entry:)
-      program_entry.css('.program-bands a').content.squish
+    def event_start_time(event_page:)
+      date_string = event_page.at_css('article.show').attr('data-date').to_s
+      time_string = event_page.css('article.show').attr('data-time').to_s
+      Time.zone.parse("#{date_string}, #{time_string}")
     end
 
-    def event_subtitle(program_entry:)
-      nil
+    def event_title(event_page:)
+      event_page.at_css('article.show').attr('data-title').to_s
     end
 
-    def event_start_date(program_entry:)
-      year = program_entry.css('.program-year').content.squish
-      month = program_entry.css('.program-month').content.squish
-      day = program_entry.css('.program-day').content.squish
-      time = program_entry.css('.program-time').content.squish
-
-      Time.zone.parse("#{year}-#{month}-#{day}T#{time}")
+    def event_subtitle(event_page:)
+      event_page.css('.show-text-wrapper p').children.find { |node| node.text.squish.presence }.text.squish
     end
 
-    def event_url(program_entry:)
-      program_entry.css('.program-bands a').attr('href').to_s
-    end
-
-    def event_genres(program_entry:)
+    def event_genres(event_page:)
       nil
     end
   end

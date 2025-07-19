@@ -15,9 +15,6 @@ class EventsController < ApplicationController
     @events = @q.result(distinct: true).order(start_date: :asc).page(params[:page])
   end
 
-  def update
-  end
-
   # DELETE /events/1
   def destroy
     @event.destroy!

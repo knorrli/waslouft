@@ -1,59 +1,61 @@
 module Scrapers
-  class Kofmehl
-    include Base
-
-    attr_reader :current_year, :last_event_date
-
+  class Kofmehl < Agent
     def self.location
       'Kofmehl'
     end
 
     def self.locations
-      super + ['Solothurn', 'SO']
+      [location, 'Solothurn', 'SO']
     end
 
     def self.url
-      'https://kofmehl.net/'
+      URI.parse('https://kofmehl.net/')
     end
 
-    def initialize
-      @current_year = Date.current.year
-    end
+    def process_events
+      get(self.class.url)
 
-    def program_entries
-      page.css('.events .events__element')
-    end
+      page.css('.events .events__element').each do |event_container|
+        link = Page::Link.new(event_container.at_css('a.events__link'), @mech, page)
+        url = URI.parse(link.href).to_s
 
-    def preprocess(program_entry:)
-      if last_event_date && last_event_date > event_start_date(program_entry: program_entry)
-        @current_year += 1
+        Rails.logger.info "Processing event URL #{link.href}"
+
+        event = Event.find_or_initialize_by(url: url)
+        transact do
+          event_page = click(link)
+          event.start_time = event_start_time(event_page: event_page)
+          event.start_date = event.start_time.to_date
+          event.title = event_title(event_page: event_page)
+          event.subtitle = event_subtitle(event_page: event_page)
+          event.genre_list = event_genres(event_page: event_page)
+          event.style_list = event_styles(genres: event.genre_list)
+          event.location_list = self.class.locations
+          event.save!
+        rescue StandardError => e
+          raise ScrapeError.new e.message, event
+        end
       end
-      true
     end
 
-
-    def event_title(program_entry:)
-      program_entry.css('.events__title').content
+    def event_start_time(event_page:)
+      date_string = event_page.css('.event__date').text.squish[/\d{1,2}\.\d{1,2}\.\d{4}/]
+      time_string = event_page.css('.sidebar time').last&.text&.squish.try(:[], /\d{2}:\d{2}/)
+      Time.zone.parse("#{date_string}, #{time_string}")
     end
 
-    def event_subtitle(program_entry:)
-      nil
+    def event_title(event_page:)
+      event_page.css('.event__title-artist').text.squish
     end
 
-    def event_start_date(program_entry:)
-      date_string = program_entry.css('.events__date').content.squish
-      @last_event_date = Time.zone.parse("#{date_string}.#{current_year}")
+    def event_subtitle(event_page:)
+      support = event_page.css('.event__support').text.squish
+      subtitle = event_page.css('.event__subtitle').text.squish
+      [support, subtitle].compact_blank.join(', ')
     end
 
-    def event_start_time(program_entry:)
-      nil
-    end
-
-    def event_url(program_entry:)
-      program_entry.css('a.events__link').attr('href').to_s.squish
-    end
-
-    def event_genres(program_entry:)
+    def event_genres(event_page:)
+      event_page.css('.event__status').map { |node| node.text.squish }.compact_blank
       nil
     end
   end

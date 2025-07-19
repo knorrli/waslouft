@@ -1,46 +1,61 @@
 module Scrapers
-  class Docks
-    include Base
-
+  class Docks < Agent
     def self.location
       'Docks'
     end
 
     def self.locations
-      super + ['Lausanne', 'VD']
+      [location, 'Lausanne', 'VD']
     end
 
     def self.url
-      'https://www.docks.ch/programme'
+      URI.parse('https://www.docks.ch/programme')
     end
 
-    def program_entries
-      page.css('.programme-container .mix.concerts')
+    def process_events
+      get(self.class.url)
+
+      page.css('.programme-container .mix.concerts').each do |event_container|
+        link = Page::Link.new(event_container.at_css('a'), @mech, page)
+        url = URI.parse(link.href).to_s
+
+        Rails.logger.info "Processing event URL #{link.href}"
+
+        event = Event.find_or_initialize_by(url: url)
+        transact do
+          event_page = click(link)
+          event.start_time = event_start_time(event_page: event_page)
+          event.start_date = event.start_time.to_date
+          event.title = event_title(event_page: event_page)
+          event.subtitle = event_subtitle(event_page: event_page)
+          event.genre_list = event_genres(event_page: event_page)
+          event.style_list = event_styles(genres: event.genre_list)
+          event.location_list = self.class.locations
+          event.save!
+        rescue StandardError => e
+          raise ScrapeError.new e.message, event
+        end
+      end
     end
 
-    def event_title(program_entry:)
-      program_entry.css('.programme-item-title').content.split('|').map { |content| content.squish }.join(', ')
+    def event_start_time(event_page:)
+      date_string = event_page.css('.event-infos .event-info-date').text.squish[/\d{1,2}\.\d{1,2}\.\d{4}/]
+      time_string = event_page.css('.event-infos .event-info-door').last.text.squish[/\d{2}:\d{2}/]
+      Time.zone.parse("#{date_string}, #{time_string}")
     end
 
-    def event_subtitle(program_entry:)
-      program_entry.css('.programme-item-subtitle').content.split('+').map { |content| content.squish }.compact_blank.join(', ')
+    def event_title(event_page:)
+      event_page.css('.top-event-container h1').text.squish
     end
 
-    def event_start_date(program_entry:)
-      date_string = program_entry.css('.programme-item-date').content[/\d{1,2}\.\d{1,2}\.\d{4}/]
-      Time.zone.parse(date_string)
+    def event_subtitle(event_page:)
+      event_page.css('.event-subtitle').text.split('+').map { |content| content.squish }.compact_blank.join(', ')
     end
 
-    def event_start_time(program_entry:)
-      nil
-    end
-
-    def event_url(program_entry:)
-      program_entry.css('a').attr('href').to_s.squish
-    end
-
-    def event_genres(program_entry:)
-      nil
+    def event_genres(event_page:)
+      main_tags = event_page.css('.event-info-style').map { |node| node.text }.compact_blank.map(&:squish)
+      artist_tags = event_page.css('.artist-item .artist-info').map { |node| node.text }.compact_blank.map(&:squish)
+      (main_tags | artist_tags).sort
     end
   end
 end

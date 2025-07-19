@@ -1,42 +1,53 @@
 module Scrapers
-  class Roessli
-    include Base
-
+  class Roessli < Agent
     def self.location
       'Rössli'
     end
 
     def self.locations
-      super + ['Reitschule', 'Bern', 'BE']
+      [location, 'Reitschule', 'Bern', 'BE']
     end
 
     def self.url
-      'https://www.souslepont-roessli.ch/'
+      URI.parse('https://www.souslepont-roessli.ch/')
     end
 
-    def program_entries
-      page.css('.rossli-events .event')
+    def process_events
+      get(self.class.url)
+
+      page.css('.rossli-events .event').each do |event_container|
+        url = URI.parse(event_container.at_css('a').attr('href').to_s).to_s
+
+        Rails.logger.info "Processing event URL #{url}"
+
+        event = Event.find_or_initialize_by(url: url)
+        event.start_time = event_start_time(event_container: event_container)
+        event.start_date = event.start_time.to_date
+        event.title = event_title(event_container: event_container)
+        event.genre_list = event_genres(event_container: event_container)
+        event.style_list = event_styles(genres: event.genre_list)
+        event.location_list = self.class.locations
+        event.save!
+      rescue StandardError => e
+        raise ScrapeError.new e.message, event
+      end
     end
 
-    def event_title(program_entry:)
-      program_entry.css('h2').content.squish
+    def event_start_time(event_container:)
+      event_date_string = event_container.css('.event-date').attr('datetime').to_s
+      /(?<date_string>\d{1,2}\.\s*\w{3}\s\d{4})/ =~ event_date_string
+      /(?<day>\d{1,2})\.\s*(?<month>\w{3})\s*(?<year>\d{4})/ =~ date_string
+      /(?<time_string>\d{1,2}:\d{1,2})/ =~ event_date_string
+
+      Time.zone.parse("#{year}-#{month_number(month: month)}-#{day}, #{time_string}")
     end
 
-    def event_subtitle(program_entry:)
-      nil
+    def event_title(event_container:)
+      event_container.css('h2').text.squish
     end
 
-    def event_start_date(program_entry:)
-      date_string = program_entry.css('.event-date').attr('datetime')
-      Time.zone.parse(date_string)
-    end
-
-    def event_url(program_entry:)
-      program_entry.css('a').attr('href').to_s
-    end
-
-    def event_genres(program_entry:)
-      program_entry.css('.event-categories li').map { |category| category.content.squish }
+    def event_genres(event_container:)
+      event_container.css('.event-categories li').map { |category| category.text.squish }
     end
   end
 end

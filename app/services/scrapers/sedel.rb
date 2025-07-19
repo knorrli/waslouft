@@ -1,46 +1,58 @@
 module Scrapers
-  class Sedel
-    include Base
-
+  class Sedel < Agent
     def self.location
       'Sedel'
     end
 
     def self.locations
-      super + ['Luzern', 'LU']
+      [location, 'Luzern', 'LU']
     end
 
     def self.url
-      'https://sedel.ch'
+      URI.parse('https://sedel.ch')
     end
 
-    def program_entries
-      page.css('.programm ul > li')
+    def process_events
+      get(self.class.url)
+
+      page.css('.programm ul > li').each do |event_container|
+        link = Page::Link.new(event_container.at_css('a'), @mech, page)
+        url = URI.join(self.class.url, link.href).to_s
+
+        Rails.logger.info "Processing event URL #{link.href}"
+
+        event = Event.find_or_initialize_by(url: url)
+        transact do
+          event_page = click(link)
+          event.start_time = event_start_time(event_page: event_page)
+          event.start_date = event.start_time.to_date
+          event.title = event_title(event_page: event_page)
+          event.subtitle = event_subtitle(event_page: event_page)
+          event.genre_list = event_genres(event_page: event_page)
+          event.style_list = event_styles(genres: event.genre_list)
+          event.location_list = self.class.locations
+          event.save!
+        rescue StandardError => e
+          raise ScrapeError.new e.message, event
+        end
+      end
     end
 
-    def event_title(program_entry:)
-      program_entry.css('.views-field-title .field-content').content.split('|').map { |content| content.squish }.join(', ')
-    end
-
-    def event_subtitle(program_entry:)
-      nil
-    end
-
-    def event_start_date(program_entry:)
-      event_start_time(program_entry: program_entry)
-    end
-
-    def event_start_time(program_entry:)
-      date_string = program_entry.css('.views-field-field-datum-1 time').attr('datetime')
+    def event_start_time(event_page:)
+      date_string = event_page.css('time').attr('datetime')
       Time.zone.parse(date_string)
     end
 
-    def event_url(program_entry:)
-      "#{self.class.url}#{program_entry.css('a').attr('href').to_s.squish}"
+    def event_title(event_page:)
+      event_page.css('.field-name-node-title').text.split(' | ').compact_blank.map(&:squish).join(', ')
     end
 
-    def event_genres(program_entry:)
-      nil
+    def event_subtitle(event_page:)
+      event_page.css('.field-name-field-veranstalter').text.squish
+    end
+
+    def event_genres(event_page:)
+      event_page.css('.field-name-field-stil-taxo').text.split(' | ').compact_blank.map(&:squish)
     end
   end
 end

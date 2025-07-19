@@ -1,50 +1,58 @@
 module Scrapers
-  class Schueuer
-    include Base
-
+  class Schueuer < Agent
     def self.location
       'Schüür'
     end
 
     def self.locations
-      super + ['Luzern', 'LU']
+      [location, 'Luzern', 'LU']
     end
 
     def self.url
-      'https://www.schuur.ch/programm'
+      URI.parse('https://www.schuur.ch/programm')
     end
 
-    def program_entries
-      page.css('.viz-event-list-box')
+    def process_events
+      get(self.class.url)
+
+      page.css('.viz-event-list-box').each do |event_container|
+        url = URI.parse(event_container.at_css('a.viz-event-box-details-link').attr('href').to_s).to_s
+
+        Rails.logger.info "Processing event URL #{url}"
+
+        event = Event.find_or_initialize_by(url: url)
+
+        event.start_time = event_start_time(event_container: event_container)
+        event.start_date = event.start_time.to_date
+        event.title = event_title(event_container: event_container)
+        event.subtitle = event_subtitle(event_container: event_container)
+        event.genre_list = event_genres(event_container: event_container)
+        event.style_list = event_styles(genres: event.genre_list)
+        event.location_list = self.class.locations
+        event.save!
+      rescue StandardError => e
+        raise ScrapeError.new e.message, event
+      end
     end
 
-    def preprocess(program_entry:)
-      program_entry.css('.viz-event-genre').content =~ /konzert/i
+    def event_start_time(event_container:)
+      event_date_time = event_container.css('.viz-event-date').text.squish
+      /(?<day>\d{1,2})\.\W*(?<month>\w*)\W*(?<year>\d{4})*/ =~ event_date_time
+      /(?<hour>\d{1,2}):(?<minute>\d{1,2})/ =~ event_date_time
+
+      Time.zone.parse("#{year}-#{month_number(month: month)}-#{day}, #{hour}:#{minute}")
     end
 
-    def event_title(program_entry:)
-      program_entry.css('.viz-event-name').content
+    def event_title(event_container:)
+      event_container.css('.viz-event-name').text.squish
     end
 
-    def event_subtitle(program_entry:)
-      program_entry.css('.viz-event-headline').content
+    def event_subtitle(event_container:)
+      event_container.css('.viz-event-headline').text.squish
     end
 
-    def event_start_date(program_entry:)
-      event_start_time(program_entry: program_entry)
-    end
-
-    def event_start_time(program_entry:)
-      date_string = program_entry.css('.viz-event-date').content.squish
-      Time.zone.parse(date_string)
-    end
-
-    def event_url(program_entry:)
-      program_entry.css('a.viz-event-box-details-link').attr('href').to_s.squish
-    end
-
-    def event_genres(program_entry:)
-      nil
+    def event_genres(event_container:)
+      event_container.css('.viz-event-genre').map { |node| node.text.squish }
     end
   end
 end

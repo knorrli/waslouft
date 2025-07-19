@@ -10,23 +10,19 @@ class GenreStyleAssignmentsController < ApplicationController
     styles = Style.where(id: genre_style_assignment_params[:style_ids].split(','))
 
     styles.each do |style|
-      Rails.logger.info "Updating style #{style} with genre #{genre_style_assignment_params[:tag_value]}..."
-      style.genre_list.add(genre_style_assignment_params[:tag_value])
-      Rails.logger.info "Addded tag to style"
-      style.save
-      Rails.logger.info 'Done!'
+      # manually creating taggable instead of #genre_list.add for performance reasons
+      ActsAsTaggableOn::Tagging.create(
+        taggable: style,
+        tag: ActsAsTaggableOn::Tag.find_by(name: genre_style_assignment_params[:tag_value]),
+        context: :genres
+      )
+
+      Event.tagged_with(genre_style_assignment_params[:tag_value], on: :genres).find_each do |tagged_event|
+        tagged_event.style_list.add(style.name)
+        tagged_event.save
+      end
     end
-    Rails.logger.info 'After updating styles'
 
-    Rails.logger.info 'Before updating events'
-    Event.tagged_with(genre_style_assignment_params[:tag_value], on: :genres).find_each do |tagged_event|
-      tagged_event.style_list.add(styles.map(&:name), parse: true)
-      tagged_event.save
-    end
-    Rails.logger.info 'After updating events'
-
-
-    Rails.logger.info 'Before redirect'
     redirect_to genre_style_assignments_path(page: params[:page])
   end
 
